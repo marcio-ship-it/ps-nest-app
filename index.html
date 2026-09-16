@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PS Nest</title>
+<style>
+:root{--ink:#1a1a1a;--muted:#667085;--line:#e4e7ec;--bg:#f6f7f9;--card:#fff;--accent:#c40075;--ok:#0a7f3f;--warn:#b54708;--err:#b42318}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+header{background:var(--ink);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:16px}
+header h1{font-size:18px;margin:0;font-weight:600;letter-spacing:.2px}
+header .sub{color:#cbd5e1;font-size:13px}
+main{display:grid;grid-template-columns:560px minmax(0,1fr);gap:20px;padding:20px 24px;max-width:1700px;margin:0 auto}
+@media (max-width:1180px){main{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){main{padding:14px 16px}header{padding:12px 16px}.card{padding:14px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.card h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px;font-weight:700}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+input[type=text],input[type=number],select{width:100%;min-width:0;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff}
+input:focus,select:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,26,26,.08)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+button{font:inherit;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
+button:hover{background:#333}
+button.ghost{background:#fff;color:var(--ink)}
+button.ghost:hover{background:#f2f2f2}
+button:disabled{opacity:.5;cursor:default}
+button.small{padding:4px 9px;font-size:12px}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:4px 4px}
+td{padding:3px 4px;vertical-align:middle}
+td input[type=number]{padding:5px 6px;min-width:64px;-moz-appearance:textfield}
+td input[type=number]::-webkit-outer-spin-button,td input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+td input.name{min-width:120px}
+.tablewrap{overflow-x:auto}
+td.c{text-align:center}
+.hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;background:#eef0f3;color:#344054;margin-left:6px}
+.pill.unv{background:#fff4e5;color:var(--warn)}
+.msg{padding:10px 12px;border-radius:8px;margin-bottom:12px;font-size:13px;line-height:1.45}
+.msg.err{background:#fef3f2;color:var(--err);border:1px solid #fecdca}
+.msg.warn{background:#fffaeb;color:var(--warn);border:1px solid #fedf89}
+.msg.ok{background:#ecfdf3;color:var(--ok);border:1px solid #abefc6}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--bg);border-radius:8px;padding:10px 12px}
+.stat b{display:block;font-size:22px;font-weight:600}
+.stat span{font-size:12px;color:var(--muted)}
+.sheet{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px;background:#fff}
+.sheet .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.sheet .head b{font-size:15px}
+.sheet .meta{font-size:12px;color:var(--muted)}
+.sheet svg{width:100%;height:auto;display:block;border-radius:6px}
+.dl{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.legend{font-size:12px;color:var(--muted);margin:4px 0 10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-2px;margin:0 4px 0 10px}
+.src{font-size:12px;color:var(--muted);border-top:1px dashed var(--line);margin-top:10px;padding-top:8px;line-height:1.5}
+details summary{cursor:pointer;font-size:12px;color:var(--muted)}
+.art{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px;border-bottom:1px solid var(--line)}
+.drop{border:2px dashed var(--line);border-radius:8px;padding:14px;text-align:center;color:var(--muted);font-size:13px;cursor:pointer}
+.drop.over{border-color:var(--ink);background:#fafafa}
+td select.shape{min-width:96px;padding:5px 6px}
+.sp{display:flex;gap:4px;margin-top:3px}
+.sp input,.sp select{padding:4px 6px;font-size:12px}
+.sp input.pn,.sp input.pi{width:56px;min-width:0}
+.sp input.ptext{min-width:110px}
+.sp select.pfont,.sp select.pout{max-width:170px}
+td input:disabled{background:#f2f2f2;color:#98a2b3}
+</style>
+</head>
+<body>
+<script>
+// Shared browser build: every /api/* request goes to a web worker running the Python engine
+// (Pyodide) instead of a server.  Built 20260917-070104 from nest/ui.html by scripts/build-web.py.
+(()=>{
+const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
+document.body.prepend(bar);
+const worker=new Worker('worker.js?v=20260917-070104',{type:'module'});const pending=new Map();let seq=0;
+let readyResolve;const ready=new Promise(r=>{readyResolve=r;});
+worker.onmessage=e=>{const m=e.data;
+  if(m.type==='status'){bar.textContent=m.text;return;}
+  if(m.type==='ready'){bar.textContent='Engine ready — runs entirely on your computer, nothing is uploaded.';bar.classList.add('ok');setTimeout(()=>bar.classList.add('hide'),6000);readyResolve();return;}
+  if(m.type==='fatal'){bar.textContent='The engine could not start: '+m.text;bar.classList.add('bad');return;}
+  const p=pending.get(m.id);if(p){pending.delete(m.id);p(m);}};
+function rpc(method,path,body){return new Promise(res=>{const id=++seq;pending.set(id,res);worker.postMessage({id,method,path,body});});}
+const realFetch=window.fetch.bind(window);
+window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))return realFetch(url,opts);
+  await ready;
+  const body=opts.body==null?null:(typeof opts.body==='string'?new TextEncoder().encode(opts.body):new Uint8Array(await new Response(opts.body).arrayBuffer()));
+  const r=await rpc(opts.method||'GET',u,body);const blob=new Blob([r.data],{type:r.ctype});
+  return {ok:r.status<400,status:r.status,
+    headers:{get:k=>{k=k.toLowerCase();if(k==='content-disposition')return r.filename?`attachment; filename="${r.filename}"`:null;if(k==='content-type')return r.ctype;return null;}},
+    json:async()=>JSON.parse(await blob.text()),text:()=>blob.text(),blob:async()=>blob,arrayBuffer:()=>blob.arrayBuffer()};};
+})();
+</script>
+<style>#enginebar{position:sticky;top:0;z-index:50;background:#1a1a1a;color:#fff;font-size:13px;padding:8px 16px;text-align:center;transition:opacity .4s}
+#enginebar.ok{background:#0a7f3f}#enginebar.bad{background:#b42318}#enginebar.hide{opacity:0;pointer-events:none;height:0;padding:0;overflow:hidden}</style>
+<header><h1>PS Nest</h1><span class="sub">Sheet nesting for the router. Fewest sheets, biggest clean offcut, all rules respected.</span></header>
+<main>
+<section>
+  <div class="card">
+    <h2>Job</h2>
+    <div class="row">
+      <div><label>Job name</label><input type="text" id="job" placeholder="INV-15102 Secure Parking"></div>
+      <div><label>Load an example</label><select id="example"><option value="">Choose…</option></select></div>
+    </div>
+    <div class="row">
+      <div><label>Product</label><select id="product"></select></div>
+      <div><label>Sheet</label><select id="sheet"></select></div>
+    </div>
+    <div class="row">
+      <div><label>Nesting mode</label><select id="mode"><option value="simple">Simple: rectangles, turned 0 / 90°</option><option value="complex">Complex: any shape, rotated to fit</option></select></div>
+      <div id="rotBox" style="display:none"><label>Rotation step (°)</label><select id="rot_step"><option value="90">90 (0, 90, 180, 270)</option><option value="45" selected>45 (8 angles)</option><option value="30">30 (12 angles)</option><option value="15">15 (24 angles, slower)</option><option value="10">10 (36 angles, slowest)</option></select></div>
+    </div>
+    <div class="row" id="customSheet" style="display:none">
+      <div><label>Sheet length (mm)</label><input type="number" id="sw" step="1"></div>
+      <div><label>Sheet width (mm)</label><input type="number" id="sh" step="1"></div>
+    </div>
+    <div id="trelloBox" style="display:none">
+      <label>Import from a Trello card (link or id)</label>
+      <div style="display:flex;gap:8px"><input type="text" id="trello" placeholder="https://trello.com/c/…"><button class="ghost" id="trelloBtn">Fetch</button></div>
+      <div class="hint">Reads the card title, description and checklists and lists every line with a W x H. Check every row before nesting; the parser is plain.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Parts</h2>
+    <div class="tablewrap"><table id="parts">
+      <thead><tr><th>Name</th><th style="width:100px">Shape</th><th style="width:72px">W mm</th><th style="width:72px">H mm</th><th style="width:56px">Qty</th><th style="width:40px" title="May be turned">Turn</th><th style="width:110px">Artwork</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="ghost small" id="addRow">+ Add part</button><button class="ghost small" id="clearRows">Clear</button></div>
+    <div class="hint">W is the size along the sheet length, H along the sheet width, as the artwork is drawn. Untick Turn for parts with a grain or a print that must stay upright.
+      Shapes: circle / polygon / star use W as the diameter across points; Text cuts one part per letter at height H (Arial Bold unless chosen); Cut path uses an uploaded DXF / SVG outline, scaled to W.</div>
+  </div>
+
+  <div class="card">
+    <h2>Rules <span class="pill unv" id="unvPill">sourced defaults, prove on an offcut</span></h2>
+    <div class="row3">
+      <div><label>Edge margin (mm)</label><input type="number" id="edge" step="0.5"></div>
+      <div><label>Gap between parts (mm)</label><input type="number" id="gap" step="0.5"></div>
+      <div><label>Clamp / mark zone (mm)</label><input type="number" id="clamp" step="0.5"></div>
+    </div>
+    <div class="row3">
+      <div><label>Bleed (mm)</label><input type="number" id="bleed" step="0.5"></div>
+      <div><label>Corner radius (mm)</label><input type="number" id="corner_radius" step="0.5"></div>
+      <div><label>Bit diameter (mm)</label><input type="number" id="bit_diameter" step="0.5"></div>
+    </div>
+    <div class="row">
+      <div><label>Smallest offcut worth keeping (mm)</label><input type="number" id="min_offcut" step="1"></div>
+      <div><label>Print PDF</label>
+        <div style="font-size:13px;padding-top:6px"><label style="display:inline;color:var(--ink)"><input type="checkbox" id="print_outlines"> cut outlines</label>
+        &nbsp; <label style="display:inline;color:var(--ink)"><input type="checkbox" id="corner_marks"> corner marks</label></div></div>
+    </div>
+    <details><summary>Where each default comes from</summary><div class="src" id="sources"></div></details>
+  </div>
+
+  <div class="card">
+    <h2>Artwork (PDF, one page, at final size)</h2>
+    <div id="drop" class="drop">Drop PDF files here or click to choose</div>
+    <input type="file" id="file" accept="application/pdf" multiple style="display:none">
+    <div id="artlist"></div>
+    <div class="hint">Assign a file to a part in the table. The print PDF places it 1:1 on each sheet at the part's position, turned with the part, scaled to the part plus bleed if the page size differs.</div>
+  </div>
+
+  <div class="card">
+    <h2>Cut paths (DXF or SVG outlines, mm)</h2>
+    <div id="odrop" class="drop">Drop DXF / SVG files here or click to choose</div>
+    <input type="file" id="ofile" accept=".dxf,.svg" multiple style="display:none">
+    <div id="outlist"></div>
+    <div class="hint">Every closed path becomes a part; holes and islands stay with their outer path. "Add parts" puts one row per path in the table with Shape = Cut path. Open paths, text and dimension layers are skipped and reported.</div>
+  </div>
+
+  <button id="nestBtn" style="width:100%;padding:12px;font-size:15px">Nest</button>
+</section>
+
+<section>
+  <div id="messages"></div>
+  <div class="card" id="results" style="display:none">
+    <h2>Result</h2>
+    <div class="stats" id="stats"></div>
+    <div class="dl" id="downloads"></div>
+    <div class="legend"><i style="background:#fde8ec;border:1px solid #c8102e"></i>part <i style="background:#e8f5e9"></i>reusable offcut strip <i style="border:1px dashed #999"></i>usable area inside edge margin</div>
+    <div id="sheets"></div>
+  </div>
+  <div class="card" id="empty">
+    <h2>How to use</h2>
+    <ol style="margin:0;padding-left:18px;line-height:1.7">
+      <li>Pick the product and sheet, or load an example.</li>
+      <li>Type the parts: finished size, quantity, whether they may be turned.</li>
+      <li>Check the rules. Defaults come from published ACM and CNC-nesting guidance (see "Where each default comes from"); bleed and smallest offcut are shop judgement.</li>
+      <li>Nest. The program tries hundreds of layouts and keeps the one with the fewest sheets, then the largest clean offcut.</li>
+      <li>Download the DXF cut files (one per sheet), the 1:1 print PDF and the layout sheet for the operator.</li>
+    </ol>
+  </div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+let PRODUCTS={},EXAMPLES=[],ARTS=[],OUTL=[],FONTS=null,CURRENT=null;
+const SHAPES=[['rect','Rectangle'],['circle','Circle'],['ellipse','Ellipse'],['triangle','Triangle'],['right_triangle','Right triangle'],['rhombus','Rhombus'],['polygon','Polygon'],['star','Star'],['text','Text'],['outline','Cut path']];
+const RULE_KEYS=['edge','gap','clamp','bleed','corner_radius','bit_diameter','min_offcut'];
+
+async function api(path,opts){const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:'Bad response'}));if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));return j;}
+function msg(kind,text){const d=document.createElement('div');d.className='msg '+kind;d.textContent=text;$('#messages').appendChild(d);}
+function clearMsgs(){$('#messages').innerHTML='';}
+
+function fillProduct(){const p=PRODUCTS[$('#product').value];const s=$('#sheet');s.innerHTML='';p.sheets.forEach((sh,i)=>{const o=document.createElement('option');o.value=i;o.textContent=sh.label;s.appendChild(o);});const o=document.createElement('option');o.value='custom';o.textContent='Custom size…';s.appendChild(o);
+  RULE_KEYS.forEach(k=>{$('#'+k).value=p.defaults[k];});
+  $('#sources').innerHTML=Object.entries(p.sources).map(([k,v])=>'<b>'+k+'</b>: '+esc(v)).join('<br>')+'<br><b>notes</b>: '+esc(p.notes);
+  sheetChanged();}
+function sheetChanged(){const v=$('#sheet').value;$('#customSheet').style.display=v==='custom'?'grid':'none';if(v!=='custom'){const sh=PRODUCTS[$('#product').value].sheets[+v];$('#sw').value=sh.w;$('#sh').value=sh.h;}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+function addRow(p){p=p||{};const tb=$('#parts tbody');const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input type="text" class="name" value="${esc(p.name||'')}" placeholder="Part"></td>
+  <td><select class="shape">${SHAPES.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><div class="sp"></div></td>
+  <td><input type="number" class="w" step="0.5" value="${p.w||''}"></td><td><input type="number" class="h" step="0.5" value="${p.h||''}"></td>
+  <td><input type="number" class="qty" min="1" step="1" value="${p.qty??1}"></td><td class="c"><input type="checkbox" class="rot" ${p.rotate===false?'':'checked'}></td>
+  <td><select class="art"></select></td><td><button class="ghost small del" title="Remove">×</button></td>`;
+  tb.appendChild(tr);tr.querySelector('.del').onclick=()=>tr.remove();refreshArtSelects();if(p.artwork)tr.querySelector('.art').value=p.artwork;
+  const sel=tr.querySelector('.shape');sel.onchange=()=>setShape(tr,{type:sel.value});setShape(tr,p.shape||{type:'rect'});
+  tr.querySelector('.w').oninput=()=>{const t=sel.value,w=+tr.querySelector('.w').value;if(t==='circle'||t==='polygon'||t==='star')tr.querySelector('.h').value=tr.querySelector('.w').value;
+    if(t==='outline'){const e=outlineEntry(tr);if(e&&e.w>0)tr.querySelector('.h').value=(w*e.h/e.w).toFixed(1);}};}
+function outlineEntry(tr){const v=(tr.querySelector('.pout')||{}).value||'';const [k,i]=v.split(':');const o=OUTL.find(x=>x.key===k);return o?o.parts[+i]:null;}
+function setShape(tr,spec){const t=spec.type||'rect';const sel=tr.querySelector('.shape');sel.value=t;const sp=tr.querySelector('.sp');const w=tr.querySelector('.w'),h=tr.querySelector('.h');
+  w.disabled=t==='text';h.disabled=t==='circle'||t==='polygon'||t==='star';w.title=h.title='';
+  if(t==='polygon')sp.innerHTML=`<input type="number" class="pn" min="3" max="64" step="1" value="${spec.n||6}" title="sides">`;
+  else if(t==='star')sp.innerHTML=`<input type="number" class="pn" min="3" max="32" step="1" value="${spec.n||5}" title="points"><input type="number" class="pi" min="0.1" max="0.95" step="0.05" value="${spec.inner||0.45}" title="inner radius ratio">`;
+  else if(t==='text'){sp.innerHTML=`<input type="text" class="ptext" value="${esc(spec.text||'')}" placeholder="TEXT"><select class="pfont"></select>`;fillFonts(sp.querySelector('.pfont'),spec.font||'Arial Bold');if(spec.height)h.value=spec.height;w.value='';h.title='letter height';}
+  else if(t==='outline'){sp.innerHTML=`<select class="pout"></select>`;const po=sp.querySelector('.pout');fillOutlineSelect(po,spec.key!=null?spec.key+':'+(spec.index||0):'');
+    const pick=()=>{const e=outlineEntry(tr);if(e){if(!(+w.value>0))w.value=e.w.toFixed(1);h.value=((+w.value)*e.h/e.w).toFixed(1);}};po.onchange=pick;pick();}
+  else sp.innerHTML='';
+  if(h.disabled&&t!=='text')h.value=w.value;}
+async function fillFonts(sel,cur){sel.innerHTML='<option>Arial Bold</option>';sel.value='Arial Bold';
+  if(!FONTS){try{FONTS=(await api('/api/fonts')).fonts.map(f=>typeof f==='string'?f:f.name);}catch(e){FONTS=['Arial Bold'];}}
+  sel.innerHTML=FONTS.map(f=>`<option>${esc(f)}</option>`).join('');sel.value=FONTS.includes(cur)?cur:'Arial Bold';}
+function fillOutlineSelect(sel,cur){sel.innerHTML=OUTL.length?OUTL.flatMap(o=>o.parts.map(p=>`<option value="${o.key}:${p.index}">${esc(o.name)} [${p.index+1}] ${p.w.toFixed(0)}x${p.h.toFixed(0)}</option>`)).join(''):'<option value="">upload a DXF / SVG below</option>';
+  if(cur)sel.value=cur;}
+function rowSpec(tr){const t=tr.querySelector('.shape').value;if(t==='rect')return null;const g=c=>tr.querySelector('.sp '+c);
+  if(t==='polygon')return {type:t,n:+g('.pn').value};
+  if(t==='star')return {type:t,n:+g('.pn').value,inner:+g('.pi').value};
+  if(t==='text')return {type:t,text:g('.ptext').value,height:+tr.querySelector('.h').value,font:g('.pfont').value||'Arial Bold'};
+  if(t==='outline'){const [key,index]=(g('.pout').value||':').split(':');return {type:t,key,index:+index||0};}
+  return {type:t};}
+function rows(){return [...document.querySelectorAll('#parts tbody tr')].map(tr=>({name:tr.querySelector('.name').value,w:tr.querySelector('.w').value,h:tr.querySelector('.h').value,qty:tr.querySelector('.qty').value,rotate:tr.querySelector('.rot').checked,artwork:tr.querySelector('.art').value||null,shape:rowSpec(tr)}));}
+function refreshArtSelects(){document.querySelectorAll('#parts .art').forEach(s=>{const cur=s.value;s.innerHTML='<option value="">none</option>'+ARTS.map(a=>`<option value="${a.key}">${esc(a.name)} (${a.w_mm}x${a.h_mm})</option>`).join('');s.value=ARTS.some(a=>a.key===cur)?cur:'';});
+  $('#artlist').innerHTML=ARTS.map(a=>`<div class="art"><span>${esc(a.name)} <span class="pill">${a.w_mm} x ${a.h_mm} mm</span></span><button class="ghost small" data-k="${a.key}">remove</button></div>`).join('');
+  $('#artlist').querySelectorAll('button').forEach(b=>b.onclick=async()=>{await api('/api/artwork/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:b.dataset.k})});ARTS=ARTS.filter(a=>a.key!==b.dataset.k);refreshArtSelects();});}
+
+async function uploadFiles(files){for(const f of files){if(!/pdf$/i.test(f.name)){msg('warn',f.name+': only PDF artwork is accepted.');continue;}const b64=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.readAsDataURL(f);});
+  try{const j=await api('/api/artwork',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,data:b64})});ARTS.push(j);}catch(e){msg('err',f.name+': '+e.message);}}refreshArtSelects();}
+
+async function uploadOutlines(files){for(const f of files){if(!/\.(dxf|svg)$/i.test(f.name)){msg('warn',f.name+': only DXF or SVG cut paths are accepted here (PDF artwork goes in the box above).');continue;}
+  const b64=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.readAsDataURL(f);});
+  try{const j=await api('/api/outline',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,data:b64})});OUTL.push(j);msg('ok',`${f.name}: ${j.summary}.`);j.warnings.forEach(w=>msg('warn',f.name+': '+w));}
+  catch(e){msg('err',f.name+': '+e.message);}}refreshOutlines();}
+function refreshOutlines(){$('#outlist').innerHTML=OUTL.map(o=>`<div class="art"><span>${esc(o.name)} <span class="pill">${o.parts.length} path${o.parts.length>1?'s':''}</span> <span class="pill">${esc(o.summary)}</span></span><span><button class="ghost small" data-add="${o.key}">add parts</button> <button class="ghost small" data-k="${o.key}">remove</button></span></div>`).join('');
+  $('#outlist').querySelectorAll('button[data-add]').forEach(b=>b.onclick=()=>{const o=OUTL.find(x=>x.key===b.dataset.add);const tb=$('#parts tbody');if(tb.children.length===1&&!tb.querySelector('.w').value&&!tb.querySelector('.name').value)tb.innerHTML='';
+    o.parts.forEach(p=>addRow({name:o.name.replace(/\.(dxf|svg)$/i,'')+(o.parts.length>1?' '+(p.index+1):''),w:+p.w.toFixed(1),h:+p.h.toFixed(1),qty:1,shape:{type:'outline',key:o.key,index:p.index}}));if($('#mode').value!=='complex'){$('#mode').value='complex';modeChanged();}});
+  $('#outlist').querySelectorAll('button[data-k]').forEach(b=>b.onclick=async()=>{await api('/api/outline/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:b.dataset.k})});OUTL=OUTL.filter(o=>o.key!==b.dataset.k);refreshOutlines();document.querySelectorAll('#parts .pout').forEach(s=>fillOutlineSelect(s,s.value));});
+  document.querySelectorAll('#parts .pout').forEach(s=>fillOutlineSelect(s,s.value));}
+function modeChanged(){$('#rotBox').style.display=$('#mode').value==='complex'?'':'none';}
+
+function loadExample(id){const ex=EXAMPLES.find(e=>e.id===id);if(!ex)return;$('#job').value=ex.job;$('#product').value=ex.product;fillProduct();
+  const idx=PRODUCTS[ex.product].sheets.findIndex(s=>s.w===ex.sheet.w&&s.h===ex.sheet.h);$('#sheet').value=idx>=0?String(idx):'custom';sheetChanged();if(idx<0){$('#sw').value=ex.sheet.w;$('#sh').value=ex.sheet.h;}
+  $('#mode').value=ex.mode||'simple';$('#rot_step').value=String(ex.rot_step||45);modeChanged();
+  $('#parts tbody').innerHTML='';ex.parts.forEach(addRow);}
+
+async function doNest(){clearMsgs();const btn=$('#nestBtn');btn.disabled=true;btn.textContent='Nesting…';
+  const rules={};RULE_KEYS.forEach(k=>rules[k]=$('#'+k).value);
+  const body={job:$('#job').value,product:$('#product').value,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,
+    mode:$('#mode').value,rot_step:$('#rot_step').value};
+  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});CURRENT=r;render(r);}
+  catch(e){msg('err',e.message);CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn','The previous result was cleared so a stale file cannot be downloaded. Fix the error and nest again.');}
+  finally{btn.disabled=false;btn.textContent='Nest';}}
+
+async function download(jid,kind,label,btn){
+  // Fetch the file ourselves so a server error becomes a message in the page, not a broken download.
+  const was=btn.textContent;btn.disabled=true;btn.textContent='Preparing…';
+  try{const res=await fetch(`/api/job/${jid}/${kind}`);
+    if(!res.ok){const j=await res.json().catch(()=>({}));const e=new Error(j.error||('HTTP '+res.status));e.status=res.status;throw e;}
+    const blob=await res.blob();const cd=res.headers.get('Content-Disposition')||'';const m=/filename="([^"]+)"/.exec(cd);const name=m?m[1]:`${jid}-${kind}`;
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),60000);
+    msg('ok',`${label}: ${name} (${(blob.size/1024).toFixed(0)} KB) sent to your browser downloads. If it did not appear, download one file at a time - browsers block several quick downloads from one page.`);}
+  catch(e){msg('err',`${label}: ${e.message}`);
+    if(e.status===404){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';}}
+  finally{btn.disabled=false;btn.textContent=was;}}
+
+function render(r){$('#empty').style.display='none';$('#results').style.display='';
+  r.warnings.forEach(w=>msg('warn',w));
+  const eng=r.engine==='shapes'?`true-shape engine, rotation step ${r.rot_step}°${r.pairs&&r.pairs.length?', '+r.pairs.length+' part pair'+(r.pairs.length>1?'s':'')+' interlocked':''}`:'rectangle engine';
+  msg('ok',`${r.parts_total} parts on ${r.sheet_count} sheet${r.sheet_count>1?'s':''} of ${r.sheet_mm[0]} x ${r.sheet_mm[1]} mm. ${r.layouts_tried} layouts tried in ${r.seconds} s (${eng}), every placement checked for gap, edge and overlap.`);
+  if(r.mode==='simple'&&r.engine==='shapes')msg('warn','Shaped parts were nested with 0 / 90° turns only. Switch Nesting mode to Complex to rotate them freely.');
+  const last=r.sheets[r.sheets.length-1];
+  $('#stats').innerHTML=[['Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],['Engine',r.engine==='shapes'?`shapes ${r.rot_step}°`:'rectangles'],['Last-sheet offcut',last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`],['Layouts tried',r.layouts_tried]].map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
+  const dl=[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print','Print PDF 1:1'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
+  $('#downloads').innerHTML=dl.filter(([k])=>!(k==='print'&&r.print_blocked)).map(([k,l])=>`<button class="ghost small" data-k="${k}" data-l="${l}">${l}</button>`).join('');
+  if(r.print_blocked)msg('warn','Print PDF 1:1 not offered. '+r.print_blocked);
+  $('#downloads').querySelectorAll('button').forEach(b=>b.onclick=()=>download(r.job_id,b.dataset.k,b.dataset.l,b));
+  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>Sheet ${s.n} of ${r.sheet_count}</b><span class="meta">${s.parts} parts · ${(s.utilisation*100).toFixed(1)}% used · offcut strip ${s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' x '+s.offcut_strip_mm[1]+' mm ('+s.offcut_strip_mm[2]+')'} · largest clear rectangle ${s.largest_empty_rect_mm[0]} x ${s.largest_empty_rect_mm[1]} mm</span></div>${r.svg[i]}</div>`).join('');}
+
+(async function init(){const j=await api('/api/products');PRODUCTS=j.products;EXAMPLES=j.examples;
+  try{ARTS=(await api('/api/artworks')).artworks;}catch(e){ARTS=[];}
+  const ps=$('#product');Object.entries(PRODUCTS).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v.name;ps.appendChild(o);});
+  const es=$('#example');EXAMPLES.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=e.label;es.appendChild(o);});
+  ps.onchange=fillProduct;$('#sheet').onchange=sheetChanged;es.onchange=()=>{loadExample(es.value);es.value='';};
+  fillProduct();addRow();
+  $('#addRow').onclick=()=>addRow();$('#clearRows').onclick=()=>{$('#parts tbody').innerHTML='';addRow();};
+  $('#nestBtn').onclick=doNest;
+  const drop=$('#drop'),file=$('#file');drop.onclick=()=>file.click();file.onchange=()=>uploadFiles(file.files);
+  drop.ondragover=e=>{e.preventDefault();drop.classList.add('over');};drop.ondragleave=()=>drop.classList.remove('over');drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');uploadFiles(e.dataTransfer.files);};
+  const od=$('#odrop'),of=$('#ofile');od.onclick=()=>of.click();of.onchange=()=>uploadOutlines(of.files);
+  od.ondragover=e=>{e.preventDefault();od.classList.add('over');};od.ondragleave=()=>od.classList.remove('over');od.ondrop=e=>{e.preventDefault();od.classList.remove('over');uploadOutlines(e.dataTransfer.files);};
+  $('#mode').onchange=modeChanged;modeChanged();
+  try{OUTL=(await api('/api/outlines')).outlines;}catch(e){OUTL=[];}refreshOutlines();
+  if(j.trello){$('#trelloBox').style.display='';$('#trelloBtn').onclick=async()=>{clearMsgs();try{const c=await api('/api/trello?card='+encodeURIComponent($('#trello').value));if(!c.items.length){msg('warn','No lines with a W x H found on that card.');return;}$('#job').value=$('#job').value||c.name;$('#parts tbody').innerHTML='';c.items.forEach(addRow);msg('ok',`${c.items.length} candidate line${c.items.length>1?'s':''} read from "${c.name}". Check sizes and quantities; lines not marked ACM: ${c.items.filter(i=>!i.acm).length}.`);}catch(e){msg('err',e.message);}};}
+})();
+</script>
+</body>
+</html>
