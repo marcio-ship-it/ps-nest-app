@@ -83,20 +83,32 @@ td input:disabled{background:#f2f2f2;color:#98a2b3}
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20260917-093005 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20260917-101742 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
-const worker=new Worker('worker.js?v=20260917-093005',{type:'module'});const pending=new Map();let seq=0;
-let readyResolve;const ready=new Promise(r=>{readyResolve=r;});
-worker.onmessage=e=>{const m=e.data;
+window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
+const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
+function startWorker(){worker=new Worker('worker.js?v=20260917-101742',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
+  if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
   if(m.type==='ready'){bar.textContent='Engine ready — runs entirely on your computer, nothing is uploaded.';bar.classList.add('ok');setTimeout(()=>bar.classList.add('hide'),6000);readyResolve();return;}
   if(m.type==='fatal'){bar.textContent='The engine could not start: '+m.text;bar.classList.add('bad');return;}
-  const p=pending.get(m.id);if(p){pending.delete(m.id);p(m);}};
+  const p=pending.get(m.id);if(p){pending.delete(m.id);p(m);}};}
+startWorker();
+// Stop: the worker is busy inside Python for the whole nest and GitHub Pages has no shared memory to signal it,
+// so the only way out is to kill the worker (its in-memory results go with it) and load a fresh one.
+function stopWorker(){worker.terminate();progress=null;
+  const data=new TextEncoder().encode(JSON.stringify({error:'Stopped. The engine is restarting (a few seconds); nest again when the top bar says it is ready. Earlier results cannot be downloaded any more.'}));
+  for(const [id,res] of [...pending]){pending.delete(id);res({status:499,ctype:'application/json',filename:null,data});}
+  bar.className='';bar.textContent='Stopped — restarting the nesting engine…';startWorker();}
 function rpc(method,path,body){return new Promise(res=>{const id=++seq;pending.set(id,res);worker.postMessage({id,method,path,body});});}
 const realFetch=window.fetch.bind(window);
+const jsonResp=(obj,status=200)=>{const t=JSON.stringify(obj);return {ok:status<400,status,headers:{get:()=>null},json:async()=>obj,text:async()=>t,blob:async()=>new Blob([t]),arrayBuffer:async()=>new TextEncoder().encode(t).buffer};};
 window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))return realFetch(url,opts);
+  if(u.startsWith('/api/nest/progress'))return jsonResp({running:pending.size>0,...(progress||{})});   // answered here: the worker cannot
+  if(u==='/api/nest/stop'){stopWorker();return jsonResp({ok:true,presses:1});}
   await ready;
   const body=opts.body==null?null:(typeof opts.body==='string'?new TextEncoder().encode(opts.body):new Uint8Array(await new Response(opts.body).arrayBuffer()));
   const r=await rpc(opts.method||'GET',u,body);const blob=new Blob([r.data],{type:r.ctype});
@@ -183,7 +195,8 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <details class="hint"><summary>How cut paths become parts</summary><div>Every closed path becomes a part; holes and islands stay with their outer path. "Add parts" puts one row per path in the table with Shape = Cut path. Open paths, text and dimension layers are skipped and reported.</div></details>
   </div>
 
-  <button id="nestBtn" style="width:100%;padding:12px;font-size:15px">Nest</button>
+  <div style="display:flex;gap:8px"><button id="nestBtn" style="flex:1;padding:12px;font-size:15px">Nest</button><button id="stopBtn" class="ghost" style="display:none;padding:12px 18px;font-size:15px">Stop</button></div>
+  <div id="nestStatus" class="msg warn" style="display:none;margin:10px 0 0" aria-live="polite"></div>
 </section>
 
 <section>
@@ -284,13 +297,34 @@ function loadExample(id){const ex=EXAMPLES.find(e=>e.id===id);if(!ex)return;$('#
   $('#mode').value=ex.mode||'simple';$('#rot_step').value=String(ex.rot_step||45);modeChanged();
   $('#parts tbody').innerHTML='';ex.parts.forEach(addRow);}
 
-async function doNest(){clearMsgs();const btn=$('#nestBtn');btn.disabled=true;btn.textContent='Nesting…';
+// A run can be stopped: the page names each run (run_id), polls /api/nest/progress for a live readout and posts
+// /api/nest/stop.  First press keeps the best layout finished so far (finishing the first one if none has);
+// second press abandons the layout in progress.  The browser build (window.PSNEST_WEB) restarts its engine instead.
+let RUN=null;
+function statusText(){if(!RUN)return '';const s=Math.round((Date.now()-RUN.t0)/1000),p=RUN.prog||{};let t;
+  if(RUN.presses>=2)t='Abandoning the layout in progress…';
+  else if(RUN.presses===1)t=window.PSNEST_WEB?'Stopping — the engine restarts; nest again when the top bar says it is ready…':
+    (p.tried?'Stopping — keeping the best layout finished so far…':'Stopping — finishing the first layout so there is something to show (press Stop again to abandon it)…');
+  else t='Nesting… '+s+' s';
+  const bits=[];if(p.stage==='pairing')bits.push('pairing identical parts'+(p.pairs?' ('+p.pairs+' found)':''));
+  if(p.tried)bits.push(p.tried+' layout'+(p.tried>1?'s':'')+' finished');if(p.best_sheets)bits.push('best so far '+p.best_sheets+' sheet'+(p.best_sheets>1?'s':''));
+  if(p.stage==='layouts'&&p.total)bits.push('placing part '+Math.min((p.placed||0)+1,p.total)+' of '+p.total);
+  if(bits.length)t+=' · '+bits.join(' · ');
+  if(!RUN.presses)t+=' — press Stop to keep the best layout found so far.';return t;}
+async function stopNest(){if(!RUN)return;const stop=$('#stopBtn');RUN.presses++;stop.textContent=RUN.presses>=2?'Stopping…':'Stop now';if(RUN.presses>=2||window.PSNEST_WEB)stop.disabled=true;$('#nestStatus').textContent=statusText();
+  try{await api('/api/nest/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({run_id:RUN.id})});}catch(e){msg('err','Stop did not reach the engine: '+e.message);}}
+async function doNest(){clearMsgs();const btn=$('#nestBtn'),stop=$('#stopBtn'),st=$('#nestStatus');btn.disabled=true;btn.textContent='Nesting…';
+  const run_id=Date.now().toString(36)+Math.random().toString(36).slice(2,8);RUN={id:run_id,t0:Date.now(),prog:{},presses:0};
+  stop.style.display='';stop.disabled=false;stop.textContent='Stop';stop.onclick=stopNest;st.style.display='';st.textContent=statusText();
+  let polling=false;const tick=async()=>{if(!RUN||RUN.id!==run_id)return;st.textContent=statusText();if(polling)return;polling=true;
+    try{const j=await api('/api/nest/progress?run='+run_id);if(RUN&&RUN.id===run_id&&j.running){RUN.prog=j;st.textContent=statusText();}}catch(e){}finally{polling=false;}};
+  const timer=setInterval(tick,500);
   const rules={};RULE_KEYS.forEach(k=>rules[k]=$('#'+k).value);
   const body={job:$('#job').value,product:$('#product').value,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,
-    mode:$('#mode').value,rot_step:$('#rot_step').value};
+    mode:$('#mode').value,rot_step:$('#rot_step').value,run_id};
   try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});CURRENT=r;render(r);}
-  catch(e){msg('err',e.message);CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn','The previous result was cleared so a stale file cannot be downloaded. Fix the error and nest again.');}
-  finally{btn.disabled=false;btn.textContent='Nest';}}
+  catch(e){msg('err',e.message);CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',e.message.startsWith('Stopped')?'The previous result was cleared. Nest again when you are ready.':'The previous result was cleared so a stale file cannot be downloaded. Fix the error and nest again.');}
+  finally{clearInterval(timer);RUN=null;stop.style.display='none';st.style.display='none';btn.disabled=false;btn.textContent='Nest';}}
 
 async function download(jid,kind,label,btn){
   // Fetch the file ourselves so a server error becomes a message in the page, not a broken download.
