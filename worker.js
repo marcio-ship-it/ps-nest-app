@@ -7,7 +7,7 @@ const ready=(async()=>{
     post('status','Loading Python (Pyodide 314.0.7)…');
     const pyodide=await loadPyodide({indexURL:'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/'});
     post('status','Loading the nesting engine…');
-    const r=await fetch('app.zip?v=20260918-103233');if(!r.ok)throw new Error('app.zip '+r.status);
+    const r=await fetch('app.zip?v=20260918-122449');if(!r.ok)throw new Error('app.zip '+r.status);
     pyodide.unpackArchive(await r.arrayBuffer(),'zip',{extractDir:'/app'});
     pyodide.runPython("import sys; sys.path.insert(0, '/app')");
     app=pyodide.pyimport('nest.webapp');

@@ -85,13 +85,13 @@ td input:disabled{background:#f2f2f2;color:#98a2b3}
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20260918-103233 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20260918-122449 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
 window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
 const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
-function startWorker(){worker=new Worker('worker.js?v=20260918-103233',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+function startWorker(){worker=new Worker('worker.js?v=20260918-122449',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
 worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
   if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
@@ -196,7 +196,7 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <input type="file" id="file" accept="application/pdf" multiple style="display:none">
     <div id="artlist"></div>
     <details class="hint"><summary>How the artwork is placed</summary><div>Assign a file to a part in the table. The print PDF places it 1:1 on each sheet at the part's position, turned with the part, scaled to the part plus bleed if the page size differs.<br><br>
-      <b>Print &amp; cut.</b> Drop the PDF and its part row is added for you. If the PDF carries a cut line in the <b>CutContour</b> spot colour (the pink line Flexi, Onyx, Caldera, Summa and Roland use), the part takes its size and real shape from that line: W, H and Shape are filled in and locked. After nesting, <b>Print PDF 1:1</b> has the artwork with the cut line removed and <b>Cut PDF (CutContour)</b> has only the cut lines, on the same page so they register; with <b>sheet frame</b> ticked both also carry the same hairline rectangle on the sheet edge. Bleed wider than half the gap is trimmed in the print PDF so parts cannot print over each other. The line is used exactly as drawn: it must be a closed shape, and PS Nest never draws, closes or offsets one.</div></details>
+      <b>Print &amp; cut.</b> Drop the PDF and its part row is added for you. If the PDF carries a cut line in the <b>CutContour</b> spot colour (the pink line Flexi, Onyx, Caldera, Summa and Roland use), the part takes its size and real shape from that line: W, H and Shape are filled in and locked. After nesting, <b>Print files</b> is one PDF per sheet with the artwork and the cut line removed, and <b>Cut files</b> is one PDF per sheet with only the cut lines, on the same page so they register; the files pair up by number and carry the final size (1_print_2440x1220.pdf with 1_cut_2440x1220.pdf); with <b>sheet frame</b> ticked both also carry the same hairline rectangle on the sheet edge. Bleed wider than half the gap is trimmed in the print PDF so parts cannot print over each other. The line is used exactly as drawn: it must be a closed shape, and PS Nest never draws, closes or offsets one.</div></details>
   </div>
 
   <div class="card">
@@ -232,7 +232,7 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
       <li>Type the parts: finished size, quantity, whether they may be turned.</li>
       <li>Check the rules. Defaults come from published ACM and CNC-nesting guidance (see "Where each default comes from"); bleed and smallest offcut are shop judgement.</li>
       <li>Nest. The program tries hundreds of layouts and keeps the one with the fewest sheets, then the largest clean offcut.</li>
-      <li>Download the DXF cut files (one per sheet), the 1:1 print PDF and the layout sheet for the operator. For print &amp; cut artwork (CutContour line in the PDF) also download the Cut PDF.</li>
+      <li>Download the DXF cut files (one per sheet), the print files (one per sheet, 1:1) and the layout sheet for the operator. For print &amp; cut artwork (CutContour line in the PDF) also download the cut files - numbered to pair with the print files.</li>
     </ol>
     <div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="ghost small" id="howtoClose" type="button">Close</button></div></div></dialog>
 <script>
@@ -385,11 +385,11 @@ function render(r){$('#empty').style.display='none';$('#results').style.display=
   if(r.mode==='simple'&&r.engine==='shapes')msg('warn','Shaped parts were nested with 0 / 90° turns only. Switch Nesting mode to Complex to rotate them freely.');
   const last=r.sheets[r.sheets.length-1];
   const roll=r.process&&r.process.roll;$('#stats').innerHTML=[[roll?'Cut passes':'Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],['Engine',r.engine==='shapes'?`shapes ${r.rot_step}°`:'rectangles'],[roll?'Unprinted end of last pass':'Last-sheet offcut',last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`],['Layouts tried',r.layouts_tried]].concat(r.process&&r.process.roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m']]:[]).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
-  const dl=[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print','Print PDF 1:1'],['cut','Cut PDF (CutContour)'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
-  $('#downloads').innerHTML=dl.filter(([k])=>!(k==='print'&&r.print_blocked)&&!(k==='cut'&&r.cut_blocked)).map(([k,l])=>`<button class="ghost small" data-k="${k}" data-l="${l}">${l}</button>`).join('');
-  if(r.print_blocked)msg('warn','Print PDF 1:1 not offered. '+r.print_blocked);
-  if(r.cut_parts&&r.cut_blocked)msg('warn','Cut PDF (CutContour) not offered. '+r.cut_blocked);
-  if(r.cut_parts&&!r.cut_blocked)msg('ok',`Print & cut: ${r.cut_parts} part${r.cut_parts>1?'s':''} nested by the CutContour line in the artwork. The print PDF has the cut line removed; the cut PDF carries only the CutContour lines, same page size and position.`);
+  const dl=[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print-files','Print files (1 per sheet, zip)'],['cut-files','Cut files (1 per sheet, zip)'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
+  $('#downloads').innerHTML=dl.filter(([k])=>!(k==='print-files'&&r.print_blocked)&&!(k==='cut-files'&&r.cut_blocked)).map(([k,l])=>`<button class="ghost small" data-k="${k}" data-l="${l}">${l}</button>`).join('');
+  if(r.print_blocked)msg('warn','Print files not offered. '+r.print_blocked);
+  if(r.cut_parts&&r.cut_blocked)msg('warn','Cut files not offered. '+r.cut_blocked);
+  if(r.cut_parts&&!r.cut_blocked)msg('ok',`Print & cut: ${r.cut_parts} part${r.cut_parts>1?'s':''} nested by the CutContour line in the artwork. One print file and one cut file per ${r.process&&r.process.roll?'pass':'sheet'}, numbered to pair up and named with the final size (1_print_${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf goes with 1_cut_${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf). The print file has the cut line removed; the cut file carries only the CutContour lines, same page size and position.`);
   $('#downloads').querySelectorAll('button').forEach(b=>b.onclick=()=>download(r.job_id,b.dataset.k,b.dataset.l,b));
   $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Cut pass':'Sheet'} ${s.n} of ${r.sheet_count}</b><span class="meta">${roll?(s.used_length_mm/1000).toFixed(2)+' m of roll · ':''}${s.parts} parts · ${(s.utilisation*100).toFixed(1)}% used · offcut strip ${s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' x '+s.offcut_strip_mm[1]+' mm ('+s.offcut_strip_mm[2]+')'} · largest clear rectangle ${s.largest_empty_rect_mm[0]} x ${s.largest_empty_rect_mm[1]} mm</span></div>${r.svg[i]}</div>`).join('');}
 
