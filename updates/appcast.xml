@@ -4,26 +4,24 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>PS Nest</title>
         <item>
-            <title>1.2.0</title>
-            <pubDate>Thu, 24 Sep 2026 22:43:18 +1000</pubDate>
-            <sparkle:version>20260924.2241</sparkle:version>
-            <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+            <title>1.2.1</title>
+            <pubDate>Thu, 24 Sep 2026 22:50:33 +1000</pubDate>
+            <sparkle:version>20260924.2249</sparkle:version>
+            <sparkle:shortVersionString>1.2.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<h2>PS Nest 1.2.0 — In-app updates</h2>
+            <description><![CDATA[<h2>PS Nest 1.2.1 — Clearer workspace</h2>
 <ul>
-<li>The Mac app checks for new versions when it opens and periodically afterwards.</li>
-<li>Use Check for updates at the top of the window to check at any time.</li>
-<li>Read the release notes and choose when to install and restart.</li>
-<li>Running nests, imports and downloads must finish before installation.</li>
-<li>Your current form is restored after restart; saved jobs and artwork stay on your Mac.</li>
-<li>Includes the prominent offcut-cut toggle, enabled by default for new sheet jobs.</li>
+<li>Larger text, clearer headings and more room around controls.</li>
+<li>NAS and Trello import tools expand when needed.</li>
+<li>Longer guidance is grouped under clearly named help sections.</li>
+<li>Result measurements are easier to scan, with detailed sheet dimensions one click away.</li>
+<li>The offcut switch remains prominent. Cutting settings and nesting calculations are unchanged.</li>
 </ul>
-<p>Mac versions 1.1.0 and earlier need one manual replacement to enable this updater. Windows updating is unchanged.</p>
 ]]></description>
-            <enclosure url="https://github.com/marcio-ship-it/ps-nest-app/releases/download/v1.2.0/PS-Nest-Mac-1.2.0-update.zip" length="40252918" type="application/octet-stream" sparkle:edSignature="5n1AZZhdy4/4PrMnGi5rjCLJxs8x8rkjifkKf3Z7EWQsrjMsTYPSnJ1P6SocVWaH9T8bHkzoWBTgO7K1VMHTAQ=="></enclosure>
+            <enclosure url="https://github.com/marcio-ship-it/ps-nest-app/releases/download/v1.2.1/PS-Nest-Mac-1.2.1-update.zip" length="40255577" type="application/octet-stream" sparkle:edSignature="p46XKbyqbBpuGTCmsEnVYhXZ0ie0cCN+C2PIlfZ23AOTW7eVBM9c4pf6Ja8vU/q67R5ORzm/TVgFBzyHrtZkDw=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: 9wvWCnoyYgyVR03bUAUMRVlaCUTB4vhFxU3c5UFlhzkhBvtIR+GJT1x6oAzLkKIvFduJa394hnSh8eaCLB4oAg==
-length: 1800
+edSignature: SP6ByFaDwJAEA0jpUNgDEXbYl3RSaQ7Y6/88xRviCP1PuQo3UAiUTkehDpqdVUsmC3kmhqGfM/2eacyCKrq/CQ==
+length: 1577
 -->

@@ -90,8 +90,8 @@ td select.shape{min-width:96px;padding:5px 6px}
 td input:disabled{background:#f2f2f2;color:#98a2b3}
 .card.step h2{display:flex;align-items:center;gap:10px;font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink)}
 .card.step h2 .n{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;align-items:center;justify-content:center;font-size:13px;font-weight:700}
-details.adv summary{font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-details.adv summary::-webkit-details-marker{display:none}details.adv summary::before{content:'\25B8';font-size:12px;color:var(--muted)}details.adv[open] summary::before{content:'\25BE'}
+details.adv>summary{font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+details.adv>summary::-webkit-details-marker{display:none}details.adv>summary::before{content:'\25B8';font-size:12px;color:var(--muted)}details.adv[open]>summary::before{content:'\25BE'}
 details.adv h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 10px;font-weight:700}
 #parts:not(.adv) .colshape{display:none}
 details.older{margin-top:6px}details.older summary{font-size:12px;color:var(--muted);cursor:pointer}
@@ -108,18 +108,57 @@ details.older{margin-top:6px}details.older summary{font-size:12px;color:var(--mu
 .projects th{color:var(--muted);font-weight:600}
 #nasDialog [hidden]{display:none!important}#nasDialog .nas-field{margin:12px 0}#nasDialog label{font-size:13px;color:var(--ink)}#nasDialog .nas-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}#nasDialog .nas-check{display:flex;gap:8px;align-items:flex-start;line-height:1.45}#nasDialog .nas-check input{margin-top:3px}#nasConnection{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}#nasStatus{flex:1;min-width:180px;overflow-wrap:anywhere}#nasSetupMsg{white-space:pre-line;overflow-wrap:anywhere}
 .range{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.range input{flex:1;min-width:90px}.range span{font-size:12px;color:var(--muted);white-space:nowrap}
+
+/* Readability: clear task headings, comfortable controls, secondary guidance on demand. */
+:root{--ink:#202936;--muted:#586577;--line:#dce2e9;--bg:#f2f4f7;--accent:#a90d68}
+body{font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+header{padding:18px 28px;gap:18px;background:#202632}header h1{font-size:21px;letter-spacing:-.3px}header .sub{display:none}
+header #appVersion{display:block;font-size:12px!important;line-height:1.7;color:#d4dbe6!important}header .ghostw{padding:8px 14px;font-size:13px;border-color:#647084}
+main{grid-template-columns:minmax(540px,660px) minmax(0,1fr);gap:24px;padding:28px;max-width:1680px}main>section{min-width:0}
+.card{padding:24px;border-radius:14px;margin-bottom:20px;border-color:#e0e5ec;box-shadow:0 2px 5px #20293604}
+.card h2,.card.step h2{font-size:19px;font-weight:650;letter-spacing:-.25px;text-transform:none;color:var(--ink);margin:0 0 20px}
+.card.step h2 .n{width:30px;height:30px;background:#f5eaf1;color:#94105d;font-size:14px;border:1px solid #eddae6}
+label{font-size:13px;font-weight:550;color:#3d4b5e;margin-bottom:7px;line-height:1.45}
+input[type=text],input[type=password],input[type=url],input[type=number],select,textarea.name{min-height:42px;border-color:#cbd3de;border-radius:8px;padding:9px 10px;font-size:15px;line-height:1.4}
+input:focus,select:focus,textarea.name:focus{border-color:var(--accent);box-shadow:0 0 0 3px #a90d6814}
+button{min-height:40px;border-radius:8px;font-weight:550;padding:9px 14px}button.ghost{border-color:#cbd3de;color:#344054}button.ghost:hover{background:#f5f7fa;border-color:#a7b1bf}
+button.small{font-size:13px;min-height:34px;padding:6px 10px}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #a90d6870;outline-offset:3px}
+.row,.row3{gap:16px;margin-bottom:18px}.hint{font-size:13px;line-height:1.6;color:var(--muted);max-width:70ch}
+#procInfo{margin:0 0 18px!important;line-height:1.7}#procInfo:empty{display:none}.machine-route{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px}.machine-route span{padding:3px 8px;background:#f2f4f7;border-radius:5px}.machine-note{margin:8px 0 0}.machine-notes{margin-top:10px}.machine-notes summary{font-size:13px;color:#42536b;font-weight:550}
+.drop{border-color:#cbd3de;background:#fafbfc;border-radius:10px;padding:18px 14px;line-height:1.6}.drop b{font-size:15px}.drop span{font-size:13px;margin-top:5px}.drop:hover{border-color:var(--accent)}
+.import-option{border:1px solid var(--line);border-radius:9px;margin-top:10px!important;padding:0 13px;background:#fcfcfd}.import-option>summary{font-size:14px;font-weight:550;color:#3d4b5e;padding:12px 0}.import-option[open]{padding-bottom:14px}.import-option label{margin-top:4px}
+#nasMsg:empty,#trelloMsg:empty{display:none}#nasStatus{font-size:12px}#nasConnection{gap:8px}
+.tablewrap{margin-top:20px!important}th{text-transform:none;letter-spacing:0;font-size:12px;font-weight:600;padding:9px 5px;background:#f5f7fa;white-space:nowrap}td{padding:9px 5px;border-bottom:1px solid #edf0f4}td textarea.name{min-width:135px;font-size:14px;line-height:1.5;min-height:40px}td input[type=number],td select{font-size:14px;min-height:40px}td select.art{max-width:150px}#parts td:first-child{width:30%}
+.qbtns{display:flex;gap:3px;margin:4px 0 0}.qbtns button{min-height:22px;padding:2px 5px;font-size:10px;border-color:#e1e5eb}.c input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent)}
+.parts-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}.quantity-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid #edf0f4}.quantity-tools label{display:flex;align-items:center;gap:7px;margin:0}.quantity-tools input{width:65px!important}
+.help-note{margin-top:14px;padding-top:12px;border-top:1px solid #edf0f4}.help-note summary,details.hint summary{font-size:13px;font-weight:550;color:#42536b;line-height:1.5}.help-note p{font-size:14px;line-height:1.65;max-width:68ch;margin:12px 0}.help-note ul{padding-left:19px;line-height:1.7;font-size:14px}.help-note li+li{margin-top:7px}
+.offcut-panel{padding:17px;border-radius:10px;border-width:1.5px}.offcut-toggle{font-size:16px;gap:11px;font-weight:650}.offcut-panel p{font-size:13px;margin:0 0 15px}.offcut-panel strong{font-size:12px;letter-spacing:.04em;padding:3px 8px;border-radius:5px;background:#dbefdf}.offcut-panel.is-off strong{background:#e4e8ed}
+#nestBtn{background:var(--accent);border-color:var(--accent);font-size:16px!important;min-height:48px;font-weight:650}#nestBtn:hover{background:#890d55}
+details.adv>summary{font-size:17px;gap:10px}details.adv>summary .hint{font-size:13px;font-weight:400;flex-basis:100%;margin:0 0 0 20px}details.adv h3{font-size:15px;color:#344054;text-transform:none;letter-spacing:0;margin:26px 0 16px;padding-top:20px;border-top:1px solid var(--line)}
+details.adv .row3{grid-template-columns:repeat(2,minmax(0,1fr))}details.adv .row3>div[style*="grid-column"]{grid-column:1/-1!important}
+.pill{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;line-height:1.7}.msg{font-size:14px;line-height:1.6;padding:14px 16px;border-radius:10px}.words{font-size:16px;line-height:1.6;margin-bottom:20px;max-width:65ch}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:22px}.stat{padding:16px;border:1px solid #e7ebf1;background:#f8f9fb;border-radius:10px}.stat b{font-size:27px;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.25;margin-bottom:6px}.stat span{font-size:13px}
+.dl{gap:9px;margin-bottom:17px}.dl button.main{min-height:44px;font-size:14px}.dl .more{flex-basis:100%;padding-top:3px;font-size:13px}.share{padding-top:15px;border-top:1px solid var(--line);gap:8px;margin-bottom:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:12px;line-height:1.6;margin:16px 0}.legend span{white-space:nowrap}.legend i{margin-left:0}
+.sheet{padding:16px;border-radius:12px;margin-bottom:18px}.sheet .head{display:block;margin-bottom:14px}.sheet .head b{font-size:17px}.sheet .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;line-height:1.6}.sheet .meta span{background:#f2f4f7;border-radius:5px;padding:2px 7px}.sheet details{margin-top:12px}.sheet details summary{font-size:13px}.sheet details p{font-size:13px;line-height:1.7;color:var(--muted)}
+#empty{min-height:330px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(160deg,#fff,#f8fafc)}#empty h2{margin:18px 0 8px;font-size:21px}#empty .hint{max-width:33ch;font-size:14px;line-height:1.7}.empty-sheet{width:116px;height:84px;color:#aab6c7}.empty-sheet .sample{fill:#e4eaf2;stroke:#b4c0d0}
+.projects>summary{font-size:16px!important;line-height:1.6}.projects td,.projects th{font-size:13px;padding:10px 8px}.projects .hint{font-weight:400}.projects{overflow-x:auto}
+.dlg{padding:28px}.dlg h2{font-size:20px;text-transform:none;letter-spacing:-.2px;color:var(--ink);margin-bottom:18px}.dlg ol{line-height:1.7;font-size:15px}.dlg li+li{margin-top:12px}
+@media(max-width:1120px){main{grid-template-columns:minmax(0,1fr);max-width:860px}#empty{min-height:240px}}
+@media(max-width:600px){main{padding:16px;gap:0}.card{padding:18px}header{padding:14px 18px;gap:12px}.row,.row3,details.adv .row3{grid-template-columns:1fr}.card.step h2{font-size:18px}.offcut-toggle{font-size:14px;gap:8px}.offcut-panel{padding:13px}.stats{gap:8px}.stat{padding:13px}.stat b{font-size:23px}.dlg{padding:22px}header #appVersion{max-width:230px}.quantity-tools{align-items:flex-start}}
+
 </style>
 </head>
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20260924-220147 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20260924-225032 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
 window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
 const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
-function startWorker(){worker=new Worker('worker.js?v=20260924-220147',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+function startWorker(){worker=new Worker('worker.js?v=20260924-225032',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
 worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
   if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
@@ -155,7 +194,7 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
   <div class="card step">
     <h2><span class="n">1</span>Material</h2>
     <div class="row">
-      <div><label>What is it printed on / cut from?</label><select id="product"></select><div id="productMsg" style="font-size:13px;margin-top:4px;color:#b42318"></div></div>
+      <div><label for="product">Material &amp; process</label><select id="product"></select><div id="productMsg" style="font-size:13px;margin-top:4px;color:#b42318"></div></div>
       <div><label id="sheetLabel">Sheet</label><select id="sheet"></select></div>
     </div>
     <div class="row" id="customSheet" style="display:none">
@@ -163,35 +202,35 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
       <div id="shBox"><label id="shLabel">Sheet width (mm)</label><input type="number" id="sh" step="1"></div>
     </div>
     <div class="hint" id="procInfo" style="margin:-2px 0 10px"></div>
-    <div><label>Job name (goes into every file name)</label><input type="text" id="job" placeholder="INV-12345 Rate boards"></div>
+    <div><label for="job">Job name</label><input type="text" id="job" placeholder="INV-12345 Rate boards"></div>
   </div>
 
   <div class="card step">
     <h2><span class="n">2</span>Parts</h2>
-    <div id="drop" class="drop"><b>Drop the artwork PDFs here</b> or click to choose<br><span>One PDF per part, at final size, with the pink CutContour cut line. Each file becomes a part below.</span></div>
+    <div id="drop" class="drop"><b>Drop the artwork PDFs here</b> or click to choose<br><span>Final-size PDFs. Include a pink CutContour line for print &amp; cut.</span></div>
     <input type="file" id="file" accept="application/pdf" multiple style="display:none">
     <div id="artlist"></div>
-    <div id="nasBox" style="display:none;margin-top:10px">
-      <label for="nasPl">Or type the PL number and pull the finished art from the NAS</label>
+    <details id="nasBox" class="import-option" style="display:none"><summary>Import from NAS</summary>
+      <label for="nasPl">PL job number</label>
       <div style="display:flex;gap:8px"><input type="text" id="nasPl" placeholder="PL014508"><button class="ghost" id="nasBtn">Fetch from NAS</button></div>
       <div id="nasConnection"><span class="hint" id="nasStatus" role="status">Checking NAS configuration…</span><button class="ghost small" id="nasConfigure" type="button">Connect to NAS</button></div>
       <div id="nasMsg" style="font-size:13px;margin-top:6px;min-height:1em;white-space:pre-line"></div>
-    </div>
-    <div id="trelloBox" style="display:none;margin-top:10px">
-      <label>Or paste a Trello card link and fetch its files</label>
+    </details>
+    <details id="trelloBox" class="import-option" style="display:none"><summary>Import from Trello</summary>
+      <label for="trello">Trello card link</label>
       <div style="display:flex;gap:8px"><input type="text" id="trello" placeholder="https://trello.com/c/…"><button class="ghost" id="trelloBtn">Fetch</button></div>
       <div id="trelloMsg" style="font-size:13px;margin-top:6px;min-height:1em;white-space:pre-line"></div>
-    </div>
+    </details>
     <div class="tablewrap" style="margin-top:12px"><table id="parts">
       <thead><tr><th>Part</th><th class="colshape" style="width:100px">Shape</th><th style="width:72px">W mm</th><th style="width:72px">H mm</th><th style="width:56px">Qty</th><th style="width:40px" title="May be turned 90°">Turn</th><th style="width:110px">Artwork</th><th></th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="ghost small" id="addRow">+ Add a part by size</button><button class="ghost small" id="clearRows">Clear</button>
+    <div class="parts-actions"><button class="ghost small" id="addRow">+ Add a part by size</button><button class="ghost small" id="clearRows">Clear</button>
       <button class="ghost small" id="listBtn" title="CSV or XLSX: columns name, width, height, qty, file">Parts list from a spreadsheet</button><input type="file" id="listFile" accept=".csv,.xlsx,.xls,text/csv" style="display:none">
-      <span style="flex:1"></span>
+    </div><div class="quantity-tools">
       <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)">Set every qty to <input type="number" id="qtyAll" min="1" step="1" style="width:56px;padding:3px 6px"><button class="ghost small" id="qtyAllBtn">Set</button></label>
       <button class="ghost small" id="qtyLast" title="Copy the quantities of the last job nested on this computer, matched by part name">Same as last job</button></div>
-    <div class="hint">No artwork? Type the size and quantity and you get cut files only. Untick Turn for a part that must stay upright. +10 / +100 next to a quantity add to it.</div>
+    <details class="help-note"><summary>Sizes, quantities &amp; turning</summary><ul><li>Enter dimensions and quantity for cut-only parts.</li><li>Untick Turn when a part must stay upright.</li><li>Use +10 or +100 to increase a quantity.</li></ul></details>
   </div>
 
   <div class="card step">
@@ -203,10 +242,10 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     </div>
     <div style="display:flex;gap:8px"><button id="nestBtn" style="flex:1;padding:12px;font-size:15px">Nest</button><button id="stopBtn" class="ghost" style="display:none;padding:12px 18px;font-size:15px">Stop</button></div>
     <div id="nestStatus" class="msg warn" style="display:none;margin:10px 0 0" aria-live="polite"></div>
-    <div class="hint">The sheets, the numbers and the download buttons appear on the right.</div>
+
   </div>
 
-  <details class="card adv" id="adv"><summary>Settings <span class="hint" style="display:inline">printer, margins, gap, bleed, nesting mode, print options, DXF / SVG cut paths, examples</span></summary>
+  <details class="card adv" id="adv"><summary>Settings <span class="hint" style="display:inline">Machine, spacing &amp; cut paths</span></summary>
     <h3>Machine</h3>
     <div class="row3">
       <div id="printerBox"><label>Printer</label><select id="printer"></select></div>
@@ -259,10 +298,10 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <h3>Examples</h3>
     <div><label>Load an example job</label><select id="example"><option value="">Choose…</option></select></div>
 
-    <h3>Reading the parts table</h3>
-    <div class="hint" style="margin-top:0">W is the size along the sheet length, H along the sheet width, as the artwork is drawn. Shapes (this column shows while Settings is open): circle / polygon / star use W as the diameter across points; Text cuts one part per letter at height H; Cut path uses an uploaded DXF / SVG outline, scaled to W; CutContour takes the shape from the pink cut line in the part's artwork PDF (W and H fill in by themselves).<br><br>
-      <b>Print &amp; cut.</b> If the PDF carries a cut line in the <b>CutContour</b> spot colour (the pink line Flexi, Onyx, Caldera, Summa and Roland use), the part takes its size and real shape from that line. After nesting, <b>Print files</b> is one PDF per sheet with the artwork and the cut line removed, and <b>Cut files</b> is one PDF per sheet with only the cut lines, on the same page so they register; the files pair up by number and carry the final size (1_print_2440x1220.pdf with 1_cut_2440x1220.pdf). Bleed wider than half the gap is trimmed in the print PDF so parts cannot print over each other. The line is used exactly as drawn: it must be a closed shape, and PS Nest never draws, closes or offsets it. A PDF without a cut line is placed as a rectangle at its page size.<br><br>
-      <b>Trello.</b> Fetch pulls every PDF attached to the card, loose or inside a zip, and makes one part per file: size and shape from its CutContour line, quantity from the file name (<code>_575x560___3x.pdf</code>). The card text is read as well and checked against the files. Check every row before nesting.</div>
+    <details class="help-note"><summary>Guide to shapes, print &amp; cut</summary>
+    <div class="hint" style="margin-top:0"><p>W is the size along the sheet length, H along the sheet width, as the artwork is drawn. Shapes (this column shows while Settings is open): circle / polygon / star use W as the diameter across points; Text cuts one part per letter at height H; Cut path uses an uploaded DXF / SVG outline, scaled to W; CutContour takes the shape from the pink cut line in the part's artwork PDF (W and H fill in by themselves).</p><p>
+      <b>Print &amp; cut.</b> If the PDF carries a cut line in the <b>CutContour</b> spot colour (the pink line Flexi, Onyx, Caldera, Summa and Roland use), the part takes its size and real shape from that line. After nesting, <b>Print files</b> is one PDF per sheet with the artwork and the cut line removed, and <b>Cut files</b> is one PDF per sheet with only the cut lines, on the same page so they register; the files pair up by number and carry the final size (1_print_2440x1220.pdf with 1_cut_2440x1220.pdf). Bleed wider than half the gap is trimmed in the print PDF so parts cannot print over each other. The line is used exactly as drawn: it must be a closed shape, and PS Nest never draws, closes or offsets it. A PDF without a cut line is placed as a rectangle at its page size.</p><p>
+      <b>Trello.</b> Fetch pulls every PDF attached to the card, loose or inside a zip, and makes one part per file: size and shape from its CutContour line, quantity from the file name (<code>_575x560___3x.pdf</code>). The card text is read as well and checked against the files. Check every row before nesting.</p></div></details>
   </details>
 </section>
 
@@ -275,13 +314,14 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <div class="stats" id="stats"></div>
     <div class="dl" id="downloads"></div>
     <div class="share"><button class="ghost small" id="undoBtn" style="display:none" title="Go back to the previous layout and settings">Undo</button><button class="ghost small" id="unlockBtn" style="display:none">Unlock all parts</button><button class="ghost small" id="copyWords">Copy summary</button><button class="ghost small" id="copyLink">Copy link to this layout</button><a class="ghost small" id="waBtn" style="display:inline-block;padding:4px 9px;font-size:12px;border:1px solid var(--ink);border-radius:6px;color:var(--ink);text-decoration:none" target="_blank" rel="noopener">Send on WhatsApp</a></div>
-    <div class="hint" id="shareHint" style="margin-top:0">Drag a part on the picture to lock it there, then Nest again. The link opens on a phone only while this computer can be reached on the network.</div>
-    <div class="legend"><i style="background:#fde8ec;border:1px solid #c8102e"></i>part <i style="background:#e8f5e9"></i>reusable offcut strip <i style="border-top:2px dashed #2e7d32;height:0;margin-top:6px"></i>trim cut <i style="border:1px dashed #999"></i>usable area inside edge margin</div>
+    <details class="help-note"><summary>Adjusting &amp; sharing this layout</summary><div class="hint" id="shareHint">Drag a part to lock its position, then Nest again. Shared links work only while this computer is reachable on the network.</div></details>
+    <div class="legend"><span><i style="background:#fde8ec;border:1px solid #c8102e"></i>Part</span><span><i style="background:#e8f5e9"></i>Reusable offcut</span><span><i style="border-top:2px dashed #2e7d32;height:0"></i>Separation cut</span><span><i style="border:1px dashed #999"></i>Usable area</span></div>
     <div id="sheets"></div>
   </div>
   <div class="card" id="empty">
-    <h2>Result</h2>
-    <div class="hint" style="margin:0">Your sheets will show here after you press <b>Nest</b>, with the download buttons. <a href="#" id="howtoLink">How to use</a></div>
+    <svg class="empty-sheet" viewBox="0 0 116 84" aria-hidden="true"><rect x="1" y="1" width="114" height="82" rx="6" fill="none" stroke="currentColor" stroke-dasharray="4 4"/><rect class="sample" x="9" y="9" width="36" height="30" rx="3"/><rect class="sample" x="50" y="9" width="29" height="44" rx="3"/><rect class="sample" x="9" y="44" width="36" height="31" rx="3"/></svg>
+    <h2>Your layout appears here</h2>
+    <div class="hint" style="margin:0">Choose a material, add your parts, then press <b>Nest</b>.</div><a class="hint" href="#" id="howtoLink">Quick start guide</a>
   </div>
 </section>
 </main>
@@ -348,12 +388,25 @@ async function loadProjects(){try{const j=await api('/api/jobs');const jobs=j.jo
   $('#projectList').innerHTML='<table><thead><tr><th>Job</th><th>When</th><th>Material</th><th>Sheets</th><th>Parts</th><th></th></tr></thead><tbody>'+jobs.slice(0,40).map(x=>`<tr><td>${esc(x.job||'')}</td><td>${when(x.when)}</td><td>${esc((x.material||'').split(' (')[0])}</td><td>${x.sheets??''}</td><td>${x.parts??''}</td><td style="white-space:nowrap">${x.reopen?`<button class="ghost small" data-open="${x.id}">Open</button> `:''}<a href="/p/${x.id}" target="_blank" rel="noopener" style="font-size:12px">View</a></td></tr>`).join('')+'</tbody></table>';
   $('#projectList').querySelectorAll('button[data-open]').forEach(b=>b.onclick=async()=>{clearMsgs();try{const r=await api('/api/job/'+b.dataset.open+'/request');applyRequest(r.request);msg('ok',`"${r.job}" is back in the form: change what you need and press Nest.`);window.scrollTo({top:0,behavior:'smooth'});}catch(e){msg('err',e.message);}});}catch(e){}}
 
-async function api(path,opts){const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:'Bad response'}));if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));return j;}
+let API_PENDING=0;
+async function api(path,opts){API_PENDING++;try{const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:'Bad response'}));if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));return j;}finally{API_PENDING--;}}
+// The native updater saves only job state and PS Nest preferences, never NAS passwords.
+window.psNestUpdateSnapshot=()=>{
+  if(!window.PSNEST_INITIALIZED||RUN||API_PENDING||[...document.querySelectorAll('button:disabled')].some(b=>b.offsetParent!==null))throw new Error('Finish the current operation before updating.');
+  const preferences={};Object.keys(localStorage).filter(k=>k.startsWith('psnest.')).forEach(k=>preferences[k]=localStorage.getItem(k));
+  return {form:formSnapshot(),result:CURRENT,preferences};
+};
+window.psNestRestoreUpdate=s=>{
+  Object.entries(s.preferences||{}).filter(([k])=>k.startsWith('psnest.')).forEach(([k,v])=>localStorage.setItem(k,v));
+  const f=s.form;if(!f.product){delete f.sheet;}applyForm(f);applyLang(localStorage.getItem('psnest.lang')||'en');syncOffcut();
+  if(s.result){CURRENT=s.result;FORM_OF_CURRENT=f;render(CURRENT);}
+  msg('ok','Your job was restored after the app update.');return true;
+};
 function msg(kind,text){const d=document.createElement('div');d.className='msg '+kind;d.textContent=text;$('#messages').appendChild(d);}
 function clearMsgs(){$('#messages').innerHTML='';}
 
 function noProduct(){$('#sheet').innerHTML='<option value="">\u2014</option>';$('#customSheet').style.display='none';$('#printer').innerHTML='';$('#printerBox').style.visibility='hidden';$('#toolLabel').textContent='';
-  $('#procInfo').innerHTML='Pick the material: the printer, the cutter, the sheet sizes and the spacing rules follow from it.';$('#sources').innerHTML='';}
+  $('#procInfo').innerHTML='Machine and spacing defaults follow your material.';$('#sources').innerHTML='';}
 function fillProduct(){const p=PRODUCTS[$('#product').value];$('#product').style.outline='';$('#productMsg').textContent='';if(!p){noProduct();return;}const s=$('#sheet');s.innerHTML='';p.sheets.forEach((sh,i)=>{const o=document.createElement('option');o.value=i;o.textContent=sh.label;s.appendChild(o);});const o=document.createElement('option');o.value='custom';o.textContent='Custom size…';s.appendChild(o);
   $('#offcut_enabled').checked=true;$('#offcut').value='L';syncOffcut();
   RULE_KEYS.forEach(k=>{$('#'+k).value=p.defaults[k];});
@@ -367,7 +420,8 @@ function fillProduct(){const p=PRODUCTS[$('#product').value];$('#product').style
   const fb=$('#forgetBtn');if(fb)fb.onclick=e=>{e.preventDefault();try{localStorage.removeItem(memKey());}catch(x){}fillProduct.noMem=true;fillProduct();fillProduct.noMem=false;$('#productMsg').textContent='';};}
 function printerName(){const p=PRODUCTS[$('#product').value];if(!p)return '';const m=p.printers.find(x=>x.id===$('#printer').value);return m?m.name:p.printer_name;}
 function procInfo(){const p=PRODUCTS[$('#product').value];if(!p){noProduct();return;}
-  $('#procInfo').innerHTML=(p.printer_name?'Print: <b>'+esc(printerName())+'</b> &nbsp;&rarr;&nbsp; ':'Cut only &nbsp;&rarr;&nbsp; ')+'Cut: <b>'+esc(p.cutter_name)+'</b> &nbsp;&middot;&nbsp; machine file: <b>'+(p.output==='cut'?'Cut PDF':'DXF')+'</b>'+(p.assumed.length?' &nbsp;&middot;&nbsp; <span class="pill unv">unproven: '+esc(p.assumed.join(', '))+'</span>':'')+'<br>'+esc(p.notes||'');}
+  $('#procInfo').innerHTML='<div class="machine-route">'+(p.printer_name?'<span>Print: <b>'+esc(printerName())+'</b></span>':'')+'<span>Cut: <b>'+esc(p.cutter_name)+'</b></span><span>'+(p.output==='cut'?'Cut PDF':'DXF')+'</span></div>'+(p.assumed.length?'<span class="pill unv">Unproven defaults: '+esc(p.assumed.join(', '))+'</span>':'')+(p.notes?'<details class="machine-notes"><summary>Machine limits &amp; material notes</summary><p class="machine-note">'+esc(p.notes)+'</p></details>':'');}
+
 function sheetChanged(){const p=PRODUCTS[$('#product').value];if(!p)return;const v=$('#sheet').value;$('#customSheet').style.display=v==='custom'?'grid':'none';if(v!=='custom'){const sh=p.sheets[+v];$('#sw').value=sh.w;$('#sh').value=sh.h;}}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 
@@ -497,7 +551,7 @@ function render(r){$('#empty').style.display='none';$('#results').style.display=
   const eng=r.engine==='shapes'?`true-shape engine, rotation step ${r.rot_step}°${r.pairs&&r.pairs.length?', '+r.pairs.length+' part pair'+(r.pairs.length>1?'s':'')+' interlocked':''}`:'rectangle engine';
   const onWhat=r.process&&r.process.roll?`a ${r.sheet_mm[1]} mm wide roll: ${(r.media_used_mm/1000).toFixed(2)} m of roll used, cut in ${r.sheet_count} pass${r.sheet_count>1?'es':''} of up to ${r.sheet_mm[0]} mm (what the knife table takes in one go; no part crosses a pass, because cutting across the feed is not confirmed)`:`${r.sheet_count} sheet${r.sheet_count>1?'s':''} of ${r.sheet_mm[0]} x ${r.sheet_mm[1]} mm`;
   const mixed=r.rules&&r.rules.stock&&r.rules.stock.length&&r.words?r.words.replace(/^\d+ parts on /,'').replace(/, \d+% of the material used\..*$/,''):null;
-  msg('ok',`${r.parts_total} parts on ${mixed||onWhat}. Best of ${r.layouts_tried} layouts (${eng}, ${r.seconds} s); every placement checked for gap, edge and overlap.`);
+  msg('ok',`${r.parts_total} parts on ${mixed||onWhat}. Gap, edge and overlap checks passed.`);
   $('#words').textContent=r.words||'';const link=location.origin+'/p/'+r.job_id;const share=(r.job?r.job+': ':'')+(r.words||'')+' '+link;
   $('#copyWords').onclick=()=>copyText(share).then(()=>msg('ok','Summary copied. Paste it into WhatsApp or an email.'),()=>msg('err','Could not copy. Select the sentence above and copy it by hand.'));
   $('#copyLink').onclick=()=>copyText(link).then(()=>msg('ok','Link copied: '+link+'. It opens on a phone only while this computer can be reached on the network.'),()=>msg('err','Could not copy: '+link));
@@ -518,7 +572,8 @@ function render(r){$('#empty').style.display='none';$('#results').style.display=
   if(r.cut_parts&&r.cut_blocked)msg('warn','Cut files not offered. '+r.cut_blocked);
   if(r.cut_parts&&!r.cut_blocked)msg('ok',`Print & cut: one print file and one cut file per ${r.process&&r.process.roll?'pass':'sheet'}, named to pair up ("${r.file_label||'job'} - … - sheet 1 of ${r.sheet_count} - print ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf" goes with "… - cut ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf"). The print file has the cut line removed; the cut file has only the cut lines, same page and position.`);
   $('#downloads').querySelectorAll('button,a').forEach(b=>b.onclick=e=>{e.preventDefault();download(r.job_id,b.dataset.k,b.dataset.l,b);});
-  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Cut pass':'Sheet'} ${s.n} of ${r.sheet_count}</b><span class="meta">${roll?(s.used_length_mm/1000).toFixed(2)+' m of roll · ':''}${s.parts} parts · ${(s.utilisation*100).toFixed(1)}% used · offcut strip ${s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' x '+s.offcut_strip_mm[1]+' mm ('+s.offcut_strip_mm[2]+')'} · largest clear rectangle ${s.largest_empty_rect_mm[0]} x ${s.largest_empty_rect_mm[1]} mm${s.trim_line_mm?' · trim cut at '+s.trim_line_mm[1]+' mm ('+(s.trim_line_mm[0]==='x'?'vertical':'horizontal')+')':''}</span></div>${r.svg[i]}</div>`).join('');wireDrag(r);}
+  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Cut pass':'Sheet'} ${s.n} of ${r.sheet_count}</b><div class="meta"><span>${s.parts} parts</span><span>${(s.utilisation*100).toFixed(1)}% used</span>${roll?`<span>${(s.used_length_mm/1000).toFixed(2)} m of roll</span>`:''}<span>Offcut ${s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' × '+s.offcut_strip_mm[1]+' mm'}</span></div></div>${r.svg[i]}<details><summary>Sheet measurements</summary><p>Largest clear rectangle: ${s.largest_empty_rect_mm[0]} × ${s.largest_empty_rect_mm[1]} mm.${s.offcut_strip_mm[2]!=='none'?' Offcut position: '+s.offcut_strip_mm[2]+'.':''}${s.trim_line_mm?' Separation cut: '+s.trim_line_mm[1]+' mm ('+(s.trim_line_mm[0]==='x'?'vertical':'horizontal')+').':''}</p></details></div>`).join('');wireDrag(r);}
+
 function wireDrag(r){document.querySelectorAll('#sheets .sheet').forEach((box,si)=>{const svg=box.querySelector('svg');if(!svg)return;const s=r.sheets[si];const paths=[...svg.querySelectorAll('g path')];const labels=[...svg.querySelectorAll('svg > text')];
   paths.forEach((p,pi)=>{const pl=s.placements[pi];if(!pl)return;p.classList.add('part');if(PINS.some(x=>x.name===pl.part&&x.sheet===si))p.classList.add('locked');p.setAttribute('title',pl.part);
     const H=s.sheet_mm[1];let drag=null;
@@ -539,6 +594,7 @@ const PT={'Material':'Material','Sheet length (mm)':'Comprimento da chapa (mm)',
  'Or type the PL number and pull the finished art from the NAS':'Ou digite o número PL e puxe a arte final do NAS','Or paste a Trello card link and fetch its files':'Ou cole o link do cartão Trello e busque os arquivos','Extra sheets or remnants to use first (mm x mm, how many)':'Chapas extras ou sobras para usar primeiro (mm x mm, quantas)',
  'Edge per side (mm, blank = edge margin)':'Margem por lado (mm, vazio = margem da borda)','Smallest offcut worth keeping (mm)':'Menor sobra que vale guardar (mm)','How to use':'Como usar','Set every qty to':'Definir todas as qtd para','Set':'Definir','Load an example job':'Carregar um exemplo',
  'The sheets, the numbers and the download buttons appear on the right.':'As chapas, os números e os botões de download aparecem à direita.','No artwork? Type the size and quantity and you get cut files only. Untick Turn for a part that must stay upright. +10 / +100 next to a quantity add to it.':'Sem arte? Digite a medida e a quantidade e você recebe só os arquivos de corte. Desmarque Girar para uma peça que deve ficar em pé. +10 / +100 ao lado da quantidade somam a ela.'};
+Object.assign(PT,{'Material & process':'Material e processo','Job name':'Nome do trabalho','Import from NAS':'Importar do NAS','Import from Trello':'Importar do Trello','PL job number':'Número PL do trabalho','Trello card link':'Link do cartão Trello','Sizes, quantities & turning':'Medidas, quantidades e giro','Machine, spacing & cut paths':'Máquina, espaçamento e linhas de corte','Guide to shapes, print & cut':'Guia de formas, impressão e corte','Adjusting & sharing this layout':'Ajustar e compartilhar este layout','Your layout appears here':'Seu layout aparece aqui','Quick start guide':'Guia rápido','Sheet measurements':'Medidas da chapa','Machine limits & material notes':'Limites da máquina e notas do material'});
 function applyLang(l){LANG=l;try{localStorage.setItem('psnest.lang',l);}catch(e){}$('#langBtn').textContent=l==='en'?'PT':'EN';
   document.querySelectorAll('label,button,h2,h3,th,summary,option,.hint,a,.nas-check span').forEach(el=>{if(el.children.length){const t=el.lastChild;if(!t||t.nodeType!==3)return;const k0=el.dataset.en!==undefined?el.dataset.en:t.textContent.trim();if(!(k0 in PT))return;if(el.dataset.en===undefined)el.dataset.en=k0;t.textContent=l==='pt'?PT[k0]:k0;return;}const k=el.dataset.en!==undefined?el.dataset.en:el.textContent.trim();if(!(k in PT))return;if(el.dataset.en===undefined)el.dataset.en=k;el.textContent=l==='pt'?PT[k]:k;});
   document.documentElement.lang=l==='pt'?'pt-BR':'en';if(NAS_SETTINGS)renderNasStatus(NAS_SETTINGS);}
@@ -624,6 +680,7 @@ Object.assign(PT,{'NAS connection':'Conexão com o NAS','Connect to NAS':'Conect
     const chk=c.check||[],notes=c.file_notes||[];if(chk.length||notes.length)kind=kind==='err'?kind:'warn';
     const tail=(chk.length?`\nCheck against the card: ${chk.map(x=>x.text).join('; ')}.`:'')+(notes.length?`\n${notes.join(' ')}`:'');
     tm(kind,(files.length?`${ft} The card's ${n} typed line${n!==1?'s':''} ${n?'were':'was'} read too and compared with the files.`:`${n} candidate line${n>1?'s':''} read from "${c.name}" into the parts list below. No artwork is attached to the card, so this can only be cut, not printed. Check sizes and quantities.`)+mt+tail);}catch(e){tm('err',e.message);}finally{b.disabled=false;b.textContent='Fetch';}};}
+window.PSNEST_INITIALIZED=true;
 })();
 </script>
 </body>
