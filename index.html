@@ -147,18 +147,30 @@ details.adv .row3{grid-template-columns:repeat(2,minmax(0,1fr))}details.adv .row
 @media(max-width:1120px){main{grid-template-columns:minmax(0,1fr);max-width:860px}#empty{min-height:240px}}
 @media(max-width:600px){main{padding:16px;gap:0}.card{padding:18px}header{padding:14px 18px;gap:12px}.row,.row3,details.adv .row3{grid-template-columns:1fr}.card.step h2{font-size:18px}.offcut-toggle{font-size:14px;gap:8px}.offcut-panel{padding:13px}.stats{gap:8px}.stat{padding:13px}.stat b{font-size:23px}.dlg{padding:22px}header #appVersion{max-width:230px}.quantity-tools{align-items:flex-start}}
 
+
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.compact-offcut{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 12px;margin-bottom:10px}
+.compact-offcut .offcut-toggle{flex:1 1 225px;font-size:14px;gap:8px;margin:0;white-space:nowrap}
+.compact-offcut .offcut-choice{flex:1 1 180px}
+.compact-offcut select{font-size:13px;min-height:34px;margin:0}
+.compact-offcut .offcut-toggle input{width:40px;height:24px}
+.compact-offcut .offcut-toggle input::after{width:18px;height:18px}
+.compact-offcut .offcut-toggle input:checked::after{transform:translateX(16px)}
+.compact-offcut strong{font-size:10px;padding:2px 5px}
+#customMaterial{border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
 </style>
 </head>
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20260924-225032 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20260924-230236 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
 window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
 const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
-function startWorker(){worker=new Worker('worker.js?v=20260924-225032',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+function startWorker(){worker=new Worker('worker.js?v=20260924-230236',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
 worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
   if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
@@ -196,6 +208,25 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <div class="row">
       <div><label for="product">Material &amp; process</label><select id="product"></select><div id="productMsg" style="font-size:13px;margin-top:4px;color:#b42318"></div></div>
       <div><label id="sheetLabel">Sheet</label><select id="sheet"></select></div>
+    </div>
+    <div id="customMaterial" hidden>
+      <div class="row">
+        <div><label for="custom_name">Material name</label><input id="custom_name" maxlength="100" placeholder="e.g. Birch plywood"></div>
+        <div><label for="custom_family">Material family</label><select id="custom_family"><option value="other">Other / unlisted</option></select></div>
+      </div>
+      <div class="row">
+        <div><label for="custom_cutter">Cutting process</label><select id="custom_cutter"></select></div>
+        <div><label for="custom_roll">Stock type</label><select id="custom_roll"><option value="sheet">Sheet</option><option value="roll">Roll</option></select></div>
+      </div>
+      <div class="row" id="customTool" hidden>
+        <div><label for="custom_cutter_name">Cutter name</label><input id="custom_cutter_name" maxlength="100" placeholder="Custom cutter"></div>
+        <div><label for="custom_tool_kind">Cutting tool</label><select id="custom_tool_kind"><option value="kerf">Laser / other kerf</option><option value="bit">Router bit</option><option value="knife">Knife</option></select></div>
+      </div>
+      <div class="row">
+        <div><label for="custom_printer">Printing</label><select id="custom_printer"><option value="">Cut only — no printing</option></select></div>
+        <div><label for="custom_thickness">Thickness (mm, optional)</label><input id="custom_thickness" type="number" min="0" step="0.1"></div>
+      </div>
+      <p class="hint">Set your sheet size below. Adjust gap, tool width and margins in Settings.</p>
     </div>
     <div class="row" id="customSheet" style="display:none">
       <div id="swBox"><label id="swLabel">Sheet length (mm)</label><input type="number" id="sw" step="1"></div>
@@ -235,10 +266,10 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
 
   <div class="card step">
     <h2><span class="n">3</span>Nest</h2>
-    <div id="offcutPanel" class="offcut-panel">
+    <div id="offcutPanel" class="offcut-panel compact-offcut">
       <label class="offcut-toggle"><input id="offcut_enabled" type="checkbox" role="switch" checked aria-controls="offcut" aria-labelledby="offcutLabel"><span id="offcutLabel">Cut off reusable material</span><strong id="offcutState" aria-live="polite">ON</strong></label>
-      <p id="offcutHint">Adds separation cuts around the nested area.</p>
-      <div><label for="offcut">Offcut shape</label><select id="offcut" title="How the leftover comes off the last sheet. The trim cut goes in the cut PDF and the DXF as a normal cut line; shown dashed green on the layout."><option value="rect">One straight cut (rectangle)</option><option value="L" selected>L-shaped (two cuts)</option><option value="stairs">Stairs (follows the parts)</option></select></div>
+      <p id="offcutHint" class="sr-only">Adds separation cuts around the nested area.</p>
+      <div class="offcut-choice"><label for="offcut" class="sr-only">Offcut shape</label><select id="offcut" title="How the leftover comes off the last sheet. The trim cut goes in the cut PDF and the DXF as a normal cut line; shown dashed green on the layout."><option value="rect">One straight cut (rectangle)</option><option value="L" selected>L-shaped (two cuts)</option><option value="stairs">Stairs (follows the parts)</option></select></div>
     </div>
     <div style="display:flex;gap:8px"><button id="nestBtn" style="flex:1;padding:12px;font-size:15px">Nest</button><button id="stopBtn" class="ghost" style="display:none;padding:12px 18px;font-size:15px">Stop</button></div>
     <div id="nestStatus" class="msg warn" style="display:none;margin:10px 0 0" aria-live="polite"></div>
@@ -356,6 +387,7 @@ const SHAPES=[['rect','Rectangle'],['circle','Circle'],['ellipse','Ellipse'],['t
 const RULE_KEYS=['edge','gap','clamp','bleed','corner_radius','bit_diameter','min_offcut'];
 const TIMES=[[5,'5 s, fast'],[15,'15 s, normal'],[45,'45 s, better'],[120,'120 s, best']];
 let PINS=[],UNDO=[],FORM_OF_CURRENT=null,LANG='en';
+let CUSTOM_TEMPLATES={}, MATERIALS={}, MACHINES={}, CUTTERS={};
 function copyText(t){return navigator.clipboard.writeText(t).catch(()=>{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();if(!ok)throw new Error('copy blocked');});}
 function timeLabel(){$('#timeLabel').textContent=TIMES[+$('#time').value][1];}
 function stockRows(){return [...document.querySelectorAll('#stockList .stock')].map(d=>({w:d.querySelector('.sw').value,h:d.querySelector('.sh').value,qty:d.querySelector('.sq').value})).filter(s=>s.w||s.h);}
@@ -370,14 +402,43 @@ function applySettings(o){if(!o)return;
   const enabled=typeof o.offcut_enabled==='boolean'?o.offcut_enabled:
     o.offcut!=null?o.offcut!=='none':o.trim_offcut!=null?!!Number(o.trim_offcut):true;
   o=Object.assign({},o,{offcut:['rect','L','stairs'].includes(o.offcut)?o.offcut:'L',offcut_enabled:enabled});MEM_KEYS.forEach(k=>{const el=$('#'+k);if(!el||!(k in o))return;if(el.type==='checkbox')el.checked=!!o[k];else el.value=o[k];});$('#stockList').innerHTML='';(o.stock||[]).forEach(stockAdd);syncOffcut();timeLabel();modeChanged();}
-function memKey(){return 'psnest.settings.'+$('#product').value;}
+function memKey(){return 'psnest.settings.'+($('#product').value==='custom'?'custom.'+$('#custom_name').value.trim()+'.'+$('#custom_cutter').value:$('#product').value);}
 function saveSettings(){if(!$('#remember').checked||!$('#product').value)return;try{localStorage.setItem(memKey(),JSON.stringify(settingsSnapshot()));}catch(e){}}
 function loadSettings(){try{const s=localStorage.getItem(memKey());if(s){applySettings(JSON.parse(s));return true;}}catch(e){}return false;}
-function formSnapshot(){return {job:$('#job').value,product:$('#product').value,sheet:$('#sheet').value,sw:$('#sw').value,sh:$('#sh').value,settings:settingsSnapshot(),parts:rows(),pins:PINS.slice()};}
-function applyForm(f){$('#job').value=f.job||'';if(f.product&&PRODUCTS[f.product]){$('#product').value=f.product;fillProduct();}
+const CUSTOM_FIELDS=['name','family','cutter','roll','cutter_name','tool_kind','printer'];
+function customSpec(){const o={};CUSTOM_FIELDS.forEach(k=>o[k]=$('#custom_'+k).value);o.roll=o.roll==='roll';return o;}
+function restoreCustom(o){if(!o)return;CUSTOM_FIELDS.forEach(k=>{if(k in o)$('#custom_'+k).value=k==='roll'?(o[k]?'roll':'sheet'):o[k];});refreshCustom(o);}
+function refreshCustom(saved){
+  const o=saved||customSpec(), family=MATERIALS[o.family];
+  if(family){o.roll=!!family.roll;$('#custom_roll').value=o.roll?'roll':'sheet';}
+  $('#custom_roll').disabled=!!family;
+  const allowed=Object.keys(CUTTERS).filter(k=>(!family||family.cutters.includes(k))&&(!o.roll||k==='ameida'));
+  $('#custom_cutter').innerHTML='';[...allowed,'custom'].forEach(k=>$('#custom_cutter').add(new Option(k==='custom'?'Custom cutting process…':CUTTERS[k].label,k)));
+  o.cutter=[...allowed,'custom'].includes(o.cutter)?o.cutter:'custom';$('#custom_cutter').value=o.cutter;
+  $('#customTool').hidden=o.cutter!=='custom';
+  const printers=Object.entries(MACHINES).filter(([k,v])=>v.feed===(o.roll?'roll':'flatbed')&&(!family||(family.printers||[]).includes(k)));
+  $('#custom_printer').innerHTML='';$('#custom_printer').add(new Option('Cut only — no printing',''));
+  printers.forEach(([k,v])=>$('#custom_printer').add(new Option(v.name,k)));$('#custom_printer').value=printers.some(([k])=>k===o.printer)?o.printer:'';o.printer=$('#custom_printer').value;
+  const p=JSON.parse(JSON.stringify(CUSTOM_TEMPLATES[o.cutter]));
+  if(o.cutter==='custom'){const c=CUTTERS[{bit:'biesse',kerf:'co2',knife:'ameida'}[o.tool_kind]];p.tool=c.tool;p.output=c.output;p.defaults={...c.defaults,bleed:0,min_offcut:300};p.cutter_name=o.cutter_name.trim()||'Custom cutter';}
+  p.material=o.family;p.material_name=o.name.trim()||'Custom material';p.name=p.material_name+' → '+p.cutter_name;p.roll=o.roll;
+  p.printer=o.printer||null;p.printer_name=o.printer?MACHINES[o.printer].name:null;p.printers=o.printer?printers.map(([id,v])=>({id,name:v.name})):[];p.defaults.bleed=o.printer?3:0;
+  PRODUCTS.custom=p;
+}
+function customChanged(e){
+  const size={w:$('#sw').value,h:$('#sh').value},settings=settingsSnapshot();refreshCustom();
+  fillProduct.noMem=true;fillProduct();fillProduct.noMem=false;
+  $('#sw').value=size.w;$('#sh').value=size.h;
+  if(['custom_name','custom_cutter_name','custom_thickness'].includes(e.target.id))applySettings(settings);else applySettings({offcut:settings.offcut,offcut_enabled:settings.offcut_enabled});
+  $('#thickness').value=$('#custom_thickness').value;
+  try{localStorage.setItem('psnest.customMaterial',JSON.stringify(customSpec()));}catch(e){}
+  if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn','Material changed. Press Nest to update the cut files.');}
+}
+function formSnapshot(){return {job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,sheet:$('#sheet').value,sw:$('#sw').value,sh:$('#sh').value,settings:settingsSnapshot(),parts:rows(),pins:PINS.slice()};}
+function applyForm(f){if(f.custom_material)restoreCustom(f.custom_material);$('#job').value=f.job||'';if(f.product&&PRODUCTS[f.product]){$('#product').value=f.product;fillProduct();}
   if(f.sheet!==undefined){$('#sheet').value=f.sheet;sheetChanged();if(f.sheet==='custom'){$('#sw').value=f.sw;$('#sh').value=f.sh;}}
-  applySettings(f.settings);$('#parts tbody').innerHTML='';(f.parts||[]).forEach(p=>addRow(Object.assign({},p,{rotate:p.rotate!==false})));if(!(f.parts||[]).length)addRow();refreshArtSelects();PINS=(f.pins||[]).slice();}
-function applyRequest(q){const f={job:q.job,product:q.product,sheet:'custom',sw:q.sheet&&q.sheet.w,sh:q.sheet&&q.sheet.h,parts:q.parts,pins:q.pins||[],
+  applySettings(f.settings);$('#custom_thickness').value=$('#thickness').value;$('#parts tbody').innerHTML='';(f.parts||[]).forEach(p=>addRow(Object.assign({},p,{rotate:p.rotate!==false})));if(!(f.parts||[]).length)addRow();refreshArtSelects();PINS=(f.pins||[]).slice();}
+function applyRequest(q){const f={job:q.job,product:q.product,custom_material:q.custom_material,sheet:'custom',sw:q.sheet&&q.sheet.w,sh:q.sheet&&q.sheet.h,parts:q.parts,pins:q.pins||[],
   settings:Object.assign({},q.rules||{},{printer:q.printer,thickness:q.thickness,cut_line:q.cut_line,mode:q.mode,rot_step:q.rot_step,mirror:q.mirror,offcut:q.offcut,policy:q.policy,print_outlines:q.print_outlines,corner_marks:q.corner_marks,sheet_frame:q.sheet_frame!==false,
     edge_l:(q.edge_sides||{}).l,edge_r:(q.edge_sides||{}).r,edge_b:(q.edge_sides||{}).b,edge_t:(q.edge_sides||{}).t,stock:q.stock||[],time:String(Math.max(0,TIMES.findIndex(t=>t[0]>=+(q.time||45))))})};
   applyForm(f);const p=PRODUCTS[q.product];if(p&&q.sheet){const i=p.sheets.findIndex(s=>+s.w===+q.sheet.w&&+s.h===+q.sheet.h);if(i>=0){$('#sheet').value=i;sheetChanged();}}}
@@ -407,16 +468,16 @@ function clearMsgs(){$('#messages').innerHTML='';}
 
 function noProduct(){$('#sheet').innerHTML='<option value="">\u2014</option>';$('#customSheet').style.display='none';$('#printer').innerHTML='';$('#printerBox').style.visibility='hidden';$('#toolLabel').textContent='';
   $('#procInfo').innerHTML='Machine and spacing defaults follow your material.';$('#sources').innerHTML='';}
-function fillProduct(){const p=PRODUCTS[$('#product').value];$('#product').style.outline='';$('#productMsg').textContent='';if(!p){noProduct();return;}const s=$('#sheet');s.innerHTML='';p.sheets.forEach((sh,i)=>{const o=document.createElement('option');o.value=i;o.textContent=sh.label;s.appendChild(o);});const o=document.createElement('option');o.value='custom';o.textContent='Custom size…';s.appendChild(o);
+function fillProduct(){const custom=$('#product').value==='custom';$('#customMaterial').hidden=!custom;if(custom)refreshCustom();const p=PRODUCTS[$('#product').value];$('#product').style.outline='';$('#productMsg').textContent='';if(!p){noProduct();return;}const s=$('#sheet');s.innerHTML='';(custom?[]:p.sheets).forEach((sh,i)=>{const o=document.createElement('option');o.value=i;o.textContent=sh.label;s.appendChild(o);});const o=document.createElement('option');o.value='custom';o.textContent='Custom size…';s.appendChild(o);
   $('#offcut_enabled').checked=true;$('#offcut').value='L';syncOffcut();
   RULE_KEYS.forEach(k=>{$('#'+k).value=p.defaults[k];});
   $('#toolLabel').textContent=p.tool.label;$('#bit_diameter').disabled=p.tool.kind==='knife';$('#corner_radius').disabled=p.tool.kind!=='bit';
   $('#mirror').checked=!!p.mirror;$('#sheetLabel').textContent=p.roll?'Roll width':'Sheet';
-  $('#swBox').style.display=p.roll?'none':'';$('#shLabel').textContent=p.roll?'Roll width (mm, across the roll)':'Sheet width (mm)';
-  const pr=$('#printer');pr.innerHTML='';p.printers.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;pr.appendChild(o);});$('#printerBox').style.visibility=p.printers.length?'visible':'hidden';
+  $('#swBox').style.display=p.roll&&!custom?'none':'';$('#swLabel').textContent=p.roll?'Pass length (mm)':'Sheet length (mm)';$('#shLabel').textContent=p.roll?'Roll width (mm, across the roll)':'Sheet width (mm)';
+  const pr=$('#printer');pr.innerHTML='';p.printers.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;pr.appendChild(o);});pr.value=p.printer||'';$('#printerBox').style.visibility=p.printers.length?'visible':'hidden';
   procInfo();
   $('#sources').innerHTML=Object.entries(p.sources).map(([k,v])=>'<b>'+k+'</b>: '+esc(v)).join('<br>')+'<br><b>notes</b>: '+esc(p.notes);
-  sheetChanged();if(!fillProduct.noMem&&loadSettings())$('#productMsg').innerHTML='<span style="color:var(--muted)">Settings restored from the last '+esc(p.material_name)+' job on this computer. <a href="#" id="forgetBtn">Use the shop defaults</a></span>';
+  sheetChanged();if(!custom&&!fillProduct.noMem&&loadSettings())$('#productMsg').innerHTML='<span style="color:var(--muted)">Settings restored from the last '+esc(p.material_name)+' job on this computer. <a href="#" id="forgetBtn">Use the shop defaults</a></span>';
   const fb=$('#forgetBtn');if(fb)fb.onclick=e=>{e.preventDefault();try{localStorage.removeItem(memKey());}catch(x){}fillProduct.noMem=true;fillProduct();fillProduct.noMem=false;$('#productMsg').textContent='';};}
 function printerName(){const p=PRODUCTS[$('#product').value];if(!p)return '';const m=p.printers.find(x=>x.id===$('#printer').value);return m?m.name:p.printer_name;}
 function procInfo(){const p=PRODUCTS[$('#product').value];if(!p){noProduct();return;}
@@ -426,7 +487,7 @@ function sheetChanged(){const p=PRODUCTS[$('#product').value];if(!p)return;const
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 
 function addRow(p){p=p||{};const tb=$('#parts tbody');const tr=document.createElement('tr');
-  tr.innerHTML=`<td><textarea class="name" rows="1" title="${esc(p.name||'')}" placeholder="Part" onkeydown="if(event.key==='Enter')event.preventDefault()" oninput="this.value=this.value.replace(/[\r\n]+/g,' ');this.title=this.value">${esc(p.name||'')}</textarea></td>
+  tr.innerHTML=`<td><textarea class="name" rows="1" title="${esc(p.name||'')}" placeholder="Part" onkeydown="if(event.key==='Enter')event.preventDefault()" oninput="this.value=this.value.replace(/[\\r\\n]+/g,' ');this.title=this.value">${esc(p.name||'')}</textarea></td>
   <td class="colshape"><select class="shape">${SHAPES.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><div class="sp"></div></td>
   <td><input type="number" class="w" step="0.5" value="${p.w||''}"></td><td><input type="number" class="h" step="0.5" value="${p.h||''}"></td>
   <td style="white-space:nowrap"><input type="number" class="qty" min="1" step="1" value="${p.qty??1}" style="width:48px"><span class="qbtns"><button class="ghost q10" title="+10" tabindex="-1" type="button">+10</button><button class="ghost q100" title="+100" tabindex="-1" type="button">+100</button></span></td><td class="c"><input type="checkbox" class="rot" ${p.rotate===false?'':'checked'}></td>
@@ -479,7 +540,7 @@ function refreshArtSelects(){document.querySelectorAll('#parts .art').forEach(s=
   $('#artlist').querySelectorAll('button[data-k]').forEach(b=>b.onclick=async()=>{await api('/api/artwork/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:b.dataset.k})});ARTS=ARTS.filter(a=>a.key!==b.dataset.k);refreshArtSelects();});}
 
 async function uploadFiles(files){for(const f of files){if(!/pdf$/i.test(f.name)){msg('warn',f.name+': only PDF artwork is accepted.');continue;}const b64=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.readAsDataURL(f);});
-  try{const j=await api('/api/artwork',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,data:b64,sheet:{w:$('#sw').value,h:$('#sh').value},product:$('#product').value||null})});(j.warnings||[]).forEach(w=>msg('warn',w));const i=ARTS.findIndex(a=>a.key===j.key);if(i>=0)ARTS[i]=j;else ARTS.push(j);NEWARTS.add(j.key);const c=j.cut||{};if(j.pages>1)msg('warn',`${f.name} has ${j.pages} pages: only page 1 is used. Save each item as its own PDF.`);
+  try{const j=await api('/api/artwork',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,data:b64,sheet:{w:$('#sw').value,h:$('#sh').value},product:$('#product').value||null,custom_material:$('#product').value==='custom'?customSpec():null})});(j.warnings||[]).forEach(w=>msg('warn',w));const i=ARTS.findIndex(a=>a.key===j.key);if(i>=0)ARTS[i]=j;else ARTS.push(j);NEWARTS.add(j.key);const c=j.cut||{};if(j.pages>1)msg('warn',`${f.name} has ${j.pages} pages: only page 1 is used. Save each item as its own PDF.`);
     if(c.error)msg('err',f.name+': '+c.error+(c.fix?' '+c.fix:''));
     else if(c.found){addArtPart(j);msg('ok',`${f.name}: CutContour line found, ${c.w} x ${c.h} mm${c.holes?' with '+c.holes+' hole'+(c.holes>1?'s':''):''}. A part row was added${j.qty_hint?' with quantity '+j.qty_hint+' read from the file name: check it':': set the quantity'}.`);}
     else{addArtPart(j);msg('warn',`${f.name}: artwork added at its PDF page size, ${j.w_mm} x ${j.h_mm} mm. No recognised CutContour path was found. These dimensions do not identify the cut shape. Check the quantity. ${c.fix||'For shaped cutting, supply a closed vector path using the CutContour spot colour.'}`);}}
@@ -526,11 +587,11 @@ async function doNest(){clearMsgs();if(!$('#product').value){const t='Choose the
   const timer=setInterval(tick,500);
   const rules={};RULE_KEYS.forEach(k=>rules[k]=$('#'+k).value);rules.trim_offcut=selectedOffcut()==='none'?0:1;
   if($('#policy').value==='free'&&$('#mode').value!=='complex'){$('#mode').value='complex';modeChanged();}
-  const body={job:$('#job').value,product:$('#product').value,printer:$('#printer').value||null,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,sheet_frame:$('#sheet_frame').checked,thickness:$('#thickness').value,mirror:$('#mirror').checked,cut_line:$('#cut_line').value,
+  const body={job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,printer:$('#printer').value||null,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,sheet_frame:$('#sheet_frame').checked,thickness:$('#thickness').value,mirror:$('#mirror').checked,cut_line:$('#cut_line').value,
     mode:$('#mode').value,rot_step:$('#rot_step').value,offcut:selectedOffcut(),policy:$('#policy').value,time:TIMES[+$('#time').value][0],
     edge_sides:{l:$('#edge_l').value,r:$('#edge_r').value,b:$('#edge_b').value,t:$('#edge_t').value},stock:stockRows(),pins:PINS,run_id};
   const sent=formSnapshot();const before=CURRENT?{form:FORM_OF_CURRENT||sent,result:CURRENT}:null;
-  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(before){UNDO.push(before);if(UNDO.length>10)UNDO.shift();}CURRENT=r;FORM_OF_CURRENT=sent;saveSettings();rememberQty();render(r);loadProjects();}
+  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(before){UNDO.push(before);if(UNDO.length>10)UNDO.shift();}CURRENT=r;FORM_OF_CURRENT=sent;if(body.custom_material){try{localStorage.setItem('psnest.customMaterial',JSON.stringify(body.custom_material));}catch(e){}}saveSettings();rememberQty();render(r);loadProjects();}
   catch(e){msg('err',e.message);CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',e.message.startsWith('Stopped')?'The previous result was cleared. Nest again when you are ready.':'The previous result was cleared so a stale file cannot be downloaded. Fix the error and nest again.');}
   finally{clearInterval(timer);RUN=null;stop.style.display='none';st.style.display='none';btn.disabled=false;btn.textContent='Nest';}}
 
@@ -563,7 +624,7 @@ function render(r){$('#empty').style.display='none';$('#results').style.display=
   const roll=r.process&&r.process.roll;$('#stats').innerHTML=[[roll?'Cut passes':'Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],[roll?'Unprinted end of last pass':'Last-sheet offcut',last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`]].concat(r.process&&r.process.roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m']]:[]).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
   const dl=[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print-files','Print files (1 per sheet, zip)'],['cut-files','Cut files (1 per sheet, zip)'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
   const dlv=dl.filter(([k])=>!(k==='print-files'&&r.print_blocked)&&!(k==='cut-files'&&r.cut_blocked));
-  const short={'dxf':'Router DXF','dxf-labels':'DXF with part labels','print-files':'Print files','cut-files':'Cut files','layout':'Layout sheet (A4)','report':'Report (JSON)','all':'Download all files (zip)'};
+  const short={'dxf':'Cutting DXF','dxf-labels':'DXF with part labels','print-files':'Print files','cut-files':'Cut files','layout':'Layout sheet (A4)','report':'Report (JSON)','all':'Download all files (zip)'};
   const minor=new Set(['dxf-labels','report']);
   $('#downloads').innerHTML=dlv.filter(([k])=>k==='all').map(([k,l])=>`<button class="main" data-k="${k}" data-l="${l}">${short[k]}</button>`).join('')
     +dlv.filter(([k])=>k!=='all'&&!minor.has(k)).map(([k,l])=>`<button class="ghost small" data-k="${k}" data-l="${l}">${short[k]}</button>`).join('')
@@ -586,7 +647,7 @@ function wireDrag(r){document.querySelectorAll('#sheets .sheet').forEach((box,si
       clearMsgs();msg('ok',`${pl.part} locked at ${moved?nx:pl.x} x ${moved?ny:pl.y} mm on sheet ${si+1}. Press Nest to lay the other parts around it. Overlaps are refused and the lock dropped, with a note.`);};
     p.addEventListener('pointerup',end);p.addEventListener('pointercancel',end);});});}
 
-const PT={'Material':'Material','Sheet length (mm)':'Comprimento da chapa (mm)','Sheet width (mm)':'Largura da chapa (mm)','Download all files (zip)':'Baixar todos os arquivos (zip)','Router DXF':'DXF da router','Layout sheet (A4)':'Folha de layout (A4)','Or type the PL number and pull the artwork from the NAS':'Ou digite o número PL e puxe a arte final do NAS','Print PDF':'PDF de impressão','Pick the material: the printer, the cutter, the sheet sizes and the spacing rules follow from it.':'Escolha o material: a impressora, a cortadora, os tamanhos de chapa e as regras de espaçamento vêm dele.','One PDF per part, at final size, with the pink CutContour cut line. Each file becomes a part below.':'Um PDF por peça, no tamanho final, com a linha de corte CutContour rosa. Cada arquivo vira uma peça abaixo.','Unlock all parts':'Destravar todas as peças','Job':'Trabalho','When':'Quando','Sheets':'Chapas','Thickness (mm, optional)':'Espessura (mm, opcional)','Parts':'Peças','Nest':'Encaixar','Result':'Resultado','Settings':'Configurações','Projects':'Projetos','What is it printed on / cut from?':'Impresso em / cortado de?','Sheet':'Chapa','Roll width':'Largura do rolo',
+const PT={'Material':'Material','Sheet length (mm)':'Comprimento da chapa (mm)','Sheet width (mm)':'Largura da chapa (mm)','Download all files (zip)':'Baixar todos os arquivos (zip)','Cutting DXF':'DXF da router','Layout sheet (A4)':'Folha de layout (A4)','Or type the PL number and pull the artwork from the NAS':'Ou digite o número PL e puxe a arte final do NAS','Print PDF':'PDF de impressão','Pick the material: the printer, the cutter, the sheet sizes and the spacing rules follow from it.':'Escolha o material: a impressora, a cortadora, os tamanhos de chapa e as regras de espaçamento vêm dele.','One PDF per part, at final size, with the pink CutContour cut line. Each file becomes a part below.':'Um PDF por peça, no tamanho final, com a linha de corte CutContour rosa. Cada arquivo vira uma peça abaixo.','Unlock all parts':'Destravar todas as peças','Job':'Trabalho','When':'Quando','Sheets':'Chapas','Thickness (mm, optional)':'Espessura (mm, opcional)','Parts':'Peças','Nest':'Encaixar','Result':'Resultado','Settings':'Configurações','Projects':'Projetos','What is it printed on / cut from?':'Impresso em / cortado de?','Sheet':'Chapa','Roll width':'Largura do rolo',
  'Job name (goes into every file name)':'Nome do trabalho (entra em todos os nomes de arquivo)','Drop the artwork PDFs here':'Solte os PDFs da arte aqui','+ Add a part by size':'+ Adicionar peça por medida','Clear':'Limpar','Parts list from a spreadsheet':'Lista de peças de uma planilha',
  'Cut off reusable material':'Separar material reutilizável','Adds separation cuts around the nested area.':'Adiciona cortes para separar a área encaixada.','L-shaped (two cuts)':'Em L (dois cortes)','One straight cut (rectangle)':'Um corte reto (retângulo)','Stairs (follows the parts)':'Em degraus (segue as peças)',
  'Same as last job':'Igual ao último trabalho','Part':'Peça','Shape':'Forma','Qty':'Qtd','Turn':'Girar','Artwork':'Arte','Stop':'Parar','Offcut shape':'Forma da sobra','Turning':'Giro','Nesting time':'Tempo de encaixe','Edge margin (mm)':'Margem da borda (mm)','Gap between parts (mm)':'Espaço entre peças (mm)',
@@ -629,12 +690,22 @@ async function submitNasSettings(action){if(NAS_BUSY)return;if(action!=='clear'&
 function initNasSettings(){ $('#nasConfigure').onclick=openNasSetup;$('#nasForm').onsubmit=e=>{e.preventDefault();submitNasSettings('save');};$('#nasTest').onclick=()=>submitNasSettings('test');$('#nasForget').onclick=()=>submitNasSettings('clear');$('#nasCancel').onclick=()=>{if(!NAS_BUSY)$('#nasDialog').close();};$('#nasDialog').addEventListener('cancel',e=>{if(NAS_BUSY)e.preventDefault();});$('#nasDialog').addEventListener('close',()=>{$('#nasPassword').value='';nasSetupMessage('','');});refreshNasSettings();}
 Object.assign(PT,{'NAS connection':'Conexão com o NAS','Connect to NAS':'Conectar ao NAS','NAS address':'Endereço do NAS','NAS username':'Usuário do NAS','NAS password':'Senha do NAS','NAS job folder':'Pasta de trabalhos no NAS','Job folder':'Pasta de trabalhos','Test and connect':'Testar e conectar','Test only':'Somente testar','Cancel':'Cancelar','Disconnect and forget saved access':'Desconectar e remover acesso salvo','This HTTP address is on our Tailscale network':'Este endereço HTTP está na nossa rede Tailscale','Remember my password in macOS Keychain':'Lembrar minha senha no Chaves do macOS','Use the NAS address and your authorised account. This connection reads finished-art PDFs; it does not change files or permissions on the NAS.':'Use o endereço do NAS e sua conta autorizada. A conexão lê PDFs de arte final; não altera arquivos ou permissões no NAS.','HTTPS is preferred. An HTTP Tailscale address requires Tailscale to be connected and the NAS to appear as a peer. Other HTTP addresses are refused.':'Prefira HTTPS. Um endereço HTTP do Tailscale exige o Tailscale conectado e o NAS reconhecido na rede. Outros endereços HTTP são recusados.',"The app searches this folder for the PL number, then reads PDFs inside the job's FA folders.":'O aplicativo procura o número PL nesta pasta e lê PDFs nas pastas FA do trabalho.'});
 
-(async function init(){const j=await api('/api/products');PRODUCTS=j.products;EXAMPLES=j.examples;$('#appVersion').textContent=j.release?'v'+j.release.version+' · '+j.release.name:'Version unavailable — reopen the app';
+Object.assign(PT,{'Custom material…':'Material personalizado…','Material name':'Nome do material','Material family':'Família do material','Other / unlisted':'Outro / não listado','Cutting process':'Processo de corte','Stock type':'Tipo de material','Cutter name':'Nome da máquina de corte','Cutting tool':'Ferramenta de corte','Printing':'Impressão','Custom cutting process…':'Processo de corte personalizado…','Cut only — no printing':'Somente corte — sem impressão','Laser / other kerf':'Laser / outra largura de corte','Router bit':'Fresa','Knife':'Faca','Set your sheet size below. Adjust gap, tool width and margins in Settings.':'Defina o tamanho da chapa abaixo. Ajuste espaçamento, largura da ferramenta e margens em Configurações.'});
+
+(async function init(){const j=await api('/api/products');PRODUCTS=j.products;EXAMPLES=j.examples;CUSTOM_TEMPLATES=j.custom_templates;MATERIALS=j.materials;MACHINES=j.machines;CUTTERS=j.cutters;$('#appVersion').textContent=j.release?'v'+j.release.version+' · '+j.release.name:'Version unavailable — reopen the app';
   try{ARTS=(await api('/api/artworks')).artworks;}catch(e){ARTS=[];}
   const ps=$('#product');const ph=document.createElement('option');ph.value='';ph.textContent='Choose\u2026';ph.disabled=true;ph.selected=true;ps.appendChild(ph);const groups={};Object.entries(PRODUCTS).forEach(([k,v])=>{const g=groups[v.material]||(groups[v.material]=Object.assign(document.createElement('optgroup'),{label:v.material_name}));
     const o=document.createElement('option');o.value=k;o.textContent=v.name;g.appendChild(o);if(!g.parentNode)ps.appendChild(g);});
+  ps.insertBefore(new Option('Custom material…','custom'),ps.children[1]||null);
+  Object.entries(MATERIALS).forEach(([k,v])=>$('#custom_family').add(new Option(v.name,k)));
+  $('#custom_cutter').add(new Option('Custom cutting process…','custom'));refreshCustom();
+  try{restoreCustom(JSON.parse(localStorage.getItem('psnest.customMaterial')||'null'));}catch(e){}
+  [...CUSTOM_FIELDS,'thickness'].forEach(k=>$('#custom_'+k).onchange=customChanged);
+  ['name','cutter_name'].forEach(k=>$('#custom_'+k).oninput=()=>{refreshCustom();procInfo();if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';}});
+  $('#custom_thickness').oninput=()=>$('#thickness').value=$('#custom_thickness').value;
+  $('#thickness').oninput=()=>$('#custom_thickness').value=$('#thickness').value;
   const es=$('#example');EXAMPLES.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=e.label;es.appendChild(o);});
-  ps.onchange=fillProduct;$('#printer').onchange=procInfo;$('#sheet').onchange=sheetChanged;es.onchange=()=>{loadExample(es.value);es.value='';};
+  ps.onchange=fillProduct;$('#printer').onchange=()=>{if($('#product').value==='custom'){$('#custom_printer').value=$('#printer').value;refreshCustom();}procInfo();};$('#sheet').onchange=sheetChanged;es.onchange=()=>{loadExample(es.value);es.value='';};
   fillProduct();addRow();
   $('#addRow').onclick=()=>addRow();$('#clearRows').onclick=()=>{$('#parts tbody').innerHTML='';addRow();};
   $('#nestBtn').onclick=doNest;$('#offcut_enabled').onchange=offcutChanged;$('#offcut').onchange=offcutChanged;syncOffcut();
