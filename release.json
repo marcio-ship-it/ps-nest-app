@@ -1,7 +1,7 @@
 {
-  "version": "1.3.0",
-  "name": "Custom materials",
-  "date": "2026-09-24",
-  "build": "20260924-230236",
-  "source_commit": "3e11edad627125cafafcbd79d36fc28049f238e9"
+  "version": "1.4.0",
+  "name": "Custom separation cuts",
+  "date": "2026-09-25",
+  "build": "20260925-105435",
+  "source_commit": "aa1b8539220ccac2254d367e12fc15af58ba1cf3"
 }

@@ -4,16 +4,16 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>PS Nest</title>
         <item>
-            <title>1.3.0</title>
-            <pubDate>Thu, 24 Sep 2026 23:02:32 +1000</pubDate>
-            <sparkle:version>20260924.2302</sparkle:version>
-            <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
+            <title>1.4.0</title>
+            <pubDate>Fri, 25 Sep 2026 10:54:22 +1000</pubDate>
+            <sparkle:version>20260925.1053</sparkle:version>
+            <sparkle:shortVersionString>1.4.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<!doctype html><html><head><meta charset="utf-8"><title>PS Nest 1.3.0</title></head><body><h1>PS Nest 1.3.0 — Custom materials</h1><ul><li>Choose Custom material at the top of the material list. Enter its name, family, stock size and thickness.</li><li>Use a shop cutter or name a custom cutting process with a router bit, kerf or knife.</li><li>Custom settings are kept with your saved job.</li><li>The offcut switch now fits in a compact row, still on by default.</li></ul><p>Custom machine compatibility needs operator confirmation. Known material-family limits remain in place.</p></body></html>]]></description>
-            <enclosure url="https://github.com/marcio-ship-it/ps-nest-app/releases/download/v1.3.0/PS-Nest-Mac-1.3.0-update.zip" length="40258891" type="application/octet-stream" sparkle:edSignature="j4UpSCxe1bGsrwSw/WTePnx1eLOcKvACR0sl+lG286oTroR3absnLAnUUsOtM4V3JKAnChQWY75ioD22aG7rAQ=="></enclosure>
+            <description><![CDATA[<!doctype html><html><head><meta charset="utf-8"><title>PS Nest 1.4.0</title></head><body><h1>PS Nest 1.4.0 — Custom separation cuts</h1><p>Nest your parts, then choose <b>Edit separation cuts</b> above the sheet preview.</p><ul><li>Draw a cut between sheet edges. Click extra corners for stepped paths.</li><li>Drag a line or its white handles. Undo, delete or reset to automatic.</li><li>Unsafe cuts turn red and cannot be saved. Valid cuts are green.</li><li>Save cuts to update the DXF, applicable cutting PDF and layout files.</li><li>Saved jobs retain the paths. Nesting again rechecks their clearance.</li></ul><p>Custom cuts are for sheets. Their reusable offcut area is not yet measured. Existing automatic modes remain available.</p></body></html>]]></description>
+            <enclosure url="https://github.com/marcio-ship-it/ps-nest-app/releases/download/v1.4.0/PS-Nest-Mac-1.4.0-update.zip" length="40579250" type="application/octet-stream" sparkle:edSignature="1NdLLdH/YKLr8x7pP2ANAm3DcNIbNihvHItUUgKch2nV9qW2CxUK7Cx/MsqGT6jv3llcFMHzjHcdYs99jfqZBA=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: PwDrkgDLXVbYaG/sUcA2Sl72WKxavDY+qlKebHiNFa8Uintj8AQojqs2cxnHxj1hxFiJMxvJT0PObN5hF+6GBQ==
-length: 1725
+edSignature: yUC9DaQAONZKtKHesZbJ54YqkYbEmeRdo5foRtDMVYNVDafXAXwQODlP1d7w03ofnAdpdYIO4zaFbA5swMhIAw==
+length: 1883
 -->

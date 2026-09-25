@@ -159,18 +159,21 @@ details.adv .row3{grid-template-columns:repeat(2,minmax(0,1fr))}details.adv .row
 .compact-offcut .offcut-toggle input:checked::after{transform:translateX(16px)}
 .compact-offcut strong{font-size:10px;padding:2px 5px}
 #customMaterial{border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+
+#cutDialog{width:min(1100px,94vw);max-width:94vw;border:1px solid #d0d5dd;border-radius:14px;padding:0;max-height:95vh}
+#cutDialog::backdrop{background:#10182888}.cut-editor{padding:20px}.cut-editor h2{margin:0 0 8px}.cut-tools,.cut-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}.cut-tools button{font-size:13px}.cut-tools label{display:flex;align-items:center;gap:5px;margin:0}.cut-tools input{width:90px}.cut-actions{justify-content:flex-end}#cutCanvas{background:#f5f6f8;border:1px solid #ddd;border-radius:8px;padding:8px}#cutCanvas svg{display:block;width:100%;height:40vh;touch-action:none;user-select:none}#cutCanvas svg text{pointer-events:none}#cutStatus{margin:10px 0;font-size:14px}.edit-cuts{margin:10px 0}
 </style>
 </head>
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20260924-230236 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20260925-105435 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
 window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
 const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
-function startWorker(){worker=new Worker('worker.js?v=20260924-230236',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+function startWorker(){worker=new Worker('worker.js?v=20260925-105435',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
 worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
   if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
@@ -271,7 +274,7 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
       <p id="offcutHint" class="sr-only">Adds separation cuts around the nested area.</p>
       <div class="offcut-choice"><label for="offcut" class="sr-only">Offcut shape</label><select id="offcut" title="How the leftover comes off the last sheet. The trim cut goes in the cut PDF and the DXF as a normal cut line; shown dashed green on the layout."><option value="rect">One straight cut (rectangle)</option><option value="L" selected>L-shaped (two cuts)</option><option value="stairs">Stairs (follows the parts)</option></select></div>
     </div>
-    <div style="display:flex;gap:8px"><button id="nestBtn" style="flex:1;padding:12px;font-size:15px">Nest</button><button id="stopBtn" class="ghost" style="display:none;padding:12px 18px;font-size:15px">Stop</button></div>
+    <button class="ghost small" id="resetCustomCuts" style="display:none;margin-bottom:8px">Reset all custom cuts to automatic</button><div style="display:flex;gap:8px"><button id="nestBtn" style="flex:1;padding:12px;font-size:15px">Nest</button><button id="stopBtn" class="ghost" style="display:none;padding:12px 18px;font-size:15px">Stop</button></div>
     <div id="nestStatus" class="msg warn" style="display:none;margin:10px 0 0" aria-live="polite"></div>
 
   </div>
@@ -356,6 +359,14 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
   </div>
 </section>
 </main>
+<dialog id="cutDialog" aria-labelledby="cutTitle">
+  <div class="cut-editor"><h2 id="cutTitle">Edit separation cuts</h2>
+  <p id="cutGuide" class="hint"></p>
+  <div class="cut-tools"><button id="cutDraw">+ Draw cut</button><button id="cutFinish" class="ghost">Finish cut</button><button id="cutUndo" class="ghost">Undo</button><button id="cutDelete" class="ghost">Delete selected</button><button id="cutReset" class="ghost">Reset to automatic</button><span id="cutMode" class="pill"></span></div>
+  <div id="cutCanvas"></div><div id="cutStatus" class="msg" role="status"></div>
+  <details><summary>Enter an exact point (mm from bottom-left)</summary><div class="cut-tools"><label for="cutX">X <input id="cutX" type="number" step="0.1" value="0"></label><label for="cutY">Y <input id="cutY" type="number" step="0.1" value="0"></label><button id="cutPointAdd" class="ghost">Add point</button></div></details>
+  <div class="cut-actions"><button id="cutCancel" class="ghost">Cancel</button><button id="cutSave">Save cuts &amp; update files</button></div></div>
+</dialog>
 <dialog id="nasDialog" aria-labelledby="nasTitle"><form id="nasForm" class="dlg" autocomplete="off">
   <h2 id="nasTitle">Connect to NAS</h2>
   <p class="hint">Use the NAS address and your authorised account. This connection reads finished-art PDFs; it does not change files or permissions on the NAS.</p>
@@ -394,8 +405,8 @@ function stockRows(){return [...document.querySelectorAll('#stockList .stock')].
 function stockAdd(s){s=s||{};const d=document.createElement('div');d.className='stock';d.innerHTML=`<input type="number" class="sw" placeholder="length" step="1" value="${s.w||''}"><input type="number" class="sh" placeholder="width" step="1" value="${s.h||''}"><input type="number" class="sq" min="1" step="1" value="${s.qty||1}"><button class="ghost small" type="button" title="Remove">×</button>`;d.querySelector('button').onclick=()=>d.remove();$('#stockList').appendChild(d);}
 const MEM_KEYS=['printer','thickness','cut_line','mode','rot_step','mirror','edge','gap','clamp','bleed','corner_radius','bit_diameter','min_offcut','offcut','offcut_enabled','policy','time','edge_l','edge_r','edge_b','edge_t','print_outlines','corner_marks','sheet_frame'];
 function settingsSnapshot(){const o={};MEM_KEYS.forEach(k=>{const el=$('#'+k);if(!el)return;o[k]=el.type==='checkbox'?el.checked:el.value;});o.stock=stockRows();return o;}
-function syncOffcut(){const roll=!!(PRODUCTS[$('#product').value]||{}).roll;const on=$('#offcut_enabled').checked&&!roll;$('#offcut_enabled').disabled=roll;$('#offcut').disabled=!on;$('#offcutPanel').classList.toggle('is-off',!on);$('#offcutState').textContent=LANG==='pt'?(on?'LIGADO':'DESLIGADO'):(on?'ON':'OFF');$('#offcutHint').textContent=LANG==='pt'?(on?'Adiciona cortes para separar a área encaixada.':'Sem cortes para separar a sobra neste trabalho.'):(on?'Adds separation cuts around the nested area.':'No offcut separation cuts for this job.');if(roll){$('#offcutState').textContent=LANG==='pt'?'BOBINA':'ROLL';$('#offcutHint').textContent=LANG==='pt'?'Cortes de separação de chapas não se aplicam a bobinas.':'Sheet offcut cuts do not apply to roll materials.';}}
-function offcutChanged(){syncOffcut();if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',LANG==='pt'?'Configuração da sobra alterada. Clique em Encaixar para atualizar os arquivos de corte.':'Offcut setting changed. Press Nest to update the cut files.');}}
+function syncOffcut(){const reset=$('#resetCustomCuts');if(reset)reset.style.display=typeof CUSTOM_CUTS!=='undefined'&&Object.keys(CUSTOM_CUTS).length?'':'none';const roll=!!(PRODUCTS[$('#product').value]||{}).roll;const on=$('#offcut_enabled').checked&&!roll;$('#offcut_enabled').disabled=roll;$('#offcut').disabled=!on;$('#offcutPanel').classList.toggle('is-off',!on);$('#offcutState').textContent=LANG==='pt'?(on?'LIGADO':'DESLIGADO'):(on?'ON':'OFF');$('#offcutHint').textContent=LANG==='pt'?(on?'Adiciona cortes para separar a área encaixada.':'Sem cortes para separar a sobra neste trabalho.'):(on?'Adds separation cuts around the nested area.':'No offcut separation cuts for this job.');if(roll){$('#offcutState').textContent=LANG==='pt'?'BOBINA':'ROLL';$('#offcutHint').textContent=LANG==='pt'?'Cortes de separação de chapas não se aplicam a bobinas.':'Sheet offcut cuts do not apply to roll materials.';}}
+function offcutChanged(event){if(event?.target?.id==='offcut')CUSTOM_CUTS={};syncOffcut();if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',LANG==='pt'?'Configuração da sobra alterada. Clique em Encaixar para atualizar os arquivos de corte.':'Offcut setting changed. Press Nest to update the cut files.');}}
 function selectedOffcut(){return $('#offcut_enabled').checked&&!$('#offcut_enabled').disabled?$('#offcut').value:'none';}
 function applySettings(o){if(!o)return;
   // Older saved settings use offcut=none, or a numeric trim_offcut flag.
@@ -434,12 +445,12 @@ function customChanged(e){
   try{localStorage.setItem('psnest.customMaterial',JSON.stringify(customSpec()));}catch(e){}
   if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn','Material changed. Press Nest to update the cut files.');}
 }
-function formSnapshot(){return {job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,sheet:$('#sheet').value,sw:$('#sw').value,sh:$('#sh').value,settings:settingsSnapshot(),parts:rows(),pins:PINS.slice()};}
-function applyForm(f){if(f.custom_material)restoreCustom(f.custom_material);$('#job').value=f.job||'';if(f.product&&PRODUCTS[f.product]){$('#product').value=f.product;fillProduct();}
+function formSnapshot(){return {custom_cuts:cutClone(CUSTOM_CUTS),job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,sheet:$('#sheet').value,sw:$('#sw').value,sh:$('#sh').value,settings:settingsSnapshot(),parts:rows(),pins:PINS.slice()};}
+function applyForm(f){CUSTOM_CUTS=cutClone(f.custom_cuts||{});if(f.custom_material)restoreCustom(f.custom_material);$('#job').value=f.job||'';if(f.product&&PRODUCTS[f.product]){$('#product').value=f.product;fillProduct();}
   if(f.sheet!==undefined){$('#sheet').value=f.sheet;sheetChanged();if(f.sheet==='custom'){$('#sw').value=f.sw;$('#sh').value=f.sh;}}
   applySettings(f.settings);$('#custom_thickness').value=$('#thickness').value;$('#parts tbody').innerHTML='';(f.parts||[]).forEach(p=>addRow(Object.assign({},p,{rotate:p.rotate!==false})));if(!(f.parts||[]).length)addRow();refreshArtSelects();PINS=(f.pins||[]).slice();}
-function applyRequest(q){const f={job:q.job,product:q.product,custom_material:q.custom_material,sheet:'custom',sw:q.sheet&&q.sheet.w,sh:q.sheet&&q.sheet.h,parts:q.parts,pins:q.pins||[],
-  settings:Object.assign({},q.rules||{},{printer:q.printer,thickness:q.thickness,cut_line:q.cut_line,mode:q.mode,rot_step:q.rot_step,mirror:q.mirror,offcut:q.offcut,policy:q.policy,print_outlines:q.print_outlines,corner_marks:q.corner_marks,sheet_frame:q.sheet_frame!==false,
+function applyRequest(q){const f={custom_cuts:q.custom_cuts||{},job:q.job,product:q.product,custom_material:q.custom_material,sheet:'custom',sw:q.sheet&&q.sheet.w,sh:q.sheet&&q.sheet.h,parts:q.parts,pins:q.pins||[],
+  settings:Object.assign({},q.rules||{},{printer:q.printer,thickness:q.thickness,cut_line:q.cut_line,mode:q.mode,rot_step:q.rot_step,mirror:q.mirror,offcut:q.offcut,offcut_enabled:Object.keys(q.custom_cuts||{}).length?true:q.offcut!=='none',policy:q.policy,print_outlines:q.print_outlines,corner_marks:q.corner_marks,sheet_frame:q.sheet_frame!==false,
     edge_l:(q.edge_sides||{}).l,edge_r:(q.edge_sides||{}).r,edge_b:(q.edge_sides||{}).b,edge_t:(q.edge_sides||{}).t,stock:q.stock||[],time:String(Math.max(0,TIMES.findIndex(t=>t[0]>=+(q.time||45))))})};
   applyForm(f);const p=PRODUCTS[q.product];if(p&&q.sheet){const i=p.sheets.findIndex(s=>+s.w===+q.sheet.w&&+s.h===+q.sheet.h);if(i>=0){$('#sheet').value=i;sheetChanged();}}}
 function lastQty(){try{return JSON.parse(localStorage.getItem('psnest.lastqty')||'{}');}catch(e){return {};}}
@@ -447,13 +458,13 @@ function rememberQty(){try{const m={};rows().forEach(p=>{if(p.name)m[p.name.trim
 async function loadProjects(){try{const j=await api('/api/jobs');const jobs=j.jobs||[];const box=$('#projects');if(!jobs.length){box.style.display='none';return;}box.style.display='';$('#projectsHint').textContent=jobs.length+' nested on this computer';
   const when=t=>{const d=new Date(t*1000);return d.toLocaleDateString('en-AU',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});};
   $('#projectList').innerHTML='<table><thead><tr><th>Job</th><th>When</th><th>Material</th><th>Sheets</th><th>Parts</th><th></th></tr></thead><tbody>'+jobs.slice(0,40).map(x=>`<tr><td>${esc(x.job||'')}</td><td>${when(x.when)}</td><td>${esc((x.material||'').split(' (')[0])}</td><td>${x.sheets??''}</td><td>${x.parts??''}</td><td style="white-space:nowrap">${x.reopen?`<button class="ghost small" data-open="${x.id}">Open</button> `:''}<a href="/p/${x.id}" target="_blank" rel="noopener" style="font-size:12px">View</a></td></tr>`).join('')+'</tbody></table>';
-  $('#projectList').querySelectorAll('button[data-open]').forEach(b=>b.onclick=async()=>{clearMsgs();try{const r=await api('/api/job/'+b.dataset.open+'/request');applyRequest(r.request);msg('ok',`"${r.job}" is back in the form: change what you need and press Nest.`);window.scrollTo({top:0,behavior:'smooth'});}catch(e){msg('err',e.message);}});}catch(e){}}
+  $('#projectList').querySelectorAll('button[data-open]').forEach(b=>b.onclick=async()=>{clearMsgs();try{const r=await api('/api/job/'+b.dataset.open+'/request');applyRequest(r.request);if(r.result){CURRENT=r.result;FORM_OF_CURRENT=formSnapshot();render(r.result);}msg('ok',`"${r.job}" is back in the form: change what you need and press Nest.`);window.scrollTo({top:0,behavior:'smooth'});}catch(e){msg('err',e.message);}});}catch(e){}}
 
 let API_PENDING=0;
 async function api(path,opts){API_PENDING++;try{const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:'Bad response'}));if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));return j;}finally{API_PENDING--;}}
 // The native updater saves only job state and PS Nest preferences, never NAS passwords.
 window.psNestUpdateSnapshot=()=>{
-  if(!window.PSNEST_INITIALIZED||RUN||API_PENDING||[...document.querySelectorAll('button:disabled')].some(b=>b.offsetParent!==null))throw new Error('Finish the current operation before updating.');
+  if(!window.PSNEST_INITIALIZED||RUN||API_PENDING||CUT_EDITOR||[...document.querySelectorAll('button:disabled')].some(b=>b.offsetParent!==null))throw new Error('Finish the current operation before updating.');
   const preferences={};Object.keys(localStorage).filter(k=>k.startsWith('psnest.')).forEach(k=>preferences[k]=localStorage.getItem(k));
   return {form:formSnapshot(),result:CURRENT,preferences};
 };
@@ -587,11 +598,11 @@ async function doNest(){clearMsgs();if(!$('#product').value){const t='Choose the
   const timer=setInterval(tick,500);
   const rules={};RULE_KEYS.forEach(k=>rules[k]=$('#'+k).value);rules.trim_offcut=selectedOffcut()==='none'?0:1;
   if($('#policy').value==='free'&&$('#mode').value!=='complex'){$('#mode').value='complex';modeChanged();}
-  const body={job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,printer:$('#printer').value||null,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,sheet_frame:$('#sheet_frame').checked,thickness:$('#thickness').value,mirror:$('#mirror').checked,cut_line:$('#cut_line').value,
+  const body={custom_cuts:selectedOffcut()==='none'?{}:CUSTOM_CUTS,job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,printer:$('#printer').value||null,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,sheet_frame:$('#sheet_frame').checked,thickness:$('#thickness').value,mirror:$('#mirror').checked,cut_line:$('#cut_line').value,
     mode:$('#mode').value,rot_step:$('#rot_step').value,offcut:selectedOffcut(),policy:$('#policy').value,time:TIMES[+$('#time').value][0],
     edge_sides:{l:$('#edge_l').value,r:$('#edge_r').value,b:$('#edge_b').value,t:$('#edge_t').value},stock:stockRows(),pins:PINS,run_id};
   const sent=formSnapshot();const before=CURRENT?{form:FORM_OF_CURRENT||sent,result:CURRENT}:null;
-  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(before){UNDO.push(before);if(UNDO.length>10)UNDO.shift();}CURRENT=r;FORM_OF_CURRENT=sent;if(body.custom_material){try{localStorage.setItem('psnest.customMaterial',JSON.stringify(body.custom_material));}catch(e){}}saveSettings();rememberQty();render(r);loadProjects();}
+  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(before){UNDO.push(before);if(UNDO.length>10)UNDO.shift();}CURRENT=r;CUSTOM_CUTS=Object.fromEntries(r.sheets.flatMap((s,i)=>s.custom_cuts==null?[]:[[String(i),s.custom_cuts]]));FORM_OF_CURRENT={...sent,custom_cuts:cutClone(CUSTOM_CUTS)};if(body.custom_material){try{localStorage.setItem('psnest.customMaterial',JSON.stringify(body.custom_material));}catch(e){}}saveSettings();rememberQty();render(r);loadProjects();}
   catch(e){msg('err',e.message);CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',e.message.startsWith('Stopped')?'The previous result was cleared. Nest again when you are ready.':'The previous result was cleared so a stale file cannot be downloaded. Fix the error and nest again.');}
   finally{clearInterval(timer);RUN=null;stop.style.display='none';st.style.display='none';btn.disabled=false;btn.textContent='Nest';}}
 
@@ -621,7 +632,7 @@ function render(r){$('#empty').style.display='none';$('#results').style.display=
   $('#unlockBtn').style.display=PINS.length?'':'none';$('#unlockBtn').textContent=`Unlock all parts (${PINS.length})`;$('#unlockBtn').onclick=()=>{PINS=[];msg('ok','All parts unlocked. Nest again for a free layout.');$('#unlockBtn').style.display='none';document.querySelectorAll('#sheets path.part.locked').forEach(p=>p.classList.remove('locked'));};
   if(r.mode==='simple'&&r.engine==='shapes'&&r.sheet_count>1)msg('warn','Parts were turned 0 / 90° only. For odd shapes, Settings > Nesting mode > Complex rotates them freely and may save a sheet.');
   const last=r.sheets[r.sheets.length-1];
-  const roll=r.process&&r.process.roll;$('#stats').innerHTML=[[roll?'Cut passes':'Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],[roll?'Unprinted end of last pass':'Last-sheet offcut',last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`]].concat(r.process&&r.process.roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m']]:[]).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
+  const roll=r.process&&r.process.roll;$('#stats').innerHTML=[[roll?'Cut passes':'Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],[roll?'Unprinted end of last pass':'Last-sheet offcut',last.custom_cuts!=null?'Custom cuts':last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`]].concat(r.process&&r.process.roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m']]:[]).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
   const dl=[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print-files','Print files (1 per sheet, zip)'],['cut-files','Cut files (1 per sheet, zip)'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
   const dlv=dl.filter(([k])=>!(k==='print-files'&&r.print_blocked)&&!(k==='cut-files'&&r.cut_blocked));
   const short={'dxf':'Cutting DXF','dxf-labels':'DXF with part labels','print-files':'Print files','cut-files':'Cut files','layout':'Layout sheet (A4)','report':'Report (JSON)','all':'Download all files (zip)'};
@@ -633,7 +644,7 @@ function render(r){$('#empty').style.display='none';$('#results').style.display=
   if(r.cut_parts&&r.cut_blocked)msg('warn','Cut files not offered. '+r.cut_blocked);
   if(r.cut_parts&&!r.cut_blocked)msg('ok',`Print & cut: one print file and one cut file per ${r.process&&r.process.roll?'pass':'sheet'}, named to pair up ("${r.file_label||'job'} - … - sheet 1 of ${r.sheet_count} - print ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf" goes with "… - cut ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf"). The print file has the cut line removed; the cut file has only the cut lines, same page and position.`);
   $('#downloads').querySelectorAll('button,a').forEach(b=>b.onclick=e=>{e.preventDefault();download(r.job_id,b.dataset.k,b.dataset.l,b);});
-  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Cut pass':'Sheet'} ${s.n} of ${r.sheet_count}</b><div class="meta"><span>${s.parts} parts</span><span>${(s.utilisation*100).toFixed(1)}% used</span>${roll?`<span>${(s.used_length_mm/1000).toFixed(2)} m of roll</span>`:''}<span>Offcut ${s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' × '+s.offcut_strip_mm[1]+' mm'}</span></div></div>${r.svg[i]}<details><summary>Sheet measurements</summary><p>Largest clear rectangle: ${s.largest_empty_rect_mm[0]} × ${s.largest_empty_rect_mm[1]} mm.${s.offcut_strip_mm[2]!=='none'?' Offcut position: '+s.offcut_strip_mm[2]+'.':''}${s.trim_line_mm?' Separation cut: '+s.trim_line_mm[1]+' mm ('+(s.trim_line_mm[0]==='x'?'vertical':'horizontal')+').':''}</p></details></div>`).join('');wireDrag(r);}
+  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Cut pass':'Sheet'} ${s.n} of ${r.sheet_count}</b><div class="meta"><span>${s.parts} parts</span><span>${(s.utilisation*100).toFixed(1)}% used</span>${roll?`<span>${(s.used_length_mm/1000).toFixed(2)} m of roll</span>`:''}<span>${s.custom_cuts!=null?'Custom cuts · area not measured':'Offcut '+(s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' × '+s.offcut_strip_mm[1]+' mm')}</span></div></div>${!roll?`<button class="ghost small edit-cuts" data-sheet="${i}">Edit separation cuts</button>`:''}${r.svg[i]}<details><summary>Sheet measurements</summary><p>Largest clear rectangle: ${s.largest_empty_rect_mm[0]} × ${s.largest_empty_rect_mm[1]} mm.${s.custom_cuts==null&&s.offcut_strip_mm[2]!=='none'?' Offcut position: '+s.offcut_strip_mm[2]+'.':''}${s.trim_line_mm?' Separation cut: '+s.trim_line_mm[1]+' mm ('+(s.trim_line_mm[0]==='x'?'vertical':'horizontal')+').':''}</p></details></div>`).join('');wireDrag(r);$('#sheets').querySelectorAll('.edit-cuts').forEach(b=>b.onclick=()=>cutOpen(r,+b.dataset.sheet));}
 
 function wireDrag(r){document.querySelectorAll('#sheets .sheet').forEach((box,si)=>{const svg=box.querySelector('svg');if(!svg)return;const s=r.sheets[si];const paths=[...svg.querySelectorAll('g path')];const labels=[...svg.querySelectorAll('svg > text')];
   paths.forEach((p,pi)=>{const pl=s.placements[pi];if(!pl)return;p.classList.add('part');if(PINS.some(x=>x.name===pl.part&&x.sheet===si))p.classList.add('locked');p.setAttribute('title',pl.part);
@@ -646,6 +657,52 @@ function wireDrag(r){document.querySelectorAll('#sheets .sheet').forEach((box,si
       $('#unlockBtn').style.display='';$('#unlockBtn').textContent=`Unlock all parts (${PINS.length})`;
       clearMsgs();msg('ok',`${pl.part} locked at ${moved?nx:pl.x} x ${moved?ny:pl.y} mm on sheet ${si+1}. Press Nest to lay the other parts around it. Overlaps are refused and the lock dropped, with a note.`);};
     p.addEventListener('pointerup',end);p.addEventListener('pointercancel',end);});});}
+
+let CUT_EDITOR=null, CUSTOM_CUTS={};
+const cutClone=x=>JSON.parse(JSON.stringify(x));
+function cutRemember(){const e=CUT_EDITOR;e.undo.push({paths:cutClone(e.paths),auto:e.auto});if(e.undo.length>30)e.undo.shift();}
+function cutStatus(text,valid=false){$('#cutStatus').textContent=text;$('#cutStatus').className=valid?'msg ok':'msg warn';$('#cutSave').disabled=!valid||!!CUT_EDITOR?.drawing;}
+function cutPaint(){const e=CUT_EDITOR;if(!e)return;const g=e.svg.querySelector('g');g.querySelectorAll('.cut-edit-layer').forEach(x=>x.remove());const ns='http://www.w3.org/2000/svg',layer=document.createElementNS(ns,'g');layer.setAttribute('class','cut-edit-layer');g.append(layer);
+  e.paths.forEach((line,i)=>{const p=document.createElementNS(ns,'polyline');p.setAttribute('points',line.map(p=>p.join(',')).join(' '));p.setAttribute('fill','none');p.setAttribute('stroke',e.valid?'#167343':e.invalid?'#b42318':'#c77700');p.setAttribute('stroke-width',i===e.selected?'4':'3');p.setAttribute('vector-effect','non-scaling-stroke');p.dataset.cut=i;p.style.cursor=e.drawing?'crosshair':'move';layer.append(p);
+    if(i===e.selected&&!e.drawing)line.forEach((pt,j)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',pt[0]);c.setAttribute('cy',pt[1]);c.setAttribute('r',e.scale*6);c.setAttribute('fill','white');c.setAttribute('stroke','#167343');c.setAttribute('stroke-width','2');c.setAttribute('vector-effect','non-scaling-stroke');c.dataset.cut=i;c.dataset.point=j;c.style.cursor='grab';layer.append(c);});});
+  if(e.drawing){const p=document.createElementNS(ns,'polyline');p.setAttribute('points',e.drawing.map(p=>p.join(',')).join(' '));p.setAttribute('fill','none');p.setAttribute('stroke','#c77700');p.setAttribute('stroke-width','3');p.setAttribute('vector-effect','non-scaling-stroke');layer.append(p);e.drawing.forEach(pt=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',pt[0]);c.setAttribute('cy',pt[1]);c.setAttribute('r',e.scale*5);c.setAttribute('fill','#c77700');layer.append(c);});}
+  $('#cutDelete').disabled=e.selected<0||!!e.drawing;$('#cutUndo').disabled=!e.undo.length&&!e.drawing;$('#cutFinish').disabled=!e.drawing||e.drawing.length<2;$('#cutDraw').textContent=e.drawing?'Cancel drawing':'+ Draw cut';
+  $('#cutMode').textContent=e.auto?'Automatic cuts':'Custom cuts';
+}
+async function cutCheck(){const e=CUT_EDITOR;if(!e)return;const seq=++e.seq;e.valid=false;e.invalid=false;cutStatus('Checking part clearance and connections…');cutPaint();
+ try{await api('/api/job/'+e.result.job_id+'/separation-cuts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cuts:{[e.si]:e.auto?null:e.paths},validate_only:true})});if(CUT_EDITOR!==e||seq!==e.seq)return;e.valid=true;cutStatus(e.auto?'Automatic cuts will be restored.':e.paths.length+' cut path(s) checked. Save cuts to update the files.',true);}
+ catch(err){if(CUT_EDITOR!==e||seq!==e.seq)return;e.invalid=true;cutStatus(err.message);}
+ cutPaint();
+}
+function cutSnap(pt,previous){const e=CUT_EDITOR,t=e.scale*10;let [x,y]=pt;const W=e.sheet.sheet_mm[0],H=e.sheet.sheet_mm[1];x=Math.min(W,Math.max(0,x));y=Math.min(H,Math.max(0,y));
+  const endpoints=e.paths.flatMap(p=>[p[0],p[p.length-1]]);let nearest=null,dist=t;endpoints.forEach(q=>{const d=Math.hypot(q[0]-x,q[1]-y);if(d<dist){nearest=q;dist=d;}});if(nearest)return [...nearest];
+  if(x<t)x=0;else if(W-x<t)x=W;if(y<t)y=0;else if(H-y<t)y=H;
+  if(previous){if(x!==0&&x!==W&&Math.abs(x-previous[0])<t)x=previous[0];if(y!==0&&y!==H&&Math.abs(y-previous[1])<t)y=previous[1];}
+  return [Math.round(x*100)/100,Math.round(y*100)/100];
+}
+function cutAnchored(p){const e=CUT_EDITOR;return p[0]===0||p[1]===0||p[0]===e.sheet.sheet_mm[0]||p[1]===e.sheet.sheet_mm[1]||e.paths.some(l=>[l[0],l[l.length-1]].some(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<.001));}
+function cutAddPoint(p){const e=CUT_EDITOR;if(!e.drawing)return;const last=e.drawing.at(-1);p=cutSnap(p,last);if(last&&Math.hypot(p[0]-last[0],p[1]-last[1])<.1)return;e.drawing.push(p);if(e.drawing.length>=2&&cutAnchored(p)){cutFinish();return;}cutStatus('Click the next corner or finish on a sheet edge.');cutPaint();}
+function cutFinish(){const e=CUT_EDITOR;if(!e.drawing||e.drawing.length<2)return;cutRemember();e.paths.push(e.drawing);e.selected=e.paths.length-1;e.drawing=null;e.auto=false;cutCheck();}
+function cutOpen(r,si){if(!CURRENT||CURRENT.job_id!==r.job_id)return;const sheet=r.sheets[si];const dlg=$('#cutDialog');$('#cutCanvas').innerHTML=r.svg[si];const svg=$('#cutCanvas svg');svg.querySelectorAll('.separation').forEach(x=>x.remove());svg.querySelectorAll('polygon,rect[fill="#e8f5e9"]').forEach(x=>x.remove());svg.setAttribute('aria-label','Sheet '+(si+1)+' separation cut editor');
+ const box=svg.getBoundingClientRect();CUT_EDITOR={result:r,si,sheet,svg,paths:cutClone(sheet.separation_cuts_mm||[]),auto:sheet.custom_cuts==null,undo:[],selected:-1,drawing:null,valid:false,seq:0,scale:1};
+ $('#cutTitle').textContent='Edit separation cuts — sheet '+(si+1);$('#cutGuide').textContent='Click Draw cut, then click its start and end on sheet edges. Add corners with extra clicks. Select a cut to drag its line or white handles. Clearance: '+sheet.cut_clearance_mm.toFixed(2)+' mm.';
+ dlg.showModal();const e=CUT_EDITOR;e.scale=1/svg.getScreenCTM().a;
+ const mm=ev=>{const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());return [q.x,sheet.sheet_mm[1]-q.y];};let drag=null;
+ svg.onpointerdown=ev=>{if(e.busy)return;ev.preventDefault();if(e.drawing){cutAddPoint(mm(ev));return;}const i=ev.target.dataset.cut;if(i===undefined){e.selected=-1;cutPaint();return;}e.selected=+i;drag={start:mm(ev),paths:cutClone(e.paths),point:ev.target.dataset.point,changed:false};svg.setPointerCapture(ev.pointerId);cutPaint();};
+ svg.onpointermove=ev=>{if(!drag)return;const p=mm(ev),dx=p[0]-drag.start[0],dy=p[1]-drag.start[1];if(Math.hypot(dx,dy)<e.scale*2&&!drag.changed)return;if(!drag.changed){cutRemember();drag.changed=true;}e.auto=false;e.valid=false;e.invalid=false;e.seq++;const line=drag.paths[e.selected];
+  if(drag.point!==undefined){e.paths[e.selected]=cutClone(line);e.paths[e.selected][+drag.point]=cutSnap(p);}
+  else {let tx=Math.max(-Math.min(...line.map(p=>p[0])),Math.min(dx,sheet.sheet_mm[0]-Math.max(...line.map(p=>p[0]))));let ty=Math.max(-Math.min(...line.map(p=>p[1])),Math.min(dy,sheet.sheet_mm[1]-Math.max(...line.map(p=>p[1]))));e.paths[e.selected]=line.map(p=>[Math.round((p[0]+tx)*100)/100,Math.round((p[1]+ty)*100)/100]);}
+  cutStatus('Release to check this cut.');cutPaint();};
+ const end=()=>{const changed=drag?.changed;drag=null;if(changed)cutCheck();};svg.onpointerup=end;svg.onpointercancel=end;
+ $('#cutDraw').onclick=()=>{e.drawing=e.drawing?null:[];e.selected=-1;e.seq++;cutStatus(e.drawing?'Click a sheet edge to start.':e.valid?'Cut checks passed.':'Select a cut or draw another.',e.valid);cutPaint();};
+ $('#cutFinish').onclick=cutFinish;
+ $('#cutUndo').onclick=()=>{if(e.drawing){e.drawing=null;cutCheck();return;}const u=e.undo.pop();if(!u)return;e.paths=u.paths;e.auto=u.auto;e.selected=-1;cutCheck();};
+ $('#cutDelete').onclick=()=>{if(e.selected<0)return;cutRemember();e.paths.splice(e.selected,1);e.selected=-1;e.auto=false;cutCheck();};
+ $('#cutReset').onclick=()=>{cutRemember();e.paths=cutClone(sheet.automatic_cuts_mm||[]);e.auto=true;e.drawing=null;e.selected=-1;cutCheck();};
+ $('#cutPointAdd').onclick=()=>{const x=Number($('#cutX').value),y=Number($('#cutY').value);if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||y<0||x>sheet.sheet_mm[0]||y>sheet.sheet_mm[1]){cutStatus('Enter coordinates inside this sheet.');return;}if(!e.drawing)e.drawing=[];cutAddPoint([x,y]);};
+ $('#cutSave').onclick=async()=>{if(!e.valid||e.drawing)return;e.busy=true;const controls=[...dlg.querySelectorAll('button')];controls.forEach(b=>b.disabled=true);try{const updated=await api('/api/job/'+r.job_id+'/separation-cuts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cuts:{[si]:e.auto?null:e.paths}})});UNDO.push({form:FORM_OF_CURRENT||formSnapshot(),result:r});CUSTOM_CUTS=Object.fromEntries(updated.sheets.flatMap((s,i)=>s.custom_cuts==null?[]:[[String(i),s.custom_cuts]]));CURRENT=updated;$('#offcut_enabled').checked=true;syncOffcut();FORM_OF_CURRENT={...(FORM_OF_CURRENT||formSnapshot()),custom_cuts:cutClone(CUSTOM_CUTS),settings:{...(FORM_OF_CURRENT?.settings||settingsSnapshot()),offcut_enabled:true}};CUT_EDITOR=null;dlg.close();clearMsgs();render(updated);loadProjects();msg('ok','Separation cuts saved. Downloads now use these paths.');}catch(err){cutStatus(err.message);}finally{e.busy=false;controls.forEach(b=>b.disabled=false);if(CUT_EDITOR)cutCheck();}};
+ $('#cutCancel').onclick=()=>{if(!e.busy){CUT_EDITOR=null;dlg.close();}};dlg.oncancel=ev=>{if(e.busy)ev.preventDefault();else CUT_EDITOR=null;};cutCheck();
+}
 
 const PT={'Material':'Material','Sheet length (mm)':'Comprimento da chapa (mm)','Sheet width (mm)':'Largura da chapa (mm)','Download all files (zip)':'Baixar todos os arquivos (zip)','Cutting DXF':'DXF da router','Layout sheet (A4)':'Folha de layout (A4)','Or type the PL number and pull the artwork from the NAS':'Ou digite o número PL e puxe a arte final do NAS','Print PDF':'PDF de impressão','Pick the material: the printer, the cutter, the sheet sizes and the spacing rules follow from it.':'Escolha o material: a impressora, a cortadora, os tamanhos de chapa e as regras de espaçamento vêm dele.','One PDF per part, at final size, with the pink CutContour cut line. Each file becomes a part below.':'Um PDF por peça, no tamanho final, com a linha de corte CutContour rosa. Cada arquivo vira uma peça abaixo.','Unlock all parts':'Destravar todas as peças','Job':'Trabalho','When':'Quando','Sheets':'Chapas','Thickness (mm, optional)':'Espessura (mm, opcional)','Parts':'Peças','Nest':'Encaixar','Result':'Resultado','Settings':'Configurações','Projects':'Projetos','What is it printed on / cut from?':'Impresso em / cortado de?','Sheet':'Chapa','Roll width':'Largura do rolo',
  'Job name (goes into every file name)':'Nome do trabalho (entra em todos os nomes de arquivo)','Drop the artwork PDFs here':'Solte os PDFs da arte aqui','+ Add a part by size':'+ Adicionar peça por medida','Clear':'Limpar','Parts list from a spreadsheet':'Lista de peças de uma planilha',
@@ -708,7 +765,7 @@ Object.assign(PT,{'Custom material…':'Material personalizado…','Material nam
   ps.onchange=fillProduct;$('#printer').onchange=()=>{if($('#product').value==='custom'){$('#custom_printer').value=$('#printer').value;refreshCustom();}procInfo();};$('#sheet').onchange=sheetChanged;es.onchange=()=>{loadExample(es.value);es.value='';};
   fillProduct();addRow();
   $('#addRow').onclick=()=>addRow();$('#clearRows').onclick=()=>{$('#parts tbody').innerHTML='';addRow();};
-  $('#nestBtn').onclick=doNest;$('#offcut_enabled').onchange=offcutChanged;$('#offcut').onchange=offcutChanged;syncOffcut();
+  $('#nestBtn').onclick=doNest;$('#resetCustomCuts').onclick=()=>{CUSTOM_CUTS={};offcutChanged();msg('ok','Custom cuts reset. Press Nest to regenerate automatic cuts.');};$('#offcut_enabled').onchange=offcutChanged;$('#offcut').onchange=offcutChanged;syncOffcut();
   const drop=$('#drop'),file=$('#file');drop.onclick=()=>file.click();file.onchange=()=>uploadFiles(file.files);
   drop.ondragover=e=>{e.preventDefault();drop.classList.add('over');};drop.ondragleave=()=>drop.classList.remove('over');drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');uploadFiles(e.dataTransfer.files);};
   const od=$('#odrop'),of=$('#ofile');od.onclick=()=>of.click();of.onchange=()=>uploadOutlines(of.files);
