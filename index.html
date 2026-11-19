@@ -39,6 +39,7 @@ input:focus,select:focus,textarea.name:focus{outline:none;border-color:var(--ink
 #offcut:disabled{opacity:.5}
 .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
 .row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.roll-controls{display:grid;grid-template-columns:minmax(0,1fr) 90px 90px;gap:8px}
 button{font:inherit;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
 button:hover{background:#333}
 button.ghost{background:#fff;color:var(--ink)}
@@ -52,6 +53,12 @@ td input[type=number]{padding:5px 6px;min-width:56px;-moz-appearance:textfield}
 td input[type=number]::-webkit-outer-spin-button,td input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 td textarea.name{min-width:200px;padding:5px 8px;resize:none;line-height:1.3;field-sizing:content;overflow:hidden;white-space:pre-wrap;word-break:break-word;display:block}
 td select.art{max-width:220px}
+td select.artback{max-width:220px}
+#parts:not(.two) .colback{display:none}
+.holdbox{background:#fef3f2;border:2px solid var(--err);border-radius:8px;padding:12px 14px;margin:0 0 14px;font-size:13px;line-height:1.5;color:var(--ink)}
+.holdbox h3{margin:0 0 4px;color:var(--err);font-size:15px}.holdbox p{margin:0 0 8px}
+.holdbox .item{border-top:1px solid #fecdca;padding-top:10px;margin-top:10px}.holdbox details{margin-top:8px}.holdbox summary{cursor:pointer;font-weight:600}
+.holdbox .keep{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;max-width:640px}.holdbox .keep .wide{grid-column:1/-1}.holdbox .kmsg{margin:8px 0 0}
 #parts td:first-child{width:38%}
 .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 td.c{text-align:center}
@@ -124,6 +131,7 @@ input:focus,select:focus,textarea.name:focus{border-color:var(--accent);box-shad
 button{min-height:40px;border-radius:8px;font-weight:550;padding:9px 14px}button.ghost{border-color:#cbd3de;color:#344054}button.ghost:hover{background:#f5f7fa;border-color:#a7b1bf}
 button.small{font-size:13px;min-height:34px;padding:6px 10px}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #a90d6870;outline-offset:3px}
 .row,.row3{gap:16px;margin-bottom:18px}.hint{font-size:13px;line-height:1.6;color:var(--muted);max-width:70ch}
+.machine-bar{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:7px 10px;margin-bottom:4px;background:#eef6ff;border:1px solid #bcd6f5;border-radius:6px;font-size:13px}.machine-bar b{font-size:14px}.machine-bar a{margin-left:auto;color:#42536b}
 #procInfo{margin:0 0 18px!important;line-height:1.7}#procInfo:empty{display:none}.machine-route{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px}.machine-route span{padding:3px 8px;background:#f2f4f7;border-radius:5px}.machine-note{margin:8px 0 0}.machine-notes{margin-top:10px}.machine-notes summary{font-size:13px;color:#42536b;font-weight:550}
 .drop{border-color:#cbd3de;background:#fafbfc;border-radius:10px;padding:18px 14px;line-height:1.6}.drop b{font-size:15px}.drop span{font-size:13px;margin-top:5px}.drop:hover{border-color:var(--accent)}
 .import-option{border:1px solid var(--line);border-radius:9px;margin-top:10px!important;padding:0 13px;background:#fcfcfd}.import-option>summary{font-size:14px;font-weight:550;color:#3d4b5e;padding:12px 0}.import-option[open]{padding-bottom:14px}.import-option label{margin-top:4px}
@@ -145,7 +153,7 @@ details.adv .row3{grid-template-columns:repeat(2,minmax(0,1fr))}details.adv .row
 .projects>summary{font-size:16px!important;line-height:1.6}.projects td,.projects th{font-size:13px;padding:10px 8px}.projects .hint{font-weight:400}.projects{overflow-x:auto}
 .dlg{padding:28px}.dlg h2{font-size:20px;text-transform:none;letter-spacing:-.2px;color:var(--ink);margin-bottom:18px}.dlg ol{line-height:1.7;font-size:15px}.dlg li+li{margin-top:12px}
 @media(max-width:1120px){main{grid-template-columns:minmax(0,1fr);max-width:860px}#empty{min-height:240px}}
-@media(max-width:600px){main{padding:16px;gap:0}.card{padding:18px}header{padding:14px 18px;gap:12px}.row,.row3,details.adv .row3{grid-template-columns:1fr}.card.step h2{font-size:18px}.offcut-toggle{font-size:14px;gap:8px}.offcut-panel{padding:13px}.stats{gap:8px}.stat{padding:13px}.stat b{font-size:23px}.dlg{padding:22px}header #appVersion{max-width:230px}.quantity-tools{align-items:flex-start}}
+@media(max-width:600px){main{padding:16px;gap:0}.card{padding:18px}header{padding:14px 18px;gap:12px}.row,.row3,details.adv .row3{grid-template-columns:1fr}.roll-controls{grid-template-columns:1fr 1fr}.roll-controls>div:first-child{grid-column:1/-1}.card.step h2{font-size:18px}.offcut-toggle{font-size:14px;gap:8px}.offcut-panel{padding:13px}.stats{gap:8px}.stat{padding:13px}.stat b{font-size:23px}.dlg{padding:22px}header #appVersion{max-width:230px}.quantity-tools{align-items:flex-start}}
 
 
 [hidden]{display:none!important}
@@ -167,13 +175,13 @@ details.adv .row3{grid-template-columns:repeat(2,minmax(0,1fr))}details.adv .row
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20260925-105435 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20261119-135228 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
 window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
 const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
-function startWorker(){worker=new Worker('worker.js?v=20260925-105435',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+function startWorker(){worker=new Worker('worker.js?v=20261119-135228',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
 worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
   if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
@@ -209,8 +217,13 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
   <div class="card step">
     <h2><span class="n">1</span>Material</h2>
     <div class="row">
+      <div id="machineBar" class="machine-bar" hidden></div>
       <div><label for="product">Material &amp; process</label><select id="product"></select><div id="productMsg" style="font-size:13px;margin-top:4px;color:#b42318"></div></div>
-      <div><label id="sheetLabel">Sheet</label><select id="sheet"></select></div>
+      <div><div class="roll-controls">
+        <div><label id="sheetLabel" for="sheet">Sheet</label><select id="sheet"></select></div>
+        <div id="rollLenBox" hidden><label for="rollLen">Roll left (m)</label><input type="number" id="rollLen" step="0.1" min="0.1" style="width:90px"></div>
+        <div id="rollBatchBox" hidden><label for="rollBatch">Maximum batch (m)</label><input type="number" id="rollBatch" value="10" step="0.1" min="0.1" max="10" style="width:90px"></div>
+      </div></div>
     </div>
     <div id="customMaterial" hidden>
       <div class="row">
@@ -235,12 +248,29 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
       <div id="swBox"><label id="swLabel">Sheet length (mm)</label><input type="number" id="sw" step="1"></div>
       <div id="shBox"><label id="shLabel">Sheet width (mm)</label><input type="number" id="sh" step="1"></div>
     </div>
+    <div class="hint" id="rollHint" style="margin:-2px 0 8px" hidden></div>
     <div class="hint" id="procInfo" style="margin:-2px 0 10px"></div>
     <div><label for="job">Job name</label><input type="text" id="job" placeholder="INV-12345 Rate boards"></div>
   </div>
 
   <div class="card step">
     <h2><span class="n">2</span>Parts</h2>
+    <details id="orderBatch" class="import-option">
+      <summary>Combine approved orders or create a disposable TEST</summary>
+      <p class="hint">For printed panels of any material: nest compatible orders together. Vinyl / roll labels stay in the existing ONYX workflow. Confirm the existing order and artwork approvals after checking each order's parts and quantities. Importing a file or card does not approve it.</p>
+      <label for="batchFinish">Shared finish / laminate</label><input type="text" id="batchFinish" placeholder="e.g. Matte laminate, or None">
+      <label style="margin-top:10px"><input type="checkbox" id="disposableTest"> Create a disposable manual TEST job</label>
+      <div id="testCreationFields" hidden>
+        <p class="msg warn" id="testCreationCopy" style="margin:6px 0">TEST only: notifications are suppressed, production release stays off, and every approval field below must begin with TEST. This marker is created with the job; it cannot be added to an existing saved job.</p>
+        <label for="testCreatedBy">Created by</label><input type="text" id="testCreatedBy" maxlength="200" placeholder="Operator identity for the retained TEST record">
+      </div>
+      <div style="display:flex;gap:8px;margin:8px 0"><input type="text" id="orderRef" placeholder="Order reference, e.g. SP-1140" maxlength="24"><button id="addOrder" class="ghost" type="button">Add order</button></div>
+      <label for="activeOrder">Assign new uploads / imported parts to</label><select id="activeOrder"><option value="">Choose an order</option></select>
+      <label><input type="checkbox" id="productionSequence"> Group by state and consecutive jobs</label>
+      <p class="hint">Uses the original item numbers and Danilo's sequence. Normal limit: two states per sheet. New arrivals form a new nesting result.</p>
+      <div id="orderList"></div>
+      <p class="hint">Each small reference shows the project, panel number and finished size in millimetres. It prints in the waste beside its panel, outside the artwork. Read it while the panel is still in position, then lift the panel straight into the correct project pile. Use the project reference to sort even when sizes match. Check the counts before bundling. Existing approvals are confirmed by the named operator here; this does not grant client approval or production release.</p>
+    </details>
     <div id="drop" class="drop"><b>Drop the artwork PDFs here</b> or click to choose<br><span>Final-size PDFs. Include a pink CutContour line for print &amp; cut.</span></div>
     <input type="file" id="file" accept="application/pdf" multiple style="display:none">
     <div id="artlist"></div>
@@ -256,10 +286,11 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
       <div id="trelloMsg" style="font-size:13px;margin-top:6px;min-height:1em;white-space:pre-line"></div>
     </details>
     <div class="tablewrap" style="margin-top:12px"><table id="parts">
-      <thead><tr><th>Part</th><th class="colshape" style="width:100px">Shape</th><th style="width:72px">W mm</th><th style="width:72px">H mm</th><th style="width:56px">Qty</th><th style="width:40px" title="May be turned 90°">Turn</th><th style="width:110px">Artwork</th><th></th></tr></thead>
+      <thead><tr><th>Part</th><th class="colshape" style="width:100px">Shape</th><th style="width:72px">W mm</th><th style="width:72px">H mm</th><th style="width:56px">Qty</th><th style="width:40px" title="May be turned 90°">Turn</th><th style="width:110px">Artwork</th><th class="colback" style="width:110px" title="Double-sided: the artwork printed on the back of this part. PS Nest writes the back print file from the same nest.">Back artwork</th><th></th></tr></thead>
       <tbody></tbody>
     </table></div>
     <div class="parts-actions"><button class="ghost small" id="addRow">+ Add a part by size</button><button class="ghost small" id="clearRows">Clear</button>
+      <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink)" title="For a job printed on both faces. Choose the back artwork on each part row. PS Nest writes the back print file from the same nest, so the front print, the back print and the cut files always match. Parts may still be turned."><input type="checkbox" id="two_sided"> Double-sided: choose a back artwork per part</label>
       <button class="ghost small" id="listBtn" title="CSV or XLSX: columns name, width, height, qty, file">Parts list from a spreadsheet</button><input type="file" id="listFile" accept=".csv,.xlsx,.xls,text/csv" style="display:none">
     </div><div class="quantity-tools">
       <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)">Set every qty to <input type="number" id="qtyAll" min="1" step="1" style="width:56px;padding:3px 6px"><button class="ghost small" id="qtyAllBtn">Set</button></label>
@@ -284,6 +315,8 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <div class="row3">
       <div id="printerBox"><label>Printer</label><select id="printer"></select></div>
       <div><label>Thickness (mm, optional)</label><input type="number" id="thickness" step="0.5" min="0" placeholder="checks machine limits"></div>
+      <div id="metalBox" hidden><label for="metal">Metal (fibre laser)</label><select id="metal"></select><div id="metalMsg" style="font-size:13px;margin-top:4px;color:#b42318"></div></div>
+      <div id="cutBox" hidden><label for="cut_process">Cut (Gunner)</label><select id="cut_process"><option value="kiss" selected>Kiss cut</option><option value="through">Cut through</option></select></div>
       <div><label>Cut PDF lines</label><select id="cut_line"><option value="cutcontour">CutContour (pink spot colour)</option><option value="black">Black hairline</option></select></div>
     </div>
     <div class="row3">
@@ -294,9 +327,9 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
 
     <h3>Spacing <span class="pill unv" id="unvPill">shop defaults, prove on an offcut</span></h3>
     <div class="row3">
-      <div><label>Edge margin (mm)</label><input type="number" id="edge" step="0.5"></div>
+      <div id="edgeBox"><label>Edge margin (mm)</label><input type="number" id="edge" step="0.5"></div>
       <div><label>Gap between parts (mm)</label><input type="number" id="gap" step="0.5"></div>
-      <div><label>Clamp / mark zone (mm)</label><input type="number" id="clamp" step="0.5"></div>
+      <div id="clampBox"><label>Clamp / mark zone (mm)</label><input type="number" id="clamp" step="0.5"></div>
     </div>
     <div class="row3">
       <div><label>Bleed (mm)</label><input type="number" id="bleed" step="0.5"></div>
@@ -309,8 +342,8 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
       <div><label>Nesting time</label><div class="range"><input type="range" id="time" min="0" max="3" step="1" value="2"><span id="timeLabel">45 s, better</span></div></div>
     </div>
     <div class="row3">
-      <div><label>Smallest offcut worth keeping (mm)</label><input type="number" id="min_offcut" step="1"><input type="checkbox" id="trim_offcut" checked style="display:none"></div>
-      <div style="grid-column:span 2"><label>Edge per side: L R B T (mm, blank = edge margin)</label><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+      <div id="minOffcutBox"><label>Smallest offcut worth keeping (mm)</label><input type="number" id="min_offcut" step="1"><input type="checkbox" id="trim_offcut" checked style="display:none"></div>
+      <div id="edgeSidesBox" style="grid-column:span 2"><label>Edge per side: L R B T (mm, blank = edge margin)</label><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
         <input type="number" id="edge_l" step="0.5" min="0" placeholder="L"><input type="number" id="edge_r" step="0.5" min="0" placeholder="R"><input type="number" id="edge_b" step="0.5" min="0" placeholder="B"><input type="number" id="edge_t" step="0.5" min="0" placeholder="T"></div></div>
     </div>
     <div><label>Extra sheets or remnants to use first (mm x mm, how many)</label><div id="stockList"></div><button class="ghost small" id="stockAdd" type="button">+ Add a sheet size</button></div>
@@ -346,10 +379,13 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
     <h2>Result</h2>
     <p class="words" id="words"></p>
     <div class="stats" id="stats"></div>
+    <p class="hint" id="panelReferenceStatus" role="status" hidden></p>
+    <div id="testLifecycle" class="msg warn" hidden><b>Disposable TEST job.</b> <span id="testIdentity"></span> Notifications are suppressed and production release is off. <button class="ghost small" id="archiveTest" type="button">Archive this TEST job</button></div>
+    <div id="holdBox" class="holdbox" role="alert" hidden></div>
     <div class="dl" id="downloads"></div>
     <div class="share"><button class="ghost small" id="undoBtn" style="display:none" title="Go back to the previous layout and settings">Undo</button><button class="ghost small" id="unlockBtn" style="display:none">Unlock all parts</button><button class="ghost small" id="copyWords">Copy summary</button><button class="ghost small" id="copyLink">Copy link to this layout</button><a class="ghost small" id="waBtn" style="display:inline-block;padding:4px 9px;font-size:12px;border:1px solid var(--ink);border-radius:6px;color:var(--ink);text-decoration:none" target="_blank" rel="noopener">Send on WhatsApp</a></div>
     <details class="help-note"><summary>Adjusting &amp; sharing this layout</summary><div class="hint" id="shareHint">Drag a part to lock its position, then Nest again. Shared links work only while this computer is reachable on the network.</div></details>
-    <div class="legend"><span><i style="background:#fde8ec;border:1px solid #c8102e"></i>Part</span><span><i style="background:#e8f5e9"></i>Reusable offcut</span><span><i style="border-top:2px dashed #2e7d32;height:0"></i>Separation cut</span><span><i style="border:1px dashed #999"></i>Usable area</span></div>
+    <div class="legend"><span><i style="background:#fde8ec;border:1px solid #c8102e"></i>Part</span><span class="sheet-only"><i style="background:#e8f5e9"></i>Reusable offcut</span><span class="sheet-only"><i style="border-top:2px dashed #2e7d32;height:0"></i>Separation cut</span><span class="sheet-only"><i style="border:1px dashed #999"></i>Usable area</span></div>
     <div id="sheets"></div>
   </div>
   <div class="card" id="empty">
@@ -367,6 +403,17 @@ window.fetch=async(url,opts={})=>{const u=String(url);if(!u.startsWith('/api/'))
   <details><summary>Enter an exact point (mm from bottom-left)</summary><div class="cut-tools"><label for="cutX">X <input id="cutX" type="number" step="0.1" value="0"></label><label for="cutY">Y <input id="cutY" type="number" step="0.1" value="0"></label><button id="cutPointAdd" class="ghost">Add point</button></div></details>
   <div class="cut-actions"><button id="cutCancel" class="ghost">Cancel</button><button id="cutSave">Save cuts &amp; update files</button></div></div>
 </dialog>
+<dialog id="archiveTestDialog" aria-labelledby="archiveTestTitle"><form id="archiveTestForm" class="dlg">
+  <h2 id="archiveTestTitle">Archive disposable TEST job</h2>
+  <p class="hint" id="archiveTestIdentity"></p>
+  <p class="hint">This keeps a hash-addressed recovery copy and removes this TEST job and its job files. Artwork and outline library sources stay available because a normal UI job does not prove that it owns those sources.</p>
+  <label for="archiveTestActor">Operator performing this archive action</label><input id="archiveTestActor" maxlength="200" autocomplete="off" required>
+  <p class="hint">Enter your own operator identity. PS Nest records what you enter; this local screen does not authenticate it.</p>
+  <label for="archiveTestReason">Reason</label><textarea id="archiveTestReason" maxlength="500" required></textarea>
+  <label for="archiveTestConfirmation">Type ARCHIVE TEST JOB</label><input id="archiveTestConfirmation" autocomplete="off" required>
+  <div id="archiveTestStatus" class="msg" role="alert" hidden></div>
+  <div class="cut-actions"><button id="archiveTestCancel" class="ghost" type="button">Cancel</button><button id="archiveTestSubmit" type="submit">Archive TEST job</button></div>
+</form></dialog>
 <dialog id="nasDialog" aria-labelledby="nasTitle"><form id="nasForm" class="dlg" autocomplete="off">
   <h2 id="nasTitle">Connect to NAS</h2>
   <p class="hint">Use the NAS address and your authorised account. This connection reads finished-art PDFs; it does not change files or permissions on the NAS.</p>
@@ -398,38 +445,69 @@ const SHAPES=[['rect','Rectangle'],['circle','Circle'],['ellipse','Ellipse'],['t
 const RULE_KEYS=['edge','gap','clamp','bleed','corner_radius','bit_diameter','min_offcut'];
 const TIMES=[[5,'5 s, fast'],[15,'15 s, normal'],[45,'45 s, better'],[120,'120 s, best']];
 let PINS=[],UNDO=[],FORM_OF_CURRENT=null,LANG='en';
+let ORDERS=[];
 let CUSTOM_TEMPLATES={}, MATERIALS={}, MACHINES={}, CUTTERS={};
-function copyText(t){return navigator.clipboard.writeText(t).catch(()=>{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();if(!ok)throw new Error('copy blocked');});}
+let MACHINE=null;   // machine id this PC is bookmarked to (?machine=biesse|co2|pulse|fibre|ameida|gunner, or a printer: colorado), remembered in localStorage; null = every machine
+function copyText(t){const fallback=()=>{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();if(!ok)throw new Error('copy blocked');};
+  // navigator.clipboard exists only on secure origins; a LAN page over plain http (http://192.168.15.6:8770) has none, so go straight to the fallback.
+  if(!navigator.clipboard||!navigator.clipboard.writeText)return Promise.resolve().then(fallback);return navigator.clipboard.writeText(t).catch(fallback);}
 function timeLabel(){$('#timeLabel').textContent=TIMES[+$('#time').value][1];}
 function stockRows(){return [...document.querySelectorAll('#stockList .stock')].map(d=>({w:d.querySelector('.sw').value,h:d.querySelector('.sh').value,qty:d.querySelector('.sq').value})).filter(s=>s.w||s.h);}
 function stockAdd(s){s=s||{};const d=document.createElement('div');d.className='stock';d.innerHTML=`<input type="number" class="sw" placeholder="length" step="1" value="${s.w||''}"><input type="number" class="sh" placeholder="width" step="1" value="${s.h||''}"><input type="number" class="sq" min="1" step="1" value="${s.qty||1}"><button class="ghost small" type="button" title="Remove">×</button>`;d.querySelector('button').onclick=()=>d.remove();$('#stockList').appendChild(d);}
-const MEM_KEYS=['printer','thickness','cut_line','mode','rot_step','mirror','edge','gap','clamp','bleed','corner_radius','bit_diameter','min_offcut','offcut','offcut_enabled','policy','time','edge_l','edge_r','edge_b','edge_t','print_outlines','corner_marks','sheet_frame'];
+const MEM_KEYS=['printer','thickness','cut_line','mode','rot_step','mirror','edge','gap','clamp','bleed','corner_radius','bit_diameter','min_offcut','offcut','offcut_enabled','policy','time','edge_l','edge_r','edge_b','edge_t','print_outlines','corner_marks','sheet_frame','rollBatch'];
 function settingsSnapshot(){const o={};MEM_KEYS.forEach(k=>{const el=$('#'+k);if(!el)return;o[k]=el.type==='checkbox'?el.checked:el.value;});o.stock=stockRows();return o;}
-function syncOffcut(){const reset=$('#resetCustomCuts');if(reset)reset.style.display=typeof CUSTOM_CUTS!=='undefined'&&Object.keys(CUSTOM_CUTS).length?'':'none';const roll=!!(PRODUCTS[$('#product').value]||{}).roll;const on=$('#offcut_enabled').checked&&!roll;$('#offcut_enabled').disabled=roll;$('#offcut').disabled=!on;$('#offcutPanel').classList.toggle('is-off',!on);$('#offcutState').textContent=LANG==='pt'?(on?'LIGADO':'DESLIGADO'):(on?'ON':'OFF');$('#offcutHint').textContent=LANG==='pt'?(on?'Adiciona cortes para separar a área encaixada.':'Sem cortes para separar a sobra neste trabalho.'):(on?'Adds separation cuts around the nested area.':'No offcut separation cuts for this job.');if(roll){$('#offcutState').textContent=LANG==='pt'?'BOBINA':'ROLL';$('#offcutHint').textContent=LANG==='pt'?'Cortes de separação de chapas não se aplicam a bobinas.':'Sheet offcut cuts do not apply to roll materials.';}}
+function syncRollControls(roll){
+  [['edgeBox','edge'],['clampBox','clamp'],['minOffcutBox','min_offcut']].forEach(([box,id])=>{const b=$('#'+box),el=$('#'+id);if(b)b.style.display=roll?'none':'';if(el)el.disabled=roll;});
+  const sides=$('#edgeSidesBox');if(sides)sides.style.display=roll?'none':'';['edge_l','edge_r','edge_b','edge_t'].forEach(id=>{$('#'+id).disabled=roll;});
+}
+function syncOffcut(){const reset=$('#resetCustomCuts');if(reset)reset.style.display=typeof CUSTOM_CUTS!=='undefined'&&Object.keys(CUSTOM_CUTS).length?'':'none';const roll=!!(PRODUCTS[$('#product').value]||{}).roll;syncRollControls(roll);const on=$('#offcut_enabled').checked&&!roll;$('#offcut_enabled').disabled=roll;$('#offcut').disabled=!on;$('#offcutPanel').classList.toggle('is-off',!on);$('#offcutPanel').style.display=roll?'none':'';document.querySelectorAll('.legend .sheet-only').forEach(x=>x.style.display=roll?'none':'');$('#offcutState').textContent=LANG==='pt'?(on?'LIGADO':'DESLIGADO'):(on?'ON':'OFF');$('#offcutHint').textContent=LANG==='pt'?(on?'Adiciona cortes para separar a área encaixada.':'Sem cortes para separar a sobra neste trabalho.'):(on?'Adds separation cuts around the nested area.':'No offcut separation cuts for this job.');if(roll){$('#offcutState').textContent=LANG==='pt'?'BOBINA':'ROLL';$('#offcutHint').textContent=LANG==='pt'?'Cortes de separação de chapas não se aplicam a bobinas.':'Sheet offcut cuts do not apply to roll materials.';}}
 function offcutChanged(event){if(event?.target?.id==='offcut')CUSTOM_CUTS={};syncOffcut();if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',LANG==='pt'?'Configuração da sobra alterada. Clique em Encaixar para atualizar os arquivos de corte.':'Offcut setting changed. Press Nest to update the cut files.');}}
 function selectedOffcut(){return $('#offcut_enabled').checked&&!$('#offcut_enabled').disabled?$('#offcut').value:'none';}
-function applySettings(o){if(!o)return;
+function applySettings(o,fromMemory=false){if(!o)return;
   // Older saved settings use offcut=none, or a numeric trim_offcut flag.
   const enabled=typeof o.offcut_enabled==='boolean'?o.offcut_enabled:
     o.offcut!=null?o.offcut!=='none':o.trim_offcut!=null?!!Number(o.trim_offcut):true;
-  o=Object.assign({},o,{offcut:['rect','L','stairs'].includes(o.offcut)?o.offcut:'L',offcut_enabled:enabled});MEM_KEYS.forEach(k=>{const el=$('#'+k);if(!el||!(k in o))return;if(el.type==='checkbox')el.checked=!!o[k];else el.value=o[k];});$('#stockList').innerHTML='';(o.stock||[]).forEach(stockAdd);syncOffcut();timeLabel();modeChanged();}
-function memKey(){return 'psnest.settings.'+($('#product').value==='custom'?'custom.'+$('#custom_name').value.trim()+'.'+$('#custom_cutter').value:$('#product').value);}
+  o=Object.assign({},o,{offcut:['rect','L','stairs'].includes(o.offcut)?o.offcut:'L',offcut_enabled:enabled});MEM_KEYS.forEach(k=>{const el=$('#'+k);if(!el||!(k in o))return;if(fromMemory&&k==='printer'&&printerPC()){el.value=MACHINE;return;}if(el.type==='checkbox')el.checked=!!o[k];else el.value=o[k];});$('#stockList').innerHTML='';(o.stock||[]).forEach(stockAdd);syncOffcut();timeLabel();modeChanged();}
+function memKey(){const v=$('#product').value;return 'psnest.settings.'+(v==='custom'?'custom.'+$('#custom_name').value.trim()+'.'+$('#custom_cutter').value:v)+((PRODUCTS[v]||{}).roll?'.roll45':'');}   // roll: a new key, so remembered vinyl settings from before 20-Oct-2026 (edge 10, 3000 mm sheet) are ignored
 function saveSettings(){if(!$('#remember').checked||!$('#product').value)return;try{localStorage.setItem(memKey(),JSON.stringify(settingsSnapshot()));}catch(e){}}
-function loadSettings(){try{const s=localStorage.getItem(memKey());if(s){applySettings(JSON.parse(s));return true;}}catch(e){}return false;}
+function loadSettings(){try{const s=localStorage.getItem(memKey());if(s){applySettings(JSON.parse(s),true);return true;}}catch(e){}return false;}
 const CUSTOM_FIELDS=['name','family','cutter','roll','cutter_name','tool_kind','printer'];
+// Owner ruling 16 Oct ("name every metal"): the fibre laser needs the metal named before Run.  Exactly the seven
+// FIBRE_CAP_MM keys, in this order; the server (products/server) refuses a fibre job without one.
+const METALS=[['mild_steel','Mild steel'],['stainless','Stainless'],['aluminium','Aluminium'],['brass','Brass'],['galvanised','Galvanised'],['copper','Copper'],['colorbond','Colorbond']];
+function currentCutter(){const pid=$('#product').value;return pid==='custom'?$('#custom_cutter').value:((PRODUCTS[pid]||{}).cutter||'');}
+function syncMetal(){const fibre=currentCutter()==='fibre';const box=$('#metalBox');box.hidden=!fibre;if(!fibre)$('#metal').value='';$('#metal').style.outline='';$('#metalMsg').textContent='';}
+function metalValue(){return $('#metalBox').hidden?undefined:($('#metal').value||undefined);}
+// Owner ruling d08 (16 Oct): kiss cut is the Gunner's only. The Cut control shows for the Gunner alone (default Kiss cut)
+// and cut_process is sent only then; every other machine sends nothing and the server cuts through.
+function syncCut(){const g=currentCutter()==='gunner';const box=$('#cutBox');if(g&&box.hidden)$('#cut_process').value='kiss';box.hidden=!g;}
+function cutValue(){return $('#cutBox').hidden?undefined:($('#cut_process').value||'kiss');}
 function customSpec(){const o={};CUSTOM_FIELDS.forEach(k=>o[k]=$('#custom_'+k).value);o.roll=o.roll==='roll';return o;}
 function restoreCustom(o){if(!o)return;CUSTOM_FIELDS.forEach(k=>{if(k in o)$('#custom_'+k).value=k==='roll'?(o[k]?'roll':'sheet'):o[k];});refreshCustom(o);}
 function refreshCustom(saved){
   const o=saved||customSpec(), family=MATERIALS[o.family];
   if(family){o.roll=!!family.roll;$('#custom_roll').value=o.roll?'roll':'sheet';}
   $('#custom_roll').disabled=!!family;
-  const allowed=Object.keys(CUTTERS).filter(k=>(!family||family.cutters.includes(k))&&(!o.roll||k==='ameida'));
-  $('#custom_cutter').innerHTML='';[...allowed,'custom'].forEach(k=>$('#custom_cutter').add(new Option(k==='custom'?'Custom cutting process…':CUTTERS[k].label,k)));
-  o.cutter=[...allowed,'custom'].includes(o.cutter)?o.cutter:'custom';$('#custom_cutter').value=o.cutter;
+  // Roll stock goes to any cutter with a roll feed (MACHINES[k].roll_width: the Ameida, and the Gunner once its profile lands);
+  // a bookmarked cutter PC offers only its own cutter and never "Custom cutting process", which the server would refuse for it;
+  // a printer PC (Colorado) prints, so it offers every cutter for the stock and only its own printer (below).
+  const allowed=Object.keys(CUTTERS).filter(k=>(!MACHINE||printerPC()||k===MACHINE)&&(!family||family.cutters.includes(k))&&(!o.roll||!!(MACHINES[k]||{}).roll_width));
+  const choices=MACHINE&&!printerPC()?allowed:[...allowed,'custom'];
+  $('#custom_cutter').innerHTML='';choices.forEach(k=>$('#custom_cutter').add(new Option(k==='custom'?'Custom cutting process…':CUTTERS[k].label,k)));
+  if(!choices.length){
+    // The cutter on this PC cannot cut the material: show the placeholder, drop the stale custom product so the
+    // process line and Nest see no product, and stop here (no template to build — the old code threw on it).
+    const op=new Option('Not cut on this PC — open Show all machines','');op.disabled=true;$('#custom_cutter').add(op);
+    o.cutter='';$('#custom_cutter').value='';$('#customTool').hidden=true;delete PRODUCTS.custom;return;
+  }
+  o.cutter=choices.includes(o.cutter)?o.cutter:choices[0];$('#custom_cutter').value=o.cutter;
   $('#customTool').hidden=o.cutter!=='custom';
-  const printers=Object.entries(MACHINES).filter(([k,v])=>v.feed===(o.roll?'roll':'flatbed')&&(!family||(family.printers||[]).includes(k)));
-  $('#custom_printer').innerHTML='';$('#custom_printer').add(new Option('Cut only — no printing',''));
-  printers.forEach(([k,v])=>$('#custom_printer').add(new Option(v.name,k)));$('#custom_printer').value=printers.some(([k])=>k===o.printer)?o.printer:'';o.printer=$('#custom_printer').value;
+  const printers=Object.entries(MACHINES).filter(([k,v])=>(!printerPC()||k===MACHINE)&&v.feed===(o.roll?'roll':'flatbed')&&(!family||(family.printers||[]).includes(k)));
+  $('#custom_printer').innerHTML='';
+  if(printerPC()&&!printers.length){const op=new Option('Not printed on this PC — open Show all machines','');op.disabled=true;$('#custom_printer').add(op);
+    $('#custom_printer').value='';delete PRODUCTS.custom;return;}   // this printer cannot take the stock: no product, as for a cutter PC above
+  if(!printerPC())$('#custom_printer').add(new Option('Cut only — no printing',''));
+  printers.forEach(([k,v])=>$('#custom_printer').add(new Option(v.name,k)));$('#custom_printer').value=printers.some(([k])=>k===o.printer)?o.printer:(printerPC()?MACHINE:'');o.printer=$('#custom_printer').value;
   const p=JSON.parse(JSON.stringify(CUSTOM_TEMPLATES[o.cutter]));
   if(o.cutter==='custom'){const c=CUTTERS[{bit:'biesse',kerf:'co2',knife:'ameida'}[o.tool_kind]];p.tool=c.tool;p.output=c.output;p.defaults={...c.defaults,bleed:0,min_offcut:300};p.cutter_name=o.cutter_name.trim()||'Custom cutter';}
   p.material=o.family;p.material_name=o.name.trim()||'Custom material';p.name=p.material_name+' → '+p.cutter_name;p.roll=o.roll;
@@ -445,23 +523,36 @@ function customChanged(e){
   try{localStorage.setItem('psnest.customMaterial',JSON.stringify(customSpec()));}catch(e){}
   if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn','Material changed. Press Nest to update the cut files.');}
 }
-function formSnapshot(){return {custom_cuts:cutClone(CUSTOM_CUTS),job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,sheet:$('#sheet').value,sw:$('#sw').value,sh:$('#sh').value,settings:settingsSnapshot(),parts:rows(),pins:PINS.slice()};}
-function applyForm(f){CUSTOM_CUTS=cutClone(f.custom_cuts||{});if(f.custom_material)restoreCustom(f.custom_material);$('#job').value=f.job||'';if(f.product&&PRODUCTS[f.product]){$('#product').value=f.product;fillProduct();}
-  if(f.sheet!==undefined){$('#sheet').value=f.sheet;sheetChanged();if(f.sheet==='custom'){$('#sw').value=f.sw;$('#sh').value=f.sh;}}
-  applySettings(f.settings);$('#custom_thickness').value=$('#thickness').value;$('#parts tbody').innerHTML='';(f.parts||[]).forEach(p=>addRow(Object.assign({},p,{rotate:p.rotate!==false})));if(!(f.parts||[]).length)addRow();refreshArtSelects();PINS=(f.pins||[]).slice();}
-function applyRequest(q){const f={custom_cuts:q.custom_cuts||{},job:q.job,product:q.product,custom_material:q.custom_material,sheet:'custom',sw:q.sheet&&q.sheet.w,sh:q.sheet&&q.sheet.h,parts:q.parts,pins:q.pins||[],
-  settings:Object.assign({},q.rules||{},{printer:q.printer,thickness:q.thickness,cut_line:q.cut_line,mode:q.mode,rot_step:q.rot_step,mirror:q.mirror,offcut:q.offcut,offcut_enabled:Object.keys(q.custom_cuts||{}).length?true:q.offcut!=='none',policy:q.policy,print_outlines:q.print_outlines,corner_marks:q.corner_marks,sheet_frame:q.sheet_frame!==false,
+function formSnapshot(){return {production_plan:$('#productionSequence').checked?{mode:'state_sequence'}:null,orders:JSON.parse(JSON.stringify(ORDERS)),finish:$('#batchFinish').value,disposable_test:$('#disposableTest').checked,test_created_by:$('#testCreatedBy').value,metal:$('#metal').value,cut_process:$('#cut_process').value,custom_cuts:cutClone(CUSTOM_CUTS),job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,sheet:$('#sheet').value,sw:$('#sw').value,sh:$('#sh').value,settings:settingsSnapshot(),parts:rows(),pins:PINS.slice()};}
+function syncTestCreation(){const enabled=$('#disposableTest').checked,roll=!!(PRODUCTS[$('#product').value]||{}).roll;$('#testCreationFields').hidden=!enabled;$('#testCreatedBy').required=enabled;$('#testCreationCopy').textContent=roll?'Standalone roll TEST only: notifications are suppressed and production release stays off. No order or approval fields are created. The server issues the TEST identity with this new job; it cannot be added to an existing saved job.':'TEST only: notifications are suppressed, production release stays off, and every approval field below must begin with TEST. This marker is created with the job; it cannot be added to an existing saved job.';}
+function printerPC(){return !!MACHINE&&(MACHINES[MACHINE]||{}).kind==='printer';}
+function onMachine(p){return !MACHINE||(p||{}).cutter===MACHINE||((p||{}).printers||[]).some(x=>x.id===MACHINE);}   // cut on this cutter PC, or printed on this printer PC
+function onThisPC(pid){return !MACHINE||pid==='custom'||onMachine(PRODUCTS[pid]);}   // the material list on a bookmarked page holds only this PC's products + Custom
+function applyForm(f){$('#productionSequence').checked=f.production_plan?.mode==='state_sequence';ORDERS=JSON.parse(JSON.stringify(f.orders||[]));$('#batchFinish').value=f.finish||'';$('#disposableTest').checked=!!f.disposable_test;$('#testCreatedBy').value=f.test_created_by||'';if(typeof syncTestCreation==='function')syncTestCreation();renderOrders();CUSTOM_CUTS=cutClone(f.custom_cuts||{});if(f.custom_material)restoreCustom(f.custom_material);$('#job').value=f.job||'';
+  // A saved job must come back as what it was: custom material stays custom even when this PC cannot cut it (the custom block then
+  // shows the placeholder), and a standard product nested on another machine leaves the box empty with a note, never the previous material.
+  const known=!!f.product&&(!!PRODUCTS[f.product]||f.product==='custom');
+  if(known&&onThisPC(f.product)){$('#product').value=f.product;fillProduct();}
+  else if(known){$('#product').value='';fillProduct();const t='Nested on another machine ('+esc(PRODUCTS[f.product].cutter_name)+') \u2014 open Show all machines for this material.';$('#procInfo').innerHTML='<span class="pill unv">'+t+'</span>';$('#productMsg').innerHTML='<span class="pill unv">'+t+'</span>';}
+  if(f.metal!==undefined&&!$('#metalBox').hidden)$('#metal').value=f.metal||'';
+  if(f.cut_process!==undefined&&!$('#cutBox').hidden)$('#cut_process').value=(f.cut_process==='through')?'through':'kiss';
+  if(f.sheet!==undefined){$('#sheet').value=f.sheet;sheetChanged();if(f.sheet==='custom'){$('#sw').value=f.sw;$('#sh').value=f.sh;}setRollLen(f.sw);}
+  applySettings(f.settings);$('#custom_thickness').value=$('#thickness').value;$('#parts tbody').innerHTML='';(f.parts||[]).forEach(p=>addRow(Object.assign({},p,{rotate:p.rotate!==false})));if(!(f.parts||[]).length)addRow();refreshArtSelects();$('#two_sided').checked=(f.parts||[]).some(p=>p.artwork_back);syncTwoSided();PINS=(f.pins||[]).slice();}
+function applyRequest(q){const f={production_plan:q.production_plan,orders:q.orders,finish:q.finish,disposable_test:!!q.test_record,test_created_by:(q.test_record||{}).created_by||'',metal:q.metal,cut_process:q.cut_process,custom_cuts:q.custom_cuts||{},job:q.job,product:q.product,custom_material:q.custom_material,sheet:'custom',sw:q.sheet&&q.sheet.w,sh:q.sheet&&q.sheet.h,parts:q.parts,pins:q.pins||[],
+  settings:Object.assign({},q.rules||{},{printer:q.printer,thickness:q.thickness,cut_line:q.cut_line,mode:q.mode,rot_step:q.rot_step,mirror:q.mirror,offcut:q.offcut,offcut_enabled:Object.keys(q.custom_cuts||{}).length?true:q.offcut!=='none',policy:q.policy,print_outlines:q.print_outlines,corner_marks:q.corner_marks,sheet_frame:q.sheet_frame!==false,rollBatch:q.roll_batch_mm==null?10:+q.roll_batch_mm/1000,
     edge_l:(q.edge_sides||{}).l,edge_r:(q.edge_sides||{}).r,edge_b:(q.edge_sides||{}).b,edge_t:(q.edge_sides||{}).t,stock:q.stock||[],time:String(Math.max(0,TIMES.findIndex(t=>t[0]>=+(q.time||45))))})};
-  applyForm(f);const p=PRODUCTS[q.product];if(p&&q.sheet){const i=p.sheets.findIndex(s=>+s.w===+q.sheet.w&&+s.h===+q.sheet.h);if(i>=0){$('#sheet').value=i;sheetChanged();}}}
+  applyForm(f);const savedPrinter=q.printer||'',printerMismatch=printerPC()&&savedPrinter&&savedPrinter!==MACHINE;if(printerMismatch){$('#printer').value='';const t=`Saved job printer is ${printerName(savedPrinter)}, not this bookmarked ${printerName(MACHINE)}. Existing exports keep their saved printer route; choose ${printerName(MACHINE)} and press Nest to create new exports.`;$('#productMsg').innerHTML='<span class="pill unv">'+esc(t)+'</span>';msg('warn',t);}const p=PRODUCTS[q.product];if(p&&q.sheet){const i=p.sheets.findIndex(s=>+s.w===+q.sheet.w&&+s.h===+q.sheet.h);if(i>=0){$('#sheet').value=i;sheetChanged();}}}
 function lastQty(){try{return JSON.parse(localStorage.getItem('psnest.lastqty')||'{}');}catch(e){return {};}}
 function rememberQty(){try{const m={};rows().forEach(p=>{if(p.name)m[p.name.trim().toLowerCase()]=p.qty;});localStorage.setItem('psnest.lastqty',JSON.stringify(m));}catch(e){}}
 async function loadProjects(){try{const j=await api('/api/jobs');const jobs=j.jobs||[];const box=$('#projects');if(!jobs.length){box.style.display='none';return;}box.style.display='';$('#projectsHint').textContent=jobs.length+' nested on this computer';
   const when=t=>{const d=new Date(t*1000);return d.toLocaleDateString('en-AU',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});};
-  $('#projectList').innerHTML='<table><thead><tr><th>Job</th><th>When</th><th>Material</th><th>Sheets</th><th>Parts</th><th></th></tr></thead><tbody>'+jobs.slice(0,40).map(x=>`<tr><td>${esc(x.job||'')}</td><td>${when(x.when)}</td><td>${esc((x.material||'').split(' (')[0])}</td><td>${x.sheets??''}</td><td>${x.parts??''}</td><td style="white-space:nowrap">${x.reopen?`<button class="ghost small" data-open="${x.id}">Open</button> `:''}<a href="/p/${x.id}" target="_blank" rel="noopener" style="font-size:12px">View</a></td></tr>`).join('')+'</tbody></table>';
-  $('#projectList').querySelectorAll('button[data-open]').forEach(b=>b.onclick=async()=>{clearMsgs();try{const r=await api('/api/job/'+b.dataset.open+'/request');applyRequest(r.request);if(r.result){CURRENT=r.result;FORM_OF_CURRENT=formSnapshot();render(r.result);}msg('ok',`"${r.job}" is back in the form: change what you need and press Nest.`);window.scrollTo({top:0,behavior:'smooth'});}catch(e){msg('err',e.message);}});}catch(e){}}
+  $('#projectList').innerHTML='<table><thead><tr><th>Job</th><th>When</th><th>Material</th><th>Sheets</th><th>Parts</th><th></th></tr></thead><tbody>'+jobs.slice(0,40).map(x=>`<tr><td>${esc(x.job||'')}</td><td>${when(x.when)}</td><td>${esc((x.material||'').split(' (')[0])}</td><td>${x.sheets??''}</td><td>${x.parts??''}</td><td style="white-space:nowrap">${x.reopen?`<button class="ghost small" data-open="${x.id}">Open</button> `:''}<button class="ghost small" data-append="${x.id}">Add to batch</button> <a href="/p/${x.id}" target="_blank" rel="noopener" style="font-size:12px">View</a></td></tr>`).join('')+'</tbody></table>';
+  $('#projectList').querySelectorAll('button[data-append]').forEach(b=>b.onclick=()=>appendProject(b.dataset.append));
+  $('#projectList').querySelectorAll('button[data-open]').forEach(b=>b.onclick=()=>openProject(b.dataset.open));}catch(e){}}
+async function openProject(id){clearMsgs();try{const r=await api('/api/job/'+id+'/request');applyRequest(r.request);if(r.result){CURRENT=r.result;FORM_OF_CURRENT=formSnapshot();render(r.result);}msg('ok',`"${r.job}" is back in the form: change what you need and press Nest.`);window.scrollTo({top:0,behavior:'smooth'});}catch(e){msg('err',e.message);}}
 
 let API_PENDING=0;
-async function api(path,opts){API_PENDING++;try{const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:'Bad response'}));if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));return j;}finally{API_PENDING--;}}
+async function api(path,opts){API_PENDING++;try{const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:'Bad response'}));if(!r.ok||j.error)throw new Error(j.message||j.error||('HTTP '+r.status));return j;}finally{API_PENDING--;}}
 // The native updater saves only job state and PS Nest preferences, never NAS passwords.
 window.psNestUpdateSnapshot=()=>{
   if(!window.PSNEST_INITIALIZED||RUN||API_PENDING||CUT_EDITOR||[...document.querySelectorAll('button:disabled')].some(b=>b.offsetParent!==null))throw new Error('Finish the current operation before updating.');
@@ -477,36 +568,49 @@ window.psNestRestoreUpdate=s=>{
 function msg(kind,text){const d=document.createElement('div');d.className='msg '+kind;d.textContent=text;$('#messages').appendChild(d);}
 function clearMsgs(){$('#messages').innerHTML='';}
 
-function noProduct(){$('#sheet').innerHTML='<option value="">\u2014</option>';$('#customSheet').style.display='none';$('#printer').innerHTML='';$('#printerBox').style.visibility='hidden';$('#toolLabel').textContent='';
+function noProduct(){$('#metalBox').hidden=true;$('#cutBox').hidden=true;$('#sheet').innerHTML='<option value="">\u2014</option>';$('#customSheet').style.display='none';$('#printer').innerHTML='';$('#printerBox').style.visibility='hidden';$('#toolLabel').textContent='';
   $('#procInfo').innerHTML='Machine and spacing defaults follow your material.';$('#sources').innerHTML='';}
-function fillProduct(){const custom=$('#product').value==='custom';$('#customMaterial').hidden=!custom;if(custom)refreshCustom();const p=PRODUCTS[$('#product').value];$('#product').style.outline='';$('#productMsg').textContent='';if(!p){noProduct();return;}const s=$('#sheet');s.innerHTML='';(custom?[]:p.sheets).forEach((sh,i)=>{const o=document.createElement('option');o.value=i;o.textContent=sh.label;s.appendChild(o);});const o=document.createElement('option');o.value='custom';o.textContent='Custom size…';s.appendChild(o);
+function fillProduct(){const custom=$('#product').value==='custom';$('#customMaterial').hidden=!custom;if(custom)refreshCustom();const p=PRODUCTS[$('#product').value];$('#product').style.outline='';$('#productMsg').textContent='';if(!p){$('#rollHint').hidden=true;procInfo();return;}const s=$('#sheet');s.innerHTML='';(custom?[]:p.sheets).forEach((sh,i)=>{const o=document.createElement('option');o.value=i;o.textContent=sh.label;s.appendChild(o);});const o=document.createElement('option');o.value='custom';o.textContent='Custom size…';s.appendChild(o);
   $('#offcut_enabled').checked=true;$('#offcut').value='L';syncOffcut();
   RULE_KEYS.forEach(k=>{$('#'+k).value=p.defaults[k];});
   $('#toolLabel').textContent=p.tool.label;$('#bit_diameter').disabled=p.tool.kind==='knife';$('#corner_radius').disabled=p.tool.kind!=='bit';
   $('#mirror').checked=!!p.mirror;$('#sheetLabel').textContent=p.roll?'Roll width':'Sheet';
-  $('#swBox').style.display=p.roll&&!custom?'none':'';$('#swLabel').textContent=p.roll?'Pass length (mm)':'Sheet length (mm)';$('#shLabel').textContent=p.roll?'Roll width (mm, across the roll)':'Sheet width (mm)';
-  const pr=$('#printer');pr.innerHTML='';p.printers.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;pr.appendChild(o);});pr.value=p.printer||'';$('#printerBox').style.visibility=p.printers.length?'visible':'hidden';
-  procInfo();
+  $('#swBox').style.display=p.roll?'none':'';$('#rollLenBox').hidden=!p.roll;$('#rollBatchBox').hidden=!p.roll;if(p.roll){$('#rollLen').value=((p.sheets[0]||{}).w||45000)/1000;$('#rollBatch').value=10;}$('#swLabel').textContent=p.roll?'Length along the roll (mm)':'Sheet length (mm)';$('#shLabel').textContent=p.roll?'Roll width (mm, across the roll)':'Sheet width (mm)';
+  const pr=$('#printer');pr.innerHTML='';p.printers.filter(m=>!printerPC()||m.id===MACHINE).forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;pr.appendChild(o);});pr.value=printerPC()?MACHINE:(p.printer||'');$('#printerBox').style.visibility=p.printers.length?'visible':'hidden';
+  syncMetal();syncCut();procInfo();if(typeof syncTestCreation==='function')syncTestCreation();
   $('#sources').innerHTML=Object.entries(p.sources).map(([k,v])=>'<b>'+k+'</b>: '+esc(v)).join('<br>')+'<br><b>notes</b>: '+esc(p.notes);
   sheetChanged();if(!custom&&!fillProduct.noMem&&loadSettings())$('#productMsg').innerHTML='<span style="color:var(--muted)">Settings restored from the last '+esc(p.material_name)+' job on this computer. <a href="#" id="forgetBtn">Use the shop defaults</a></span>';
   const fb=$('#forgetBtn');if(fb)fb.onclick=e=>{e.preventDefault();try{localStorage.removeItem(memKey());}catch(x){}fillProduct.noMem=true;fillProduct();fillProduct.noMem=false;$('#productMsg').textContent='';};}
 function printerName(){const p=PRODUCTS[$('#product').value];if(!p)return '';const m=p.printers.find(x=>x.id===$('#printer').value);return m?m.name:p.printer_name;}
-function procInfo(){const p=PRODUCTS[$('#product').value];if(!p){noProduct();return;}
-  $('#procInfo').innerHTML='<div class="machine-route">'+(p.printer_name?'<span>Print: <b>'+esc(printerName())+'</b></span>':'')+'<span>Cut: <b>'+esc(p.cutter_name)+'</b></span><span>'+(p.output==='cut'?'Cut PDF':'DXF')+'</span></div>'+(p.assumed.length?'<span class="pill unv">Unproven defaults: '+esc(p.assumed.join(', '))+'</span>':'')+(p.notes?'<details class="machine-notes"><summary>Machine limits &amp; material notes</summary><p class="machine-note">'+esc(p.notes)+'</p></details>':'');}
+function procInfo(){const p=PRODUCTS[$('#product').value];$('#addOrder').disabled=!p||!!p.roll||!p.printer;if(!p){noProduct();if(MACHINE&&$('#product').value==='custom')$('#procInfo').innerHTML='<span class="pill unv">'+(printerPC()?'Not printed':'Not cut')+' on this PC \u2014 open Show all machines for this material.</span>';return;}
+  $('#procInfo').innerHTML='<div class="machine-route">'+(p.printer_name?'<span>Print: <b>'+esc(printerName())+'</b></span>':'')+'<span>Cut: <b>'+esc(p.cutter_name)+'</b></span><span>'+(p.roll&&(p.export||{}).roll_files==='one'?'Print &amp; cut PDF':p.roll&&(p.export||{}).roll_files==='two'?'Print PDF + cut PDF':p.output==='cut'?'Cut PDF':'DXF')+'</span></div>'+(p.assumed.length?'<span class="pill unv">Unproven defaults: '+esc(p.assumed.join(', '))+'</span>':'')+(p.notes?'<details class="machine-notes"><summary>Machine limits &amp; material notes</summary><p class="machine-note">'+esc(p.notes)+'</p></details>':'');}
 
-function sheetChanged(){const p=PRODUCTS[$('#product').value];if(!p)return;const v=$('#sheet').value;$('#customSheet').style.display=v==='custom'?'grid':'none';if(v!=='custom'){const sh=p.sheets[+v];$('#sw').value=sh.w;$('#sh').value=sh.h;}}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function sheetChanged(){const p=PRODUCTS[$('#product').value];if(!p)return;const v=$('#sheet').value;$('#customSheet').style.display=v==='custom'?'grid':'none';if(v!=='custom'){const sh=p.sheets[+v];$('#sw').value=sh.w;$('#sh').value=sh.h;}if(p.roll){const m=+$('#rollLen').value;if(m>0)$('#sw').value=Math.round(m*1000);}rollHint();}
+// Rolls are not all 45 m (owner, 21-Oct-2026: 22 m, 15 m, any length): Roll left (m) beside Roll width is the length the job nests on.
+function setRollLen(mm){if(PRODUCTS[$('#product').value]?.roll&&+mm>0){$('#rollLen').value=+mm/1000;$('#sw').value=mm;rollHint();}}
+function rollLenChanged(){const m=+$('#rollLen').value;if(m>0)$('#sw').value=Math.round(m*1000);rollHint();}
+function rollBatchMm(){if(!PRODUCTS[$('#product').value]?.roll)return null;const m=+$('#rollBatch').value;return Number.isFinite(m)&&m>0&&m<=10?Math.round(m*1000):null;}
+// Roll availability and the production-batch ceiling are separate inputs. ONYX still owns its media/profile margins.
+function rollHint(){const el=$('#rollHint'),p=PRODUCTS[$('#product').value];if(!el)return;el.hidden=!(p&&p.roll);if(el.hidden)return;
+  const m=MACHINES[p.cutter]||{},cw=m.roll_width,def=(p.sheets||[])[0],w=+$('#sh').value,rf=(p.export||{}).roll_files,batch=+$('#rollBatch').value||10;
+  el.textContent=(w?`Roll ${w} mm wide`+(cw?` (the ${(p.cutter_name||'cutter').split(' ')[0]} cuts up to ${cw} mm)`:'')+'. ':'')+`Roll left: ${(+$('#sw').value||0)/1000} m${def&&+$('#sw').value===def.w?' (the default \u2014 type what is left on the roll on the machine)':''}. Maximum batch: ${batch} m; whole pieces stay in separate batches of ${batch} m or less. `
+    +'Each file is exactly its batch length: no PS Nest edge margin or offcut. ONYX adds the registration marks and QR code'+(rf==='two'?'; the Gunner\'s CorelDRAW plugin adds its dots.':'.');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
 
 function addRow(p){p=p||{};const tb=$('#parts tbody');const tr=document.createElement('tr');
   tr.innerHTML=`<td><textarea class="name" rows="1" title="${esc(p.name||'')}" placeholder="Part" onkeydown="if(event.key==='Enter')event.preventDefault()" oninput="this.value=this.value.replace(/[\\r\\n]+/g,' ');this.title=this.value">${esc(p.name||'')}</textarea></td>
   <td class="colshape"><select class="shape">${SHAPES.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><div class="sp"></div></td>
   <td><input type="number" class="w" step="0.5" value="${p.w||''}"></td><td><input type="number" class="h" step="0.5" value="${p.h||''}"></td>
   <td style="white-space:nowrap"><input type="number" class="qty" min="1" step="1" value="${p.qty??1}" style="width:48px"><span class="qbtns"><button class="ghost q10" title="+10" tabindex="-1" type="button">+10</button><button class="ghost q100" title="+100" tabindex="-1" type="button">+100</button></span></td><td class="c"><input type="checkbox" class="rot" ${p.rotate===false?'':'checked'}></td>
-  <td><select class="art"></select></td><td><button class="ghost small del" title="Remove">×</button></td>`;
-  tb.appendChild(tr);tr.querySelector('.del').onclick=()=>tr.remove();refreshArtSelects();
-  const q=tr.querySelector('.qty');tr.querySelector('.q10').onclick=()=>{q.value=(+q.value||0)+10;};tr.querySelector('.q100').onclick=()=>{q.value=(+q.value||0)+100;};if(p.artwork)tr.querySelector('.art').value=p.artwork;
+  <td><select class="art"></select></td><td class="colback"><select class="artback"></select></td><td><button class="ghost small del" title="Remove">×</button></td>`;
+  tr.dataset.itemNumber=p.item_number||'';tr.dataset.siteRef=p.site_ref||'';tr.dataset.artworkVersion=p.artwork_version||'';
+  if(p.manual_identity)tr.dataset.manualIdentity=JSON.stringify(p.manual_identity);
+  tr.dataset.sourcePartId=p.source_part_id||Math.random().toString(36).slice(2,8).toUpperCase();tr.dataset.orderRef=p.order_ref||$('#activeOrder').value||'';
+  if(ORDERS.some(o=>o.ref===tr.dataset.orderRef&&o.source_binding))tr.dataset.portalSource='1';
+  tb.appendChild(tr);tr.querySelector('.del').onclick=()=>{tr.remove();recheckOrders();};refreshOrderAssignments();refreshArtSelects();
+  const q=tr.querySelector('.qty');tr.querySelector('.q10').onclick=()=>{q.value=(+q.value||0)+10;};tr.querySelector('.q100').onclick=()=>{q.value=(+q.value||0)+100;};if(p.artwork)tr.querySelector('.art').value=p.artwork;if(p.artwork_back)tr.querySelector('.artback').value=p.artwork_back;const ab=tr.querySelector('.artback');ab.onchange=()=>{ab.title=ab.selectedOptions[0]?ab.selectedOptions[0].textContent:'';};ab.onchange();
   const sel=tr.querySelector('.shape');sel.onchange=()=>setShape(tr,{type:sel.value});setShape(tr,p.shape||{type:'rect'});
-  tr.querySelector('.art').onchange=()=>artChanged(tr);artChanged(tr);
+  tr.querySelector('.art').onchange=()=>{artChanged(tr);checkManualArtworkChange(tr);};artChanged(tr);
   tr.querySelector('.w').oninput=()=>{const t=sel.value,w=+tr.querySelector('.w').value;if(t==='circle'||t==='polygon'||t==='star')tr.querySelector('.h').value=tr.querySelector('.w').value;
     if(t==='outline'){const e=outlineEntry(tr);if(e&&e.w>0)tr.querySelector('.h').value=(w*e.h/e.w).toFixed(1);}};}
 function outlineEntry(tr){const v=(tr.querySelector('.pout')||{}).value||'';const [k,i]=v.split(':');const o=OUTL.find(x=>x.key===k);return o?o.parts[+i]:null;}
@@ -531,18 +635,47 @@ function rowSpec(tr){const t=tr.querySelector('.shape').value;if(t==='rect')retu
   if(t==='text')return {type:t,text:g('.ptext').value,height:+tr.querySelector('.h').value,font:g('.pfont').value||'Arial Bold'};
   if(t==='outline'){const [key,index]=(g('.pout').value||':').split(':');return {type:t,key,index:+index||0};}
   return {type:t};}
-function rows(){return [...document.querySelectorAll('#parts tbody tr')].map(tr=>({name:tr.querySelector('.name').value,w:tr.querySelector('.w').value,h:tr.querySelector('.h').value,qty:tr.querySelector('.qty').value,rotate:tr.querySelector('.rot').checked,artwork:tr.querySelector('.art').value||null,shape:rowSpec(tr)}));}
+function rows(){return [...document.querySelectorAll('#parts tbody tr')].map(tr=>({name:tr.querySelector('.name').value,w:tr.querySelector('.w').value,h:tr.querySelector('.h').value,qty:tr.querySelector('.qty').value,rotate:tr.querySelector('.rot').checked,artwork:tr.querySelector('.art').value||null,...($('#two_sided').checked&&tr.querySelector('.artback').value?{artwork_back:tr.querySelector('.artback').value}:{}),shape:rowSpec(tr),...(ORDERS.length?{order_ref:tr.dataset.orderRef||'',source_part_id:tr.dataset.sourcePartId,...(tr.dataset.itemNumber?{item_number:tr.dataset.itemNumber}:{}),...(tr.dataset.siteRef?{site_ref:tr.dataset.siteRef}:{}),...(tr.dataset.artworkVersion?{artwork_version:tr.dataset.artworkVersion}:{}),...(tr.dataset.manualIdentity?{manual_identity:manualIdentityState(tr)}:{})}:{})}));}
 function cutPill(a){const c=a.cut||{};if(c.error)return `<span class="pill err" title="${esc(c.error+(c.fix?' '+c.fix:''))}">CutContour problem</span>`;
   if(c.found)return `<span class="pill cut">CutContour ${c.w} x ${c.h} mm${c.holes?', '+c.holes+' hole'+(c.holes>1?'s':''):''}${c.islands?', '+c.islands+' extra piece'+(c.islands>1?'s':''):''}</span>`;return '<span class="pill" title="No recognised CutContour path was found. Page dimensions are not the cut shape.">No cut path — page size only</span>';}
 function artCut(tr){const a=ARTS.find(x=>x.key===tr.querySelector('.art').value);return a&&a.cut&&a.cut.found?a.cut:null;}
 function artChanged(tr){const a=tr.querySelector('.art');a.title=a.selectedOptions[0]?a.selectedOptions[0].textContent:'';const c=artCut(tr),sel=tr.querySelector('.shape');
   if(c){if(sel.value!=='contour')setShape(tr,{type:'contour'});tr.querySelector('.w').value=c.w;tr.querySelector('.h').value=c.h;}
-  else if(sel.value==='contour'){setShape(tr,{type:'rect'});}}
-function addArtPart(a){if(!a)return;const tb=$('#parts tbody');const first=tb.children.length===1?tb.children[0]:null;
+  else if(sel.value==='contour'){setShape(tr,{type:'rect'});}renderManualIdentity(tr);}
+function manualIdentityState(tr){const record=JSON.parse(tr.dataset.manualIdentity||'null');if(!record)return null;
+  const current=record.order_ref===(tr.dataset.orderRef||'')&&record.item_number===(tr.dataset.itemNumber||'')&&record.site_ref===(tr.dataset.siteRef||'')&&record.artwork_key===tr.querySelector('.art').value;
+  if(!current)return {...record,status:'held',reason:'Identity fields or artwork changed. Confirm the corrected original identifiers.'};
+  const alias=record.candidate?.site_ref,order=ORDERS.find(o=>o.ref===(tr.dataset.orderRef||'')),orderSite=order?.site_ref?.trim();
+  if(alias&&record.site_ref!==alias&&record.site_ref!==orderSite)return {...record,status:'held',reason:'Canonical site must exactly match the selected order site reference.'};
+  return record;}
+function renderManualIdentity(tr){const note=tr.querySelector('.identity-note');if(!note)return;const record=manualIdentityState(tr);
+  const alias=record?.candidate?.site_ref,canonical=record?.site_ref;
+  note.textContent=record?.status==='resolved'?(alias&&canonical&&alias!==canonical?'Canonical site recorded; filename alias retained: '+alias+'. Order approval is still separate.':'Original identity recorded for review; order approval is still separate.'):'HOLD: '+(record?.reason||'Confirm the original identifiers.');note.style.color=record?.status==='resolved'?'#344054':'#b42318';}
+async function checkManualArtworkChange(tr){const key=tr.querySelector('.art').value,ref=tr.dataset.orderRef||'',item=tr.dataset.itemNumber||'',site=tr.dataset.siteRef||'';
+  // An imported portal manifest is authoritative, even if its filename differs.
+  if(!key||tr.dataset.portalSource==='1'||ORDERS.some(o=>o.ref===ref&&o.source_binding))return;
+  tr.dataset.manualIdentity=JSON.stringify({status:'held',reason:'Checking the artwork original identity.'});renderManualIdentity(tr);recheckOrders();
+  try{const result=await api('/api/artwork/identity',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key,order_ref:ref})});
+    if(key!==tr.querySelector('.art').value||ref!==(tr.dataset.orderRef||'')||item!==(tr.dataset.itemNumber||'')||site!==(tr.dataset.siteRef||''))return;
+    tr.dataset.itemNumber=result.item_number||'';tr.dataset.siteRef=result.site_ref||'';tr.dataset.manualIdentity=JSON.stringify(result.manual_identity);refreshOrderAssignments();recheckOrders();invalidateBatchResult();
+  }catch(e){msg('err',e.message);}}
+async function confirmManualIdentity(tr){const values={key:tr.querySelector('.art').value,order_ref:tr.dataset.orderRef||'',item_number:tr.dataset.itemNumber||'',site_ref:tr.dataset.siteRef||'',confirm:true};
+  const prior=JSON.parse(tr.dataset.manualIdentity||'null'),alias=prior?.candidate?.site_ref,order=ORDERS.find(o=>o.ref===values.order_ref),orderSite=order?.site_ref?.trim();
+  if(alias&&values.site_ref!==alias&&values.site_ref!==orderSite){tr.dataset.manualIdentity=JSON.stringify({...prior,artwork_key:values.key,order_ref:values.order_ref,item_number:values.item_number,site_ref:values.site_ref,status:'held',reason:'Canonical site must exactly match the selected order site reference.'});renderManualIdentity(tr);return;}
+  try{const result=await api('/api/artwork/identity',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(values)});
+    if(values.key!==tr.querySelector('.art').value||values.order_ref!==(tr.dataset.orderRef||'')||values.item_number!==(tr.dataset.itemNumber||'')||values.site_ref!==(tr.dataset.siteRef||''))throw new Error('Identity changed during review; confirm it again.');
+    tr.dataset.manualIdentity=JSON.stringify(result.manual_identity);recheckOrders();invalidateBatchResult();renderManualIdentity(tr);
+  }catch(e){msg('err',e.message);}}
+async function addArtPart(a,orderRef){if(!a)return;orderRef=orderRef??$('#activeOrder').value;let identity;
+  if(ORDERS.some(o=>o.ref===orderRef&&o.source_binding)){msg('err','This order uses an authoritative portal source. Revise that source before adding manual artwork.');return;}
+  try{identity=await api('/api/artwork/identity',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:a.key,order_ref:orderRef})});}
+  catch(e){identity={order_ref:orderRef,manual_identity:{schema:'manual-artwork-identity-1',status:'held',reason:'Identity check unavailable. Confirm the original identifiers before combining this artwork.'}};msg('err',e.message);}
+  if(identity.manual_identity.status==='held'&&ORDERS.length)msg('err',a.name+': '+identity.manual_identity.reason);
+  const tb=$('#parts tbody');const first=tb.children.length===1?tb.children[0]:null;
   if(first&&!first.querySelector('.w').value&&!first.querySelector('.name').value&&!first.querySelector('.art').value)tb.innerHTML='';   // replace the empty starter row
-  addRow({name:a.name.replace(/\.pdf$/i,''),qty:a.qty_hint||1,artwork:a.key,w:a.cut&&a.cut.found?'':a.w_mm,h:a.cut&&a.cut.found?'':a.h_mm});}
-function refreshArtSelects(){document.querySelectorAll('#parts .art').forEach(s=>{const cur=s.value;s.innerHTML='<option value="">none</option>'+ARTS.map(a=>`<option value="${a.key}">${esc(a.name)} (${a.w_mm}x${a.h_mm})</option>`).join('');s.value=ARTS.some(a=>a.key===cur)?cur:'';});
-  const used=new Set([...document.querySelectorAll('#parts .art')].map(s=>s.value));
+  addRow({...identity,name:a.name.replace(/\.pdf$/i,''),qty:a.qty_hint||1,artwork:a.key,w:a.cut&&a.cut.found?'':a.w_mm,h:a.cut&&a.cut.found?'':a.h_mm});recheckOrders();invalidateBatchResult();}
+function refreshArtSelects(){document.querySelectorAll('#parts .art,#parts .artback').forEach(s=>{const cur=s.value;s.innerHTML='<option value="">none</option>'+ARTS.map(a=>`<option value="${a.key}">${esc(a.name)} (${a.w_mm}x${a.h_mm})</option>`).join('');s.value=ARTS.some(a=>a.key===cur)?cur:'';});
+  const used=new Set([...document.querySelectorAll('#parts .art,#parts .artback')].map(s=>s.value));
   const row=a=>`<div class="art"><span>${esc(a.name)} <span class="pill">page ${a.w_mm} x ${a.h_mm} mm</span>${cutPill(a)}</span><span><button class="ghost small" data-add="${a.key}">add part</button> <button class="ghost small" data-k="${a.key}">remove</button></span></div>`;
   const fresh=ARTS.filter(a=>NEWARTS.has(a.key)||used.has(a.key)),older=ARTS.filter(a=>!fresh.includes(a));
   $('#artlist').innerHTML=fresh.map(row).join('')+(older.length?`<details class="older"><summary>${older.length} file${older.length>1?'s':''} uploaded earlier</summary>${older.map(row).join('')}</details>`:'');
@@ -550,11 +683,11 @@ function refreshArtSelects(){document.querySelectorAll('#parts .art').forEach(s=
   document.querySelectorAll('#parts tbody tr').forEach(tr=>artChanged(tr));
   $('#artlist').querySelectorAll('button[data-k]').forEach(b=>b.onclick=async()=>{await api('/api/artwork/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:b.dataset.k})});ARTS=ARTS.filter(a=>a.key!==b.dataset.k);refreshArtSelects();});}
 
-async function uploadFiles(files){for(const f of files){if(!/pdf$/i.test(f.name)){msg('warn',f.name+': only PDF artwork is accepted.');continue;}const b64=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.readAsDataURL(f);});
+async function uploadFiles(files){const orderRef=$('#activeOrder').value;for(const f of files){if(!/pdf$/i.test(f.name)){msg('warn',f.name+': only PDF artwork is accepted.');continue;}const b64=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.readAsDataURL(f);});
   try{const j=await api('/api/artwork',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name,data:b64,sheet:{w:$('#sw').value,h:$('#sh').value},product:$('#product').value||null,custom_material:$('#product').value==='custom'?customSpec():null})});(j.warnings||[]).forEach(w=>msg('warn',w));const i=ARTS.findIndex(a=>a.key===j.key);if(i>=0)ARTS[i]=j;else ARTS.push(j);NEWARTS.add(j.key);const c=j.cut||{};if(j.pages>1)msg('warn',`${f.name} has ${j.pages} pages: only page 1 is used. Save each item as its own PDF.`);
     if(c.error)msg('err',f.name+': '+c.error+(c.fix?' '+c.fix:''));
-    else if(c.found){addArtPart(j);msg('ok',`${f.name}: CutContour line found, ${c.w} x ${c.h} mm${c.holes?' with '+c.holes+' hole'+(c.holes>1?'s':''):''}. A part row was added${j.qty_hint?' with quantity '+j.qty_hint+' read from the file name: check it':': set the quantity'}.`);}
-    else{addArtPart(j);msg('warn',`${f.name}: artwork added at its PDF page size, ${j.w_mm} x ${j.h_mm} mm. No recognised CutContour path was found. These dimensions do not identify the cut shape. Check the quantity. ${c.fix||'For shaped cutting, supply a closed vector path using the CutContour spot colour.'}`);}}
+    else if(c.found){await addArtPart(j,orderRef);msg('ok',`${f.name}: CutContour line found, ${c.w} x ${c.h} mm${c.holes?' with '+c.holes+' hole'+(c.holes>1?'s':''):''}. A part row was added${j.qty_hint?' with quantity '+j.qty_hint+' read from the file name: check it':': set the quantity'}.`);}
+    else{await addArtPart(j,orderRef);msg('warn',`${f.name}: artwork added at its PDF page size, ${j.w_mm} x ${j.h_mm} mm. No recognised CutContour path was found. These dimensions do not identify the cut shape. Check the quantity. ${c.fix||'For shaped cutting, supply a closed vector path using the CutContour spot colour.'}`);}}
   catch(e){msg('err',f.name+': '+e.message);}}refreshArtSelects();}
 
 async function uploadOutlines(files){for(const f of files){if(!/\.(dxf|svg)$/i.test(f.name)){msg('warn',f.name+': only DXF or SVG cut paths are accepted here (PDF artwork goes in the box above).');continue;}
@@ -566,10 +699,42 @@ function refreshOutlines(){$('#outlist').innerHTML=OUTL.map(o=>`<div class="art"
     o.parts.forEach(p=>addRow({name:o.name.replace(/\.(dxf|svg)$/i,'')+(o.parts.length>1?' '+(p.index+1):''),w:+p.w.toFixed(1),h:+p.h.toFixed(1),qty:1,shape:{type:'outline',key:o.key,index:p.index}}));if($('#mode').value!=='complex'){$('#mode').value='complex';modeChanged();}});
   $('#outlist').querySelectorAll('button[data-k]').forEach(b=>b.onclick=async()=>{await api('/api/outline/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:b.dataset.k})});OUTL=OUTL.filter(o=>o.key!==b.dataset.k);refreshOutlines();document.querySelectorAll('#parts .pout').forEach(s=>fillOutlineSelect(s,s.value));});
   document.querySelectorAll('#parts .pout').forEach(s=>fillOutlineSelect(s,s.value));}
+function syncTwoSided(){$('#parts').classList.toggle('two',$('#two_sided').checked);}
 function modeChanged(){$('#rotBox').style.display=$('#mode').value==='complex'?'':'none';}
 
-function loadExample(id){const ex=EXAMPLES.find(e=>e.id===id);if(!ex)return;$('#job').value=ex.job;$('#product').value=ex.product;fillProduct();
-  const idx=PRODUCTS[ex.product].sheets.findIndex(s=>s.w===ex.sheet.w&&s.h===ex.sheet.h);$('#sheet').value=idx>=0?String(idx):'custom';sheetChanged();if(idx<0){$('#sw').value=ex.sheet.w;$('#sh').value=ex.sheet.h;}
+function stable(v){if(Array.isArray(v))return JSON.stringify(v.map(x=>JSON.parse(stable(x))));if(v&&typeof v==='object')return JSON.stringify(Object.fromEntries(Object.keys(v).sort().map(k=>[k,JSON.parse(stable(v[k]))])));return JSON.stringify(v===undefined?null:v);}
+function normalSetup(q){const p=PRODUCTS[q.product]||{};return {product:q.product,custom_material:q.custom_material||null,thickness:q.thickness==null||q.thickness===''?null:+q.thickness,printer:p.printer?(q.printer||p.printer):null,mirror:q.mirror==null?!!p.mirror:!!q.mirror,cut_process:q.cut_process||(p.cutter==='gunner'?'kiss':'through'),metal:q.metal||null,finish:(q.finish||'').trim()};}
+function batchSetup(){return normalSetup({product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,thickness:$('#thickness').value,printer:$('#printer').value||null,mirror:$('#mirror').checked,cut_process:cutValue()||null,metal:metalValue()||null,finish:$('#batchFinish').value});}
+function refreshOrderAssignments(){document.querySelectorAll('#parts tbody tr').forEach(tr=>{
+  let sel=tr.querySelector('.order-assignment'),item=tr.querySelector('.original-item'),review=tr.querySelector('.identity-review');
+  if(!ORDERS.length){if(sel)sel.remove();if(item)item.remove();if(review)review.remove();return;}
+  if(!sel){sel=document.createElement('select');sel.className='order-assignment';sel.setAttribute('aria-label','Order for '+(tr.querySelector('.name').value||'part'));tr.cells[0].appendChild(sel);sel.onchange=()=>{tr.dataset.orderRef=sel.value;recheckOrders();renderManualIdentity(tr);};}
+  sel.replaceChildren(new Option('Choose order',''),...ORDERS.map(o=>new Option(o.ref,o.ref)));sel.value=tr.dataset.orderRef||'';
+  if(!item){item=document.createElement('input');item.className='original-item';item.type='text';item.maxLength=15;item.placeholder='Original item, e.g. 4A';item.setAttribute('aria-label','Original item number');tr.cells[0].appendChild(item);item.oninput=()=>{tr.dataset.itemNumber=item.value;recheckOrders();renderManualIdentity(tr);};}
+  item.value=tr.dataset.itemNumber||'';
+  if(tr.dataset.manualIdentity&&!review){review=document.createElement('div');review.className='identity-review';
+    const site=document.createElement('input');site.className='original-site';site.type='text';site.maxLength=300;site.placeholder='Original site reference';site.setAttribute('aria-label','Original site reference');site.value=tr.dataset.siteRef||'';site.oninput=()=>{tr.dataset.siteRef=site.value;recheckOrders();renderManualIdentity(tr);};
+    const note=document.createElement('div');note.className='identity-note';note.setAttribute('role','status');
+    const button=document.createElement('button');button.type='button';button.className='ghost small';button.textContent='Confirm corrected identity';button.onclick=()=>confirmManualIdentity(tr);
+    review.append(site,note,button);tr.cells[0].appendChild(review);}
+  const siteInput=tr.querySelector('.original-site');if(siteInput)siteInput.value=tr.dataset.siteRef||'';renderManualIdentity(tr);
+});}
+function invalidateBatchResult(){if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';}}
+function recheckOrders(){let changed=false;for(const o of ORDERS){const selected=rows().filter(p=>p.order_ref===o.ref);if(o.approved&&(stable(o.approved_parts)!==stable(selected)||stable(o.setup)!==stable(batchSetup()))){o.approved=false;changed=true;}}if(changed){renderOrders();invalidateBatchResult();}}
+function renderOrders(){const active=$('#activeOrder').value;$('#activeOrder').replaceChildren(new Option('Choose an order',''),...ORDERS.map(o=>new Option(o.ref,o.ref)));$('#activeOrder').value=ORDERS.some(o=>o.ref===active)?active:(ORDERS[0]?.ref||'');const list=$('#orderList');list.replaceChildren();
+ for(const o of ORDERS){const card=document.createElement('div');card.style.cssText='border:1px solid #ddd;padding:10px;margin-top:10px;border-radius:8px';const title=document.createElement('strong');title.textContent=o.ref;card.appendChild(title);
+  for(const [key,label] of [['order_approval','Order approval reference'],['artwork_approval','Artwork approval reference / revision'],['confirmed_by','Confirmed by (operator)']]){const lab=document.createElement('label');lab.textContent=label;const input=document.createElement('input');input.type='text';input.value=o[key]||'';input.maxLength=500;input.setAttribute('aria-label',o.ref+' '+label);input.oninput=()=>{o[key]=input.value;o.approved=false;card.querySelector('input[type=checkbox]').checked=false;invalidateBatchResult();};lab.appendChild(input);card.appendChild(lab);}
+  for(const [key,label] of [['state','State / territory code'],['site_ref','Site reference'],['sequence','Production sequence']]){const lab=document.createElement('label');lab.textContent=label;const input=document.createElement('input');input.type=key==='sequence'?'number':'text';if(key==='sequence'){input.min='1';input.step='1';}input.value=o[key]||'';input.setAttribute('aria-label',o.ref+' '+label);input.oninput=()=>{o[key]=key==='sequence'?Number(input.value):input.value.trim();if(key!=='sequence'){o.approved=false;card.querySelector('input[type=checkbox]').checked=false;}invalidateBatchResult();};lab.appendChild(input);card.appendChild(lab);}
+  const lab=document.createElement('label');lab.style.cssText='display:flex;gap:8px;margin-top:8px';const check=document.createElement('input');check.type='checkbox';check.checked=!!o.approved;check.setAttribute('aria-label','Confirm approved parts for '+o.ref);check.onchange=()=>{const selected=rows().filter(p=>p.order_ref===o.ref);if(check.checked&&selected.some(p=>p.manual_identity&&p.manual_identity.status!=='resolved')){check.checked=false;msg('err','Correct the held original identifiers before confirming '+o.ref+'. Identity correction is separate from order approval.');return;}if(check.checked&&(!selected.length||!o.order_approval?.trim()||!o.artwork_approval?.trim()||!o.confirmed_by?.trim())){check.checked=false;msg('err','Enter approval references and operator name, and assign the current parts before confirming '+o.ref+'.');return;}if(check.checked&&stable(o.setup)!==stable(batchSetup())){check.checked=false;msg('err',o.ref+' was added with different material / thickness / finish settings. Restore those settings or use a separate batch.');return;}o.approved=check.checked;o.approved_parts=JSON.parse(JSON.stringify(selected));invalidateBatchResult();};lab.append(check,document.createTextNode('Current parts, quantities and artwork match these approvals'));card.appendChild(lab);
+  const remove=document.createElement('button');remove.className='ghost small';remove.textContent='Remove order';remove.onclick=()=>{if(rows().some(p=>p.order_ref===o.ref)){msg('err','Reassign or remove '+o.ref+' parts before removing this order.');return;}ORDERS=ORDERS.filter(x=>x!==o);renderOrders();invalidateBatchResult();};card.appendChild(remove);list.appendChild(card);
+ }refreshOrderAssignments();}
+$('#addOrder').onclick=()=>{const product=PRODUCTS[$('#product').value];if(!product||product.roll||!product.printer){msg('err','Combine approved orders is for printed panels. Keep vinyl / roll labels in the existing ONYX workflow.');return;}const ref=$('#orderRef').value.trim();if(!/^[A-Za-z0-9][A-Za-z0-9._-]{0,23}$/.test(ref)){msg('err','Enter an order reference of up to 24 letters, digits, dashes, dots or underscores.');return;}if(ORDERS.some(o=>o.ref.toLowerCase()===ref.toLowerCase())){msg('err','That order is already in the batch.');return;}if(!$('#product').value||!$('#batchFinish').value.trim()){msg('err','Choose the material and state the shared finish (or None) first.');return;}ORDERS.push({ref,order_approval:'',artwork_approval:'',confirmed_by:'',approved:false,setup:batchSetup()});if(ORDERS.length===1)document.querySelectorAll('#parts tbody tr').forEach(tr=>tr.dataset.orderRef=ref);renderOrders();$('#activeOrder').value=ref;$('#orderRef').value='';invalidateBatchResult();};
+async function appendProject(id){try{const ref=$('#activeOrder').value;if(!ORDERS.length||!ref)throw new Error('Add and select the order in Combine approved orders first.');const r=await api('/api/job/'+id+'/request');const q=r.request;if((q.orders||[]).length)throw new Error('This saved job is already a combined batch. Open it to retain its order identities.');const target=batchSetup(),source=normalSetup(q);for(const k of ['product','custom_material','thickness','printer','mirror','cut_process','metal']){const a=source[k]??null,b=target[k]??null;if(stable(a)!==stable(b))throw new Error('The saved job has different '+k.replaceAll('_',' ')+' settings. Use a separate compatible batch.');}const tb=$('#parts tbody');if(tb.children.length===1&&!tb.querySelector('.w').value&&!tb.querySelector('.name').value&&!tb.querySelector('.art').value)tb.innerHTML='';(q.parts||[]).forEach(p=>addRow({...p,order_ref:ref,source_part_id:null}));recheckOrders();invalidateBatchResult();msg('ok','Parts added to '+ref+'. Check quantities, finish and approval references before confirming.');}catch(e){msg('err',e.message);}}
+// Changes invalidate the confirmation, including +10/+100 and imported parts.
+for(const event of ['input','change','click'])document.addEventListener(event,e=>{if(ORDERS.length&&e.target.closest('.step'))queueMicrotask(()=>{recheckOrders();if(CURRENT&&FORM_OF_CURRENT&&stable(formSnapshot())!==stable(FORM_OF_CURRENT))invalidateBatchResult();});});
+
+function loadExample(id){if(ORDERS.length){msg('err','Open a separate job for an example; it cannot replace approved-order parts.');return;}const ex=EXAMPLES.find(e=>e.id===id);if(!ex)return;$('#job').value=ex.job;$('#product').value=ex.product;fillProduct();
+  const idx=PRODUCTS[ex.product].sheets.findIndex(s=>s.w===ex.sheet.w&&s.h===ex.sheet.h);$('#sheet').value=idx>=0?String(idx):'custom';sheetChanged();if(idx<0){$('#sw').value=ex.sheet.w;$('#sh').value=ex.sheet.h;}setRollLen(ex.sheet.w);
   $('#mode').value=ex.mode||'simple';$('#rot_step').value=String(ex.rot_step||45);modeChanged();
   $('#parts tbody').innerHTML='';ex.parts.forEach(addRow);}
 
@@ -590,6 +755,11 @@ function statusText(){if(!RUN)return '';const s=Math.round((Date.now()-RUN.t0)/1
 async function stopNest(){if(!RUN)return;const stop=$('#stopBtn');RUN.presses++;stop.textContent=RUN.presses>=2?'Stopping…':'Stop now';if(RUN.presses>=2||window.PSNEST_WEB)stop.disabled=true;$('#nestStatus').textContent=statusText();
   try{await api('/api/nest/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({run_id:RUN.id})});}catch(e){msg('err','Stop did not reach the engine: '+e.message);}}
 async function doNest(){clearMsgs();if(!$('#product').value){const t='Choose the material first (step 1).';msg('err',t);$('#productMsg').textContent=t;$('#product').style.outline='2px solid #b42318';$('#product').focus();return;}
+  if($('#product').value==='custom'&&!PRODUCTS.custom){const t=(printerPC()?'Not printed':'Not cut')+' on this PC \u2014 open Show all machines for this material.';msg('err',t);return;}
+  if(currentCutter()==='fibre'&&!$('#metal').value){const t='Name the metal: mild steel, stainless, aluminium, brass, galvanised, copper or Colorbond.';msg('err',t);$('#metalMsg').textContent=t;$('#metal').style.outline='2px solid #b42318';$('#metal').focus();return;}
+  const rollJob=!!(PRODUCTS[$('#product').value]||{}).roll,batchMm=rollBatchMm();
+  if(rollJob&&batchMm==null){msg('err','Maximum batch must be above 0 m and no more than 10 m.');$('#rollBatch').focus();return;}
+  if(rollJob&&ORDERS.length){msg('err','A standalone roll TEST cannot carry combined-order approvals. Start a separate roll job with the retained artwork.');return;}
   const btn=$('#nestBtn'),stop=$('#stopBtn'),st=$('#nestStatus');btn.disabled=true;btn.textContent='Nesting…';
   const run_id=Date.now().toString(36)+Math.random().toString(36).slice(2,8);RUN={id:run_id,t0:Date.now(),prog:{},presses:0};
   stop.style.display='';stop.disabled=false;stop.textContent='Stop';stop.onclick=stopNest;st.style.display='';st.textContent=statusText();
@@ -598,11 +768,12 @@ async function doNest(){clearMsgs();if(!$('#product').value){const t='Choose the
   const timer=setInterval(tick,500);
   const rules={};RULE_KEYS.forEach(k=>rules[k]=$('#'+k).value);rules.trim_offcut=selectedOffcut()==='none'?0:1;
   if($('#policy').value==='free'&&$('#mode').value!=='complex'){$('#mode').value='complex';modeChanged();}
-  const body={custom_cuts:selectedOffcut()==='none'?{}:CUSTOM_CUTS,job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,printer:$('#printer').value||null,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,sheet_frame:$('#sheet_frame').checked,thickness:$('#thickness').value,mirror:$('#mirror').checked,cut_line:$('#cut_line').value,
+  recheckOrders();
+  const body={...(!rollJob&&$('#productionSequence').checked?{production_plan:{mode:'state_sequence'}}:{}),...(rollJob?{roll_batch_mm:batchMm}:{}),...($('#disposableTest').checked?{test_creation:{schema:1,disposable:true,notifications_suppressed:true,production_release:false,created_by:$('#testCreatedBy').value}}:{}),orders:rollJob?[]:ORDERS,finish:rollJob?'':$('#batchFinish').value,machine:MACHINE||undefined,metal:metalValue(),cut_process:cutValue(),custom_cuts:selectedOffcut()==='none'?{}:CUSTOM_CUTS,job:$('#job').value,product:$('#product').value,custom_material:$('#product').value==='custom'?customSpec():null,printer:$('#printer').value||null,sheet:{w:$('#sw').value,h:$('#sh').value},rules,parts:rows(),print_outlines:$('#print_outlines').checked,corner_marks:$('#corner_marks').checked,sheet_frame:$('#sheet_frame').checked,thickness:$('#thickness').value,mirror:$('#mirror').checked,cut_line:$('#cut_line').value,
     mode:$('#mode').value,rot_step:$('#rot_step').value,offcut:selectedOffcut(),policy:$('#policy').value,time:TIMES[+$('#time').value][0],
-    edge_sides:{l:$('#edge_l').value,r:$('#edge_r').value,b:$('#edge_b').value,t:$('#edge_t').value},stock:stockRows(),pins:PINS,run_id};
+    edge_sides:{l:$('#edge_l').value,r:$('#edge_r').value,b:$('#edge_b').value,t:$('#edge_t').value},stock:stockRows(),pins:PINS,run_id,...keptAcks()};
   const sent=formSnapshot();const before=CURRENT?{form:FORM_OF_CURRENT||sent,result:CURRENT}:null;
-  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(before){UNDO.push(before);if(UNDO.length>10)UNDO.shift();}CURRENT=r;CUSTOM_CUTS=Object.fromEntries(r.sheets.flatMap((s,i)=>s.custom_cuts==null?[]:[[String(i),s.custom_cuts]]));FORM_OF_CURRENT={...sent,custom_cuts:cutClone(CUSTOM_CUTS)};if(body.custom_material){try{localStorage.setItem('psnest.customMaterial',JSON.stringify(body.custom_material));}catch(e){}}saveSettings();rememberQty();render(r);loadProjects();}
+  try{const r=await api('/api/nest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(stable(formSnapshot())!==stable(sent)){$('#results').style.display='none';$('#empty').style.display='';msg('warn','The form changed while nesting. This returned layout was not opened or made downloadable. Press Nest again for the current settings.');return;}if(before){UNDO.push(before);if(UNDO.length>10)UNDO.shift();}CURRENT=r;CUSTOM_CUTS=Object.fromEntries(r.sheets.flatMap((s,i)=>s.custom_cuts==null?[]:[[String(i),s.custom_cuts]]));FORM_OF_CURRENT={...sent,custom_cuts:cutClone(CUSTOM_CUTS)};if(body.custom_material){try{localStorage.setItem('psnest.customMaterial',JSON.stringify(body.custom_material));}catch(e){}}saveSettings();rememberQty();render(r);loadProjects();}
   catch(e){msg('err',e.message);CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';msg('warn',e.message.startsWith('Stopped')?'The previous result was cleared. Nest again when you are ready.':'The previous result was cleared so a stale file cannot be downloaded. Fix the error and nest again.');}
   finally{clearInterval(timer);RUN=null;stop.style.display='none';st.style.display='none';btn.disabled=false;btn.textContent='Nest';}}
 
@@ -618,33 +789,93 @@ async function download(jid,kind,label,btn){
     if(e.status===404){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';}}
   finally{btn.disabled=false;btn.textContent=was;}}
 
+// Nest guard (guard.py): a layout that costs material against the same parts with turning allowed, or against an earlier
+// nest of the same parts, has its machine files held.  The box says what it costs and offers the two ways out: nest it
+// the better way, or keep it with a named reason that stays on the job.
+let KEPT={};   // reasons recorded for the job, parts and settings of the layout that was held; sent again with the next nest of that same form so moving one part does not ask twice
+function keptKey(f){f=f||formSnapshot();return stable({job:f.job,product:f.product,custom_material:f.custom_material,metal:f.metal,cut_process:f.cut_process,sw:f.sw,sh:f.sh,settings:f.settings,parts:f.parts});}
+function keptAcks(){if(KEPT.key!==keptKey())return {};return {...(KEPT.turning?{turn_lock:KEPT.turning}:{}),...(KEPT.earlier?{earlier_ack:KEPT.earlier}:{})};}
+function renderHold(r){const box=$('#holdBox'),g=r.guard||{},list=g.held||[];box.hidden=!list.length;if(!list.length){box.innerHTML='';return;}
+  const opts=c=>Object.entries((g.reasons||{})[c]||{}).map(([k,v])=>`<option value="${esc(k)}">${esc(v)}</option>`).join('');
+  box.innerHTML='<h3>Machine files are held</h3><p class="tr">No print, cut or DXF file can be downloaded for this layout until each point below is settled.</p>'+list.map(c=>{const rec=g[c]||{};
+    const fix=c==='turning'?'<button class="small" data-fix="turning" type="button">Nest again with turning allowed</button>':(rec.job_id?`<button class="small" data-fix="earlier" data-job="${esc(rec.job_id)}" type="button">Open the earlier job</button>`:'');
+    return `<div class="item" data-check="${esc(c)}"><p>${esc(rec.words||'')}</p>${fix}<details><summary>Keep this layout and record why</summary><div class="keep"><div><label>Reason</label><select class="kreason"><option value="">choose a reason</option>${opts(c)}</select></div><div><label>Your name</label><input class="kby" type="text" maxlength="60"></div><div class="wide"><label>What exactly requires it</label><input class="knote" type="text" maxlength="300"></div><div class="wide"><button class="ghost small ksave" type="button">Record reason and release the files</button></div></div><p class="kmsg msg err" hidden></p></details></div>`;}).join('');
+  box.querySelectorAll('[data-fix="turning"]').forEach(b=>b.onclick=()=>{document.querySelectorAll('#parts .rot').forEach(c=>{c.checked=true;});if(['180','none'].includes($('#policy').value))$('#policy').value='90';doNest();});
+  box.querySelectorAll('[data-fix="earlier"]').forEach(b=>b.onclick=()=>openProject(b.dataset.job));
+  box.querySelectorAll('.item').forEach(item=>{const c=item.dataset.check,say=t=>{const m=item.querySelector('.kmsg');m.textContent=t;m.hidden=!t;};
+    item.querySelector('.ksave').onclick=async e=>{const b=e.currentTarget,ack={reason:item.querySelector('.kreason').value,note:item.querySelector('.knote').value.trim(),by:item.querySelector('.kby').value.trim()};say('');
+      if(!ack.reason){say('Choose the reason.');return;}if(ack.note.length<8){say('Write a few words saying what exactly requires it.');return;}if(!ack.by){say('Give your name.');return;}
+      b.disabled=true;try{const res=await api(`/api/job/${r.job_id}/acknowledge`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({check:c,...ack})});
+        const key=keptKey(FORM_OF_CURRENT||formSnapshot());if(KEPT.key!==key)KEPT={key};KEPT[c]=ack;const typed=[...box.querySelectorAll('.item')].filter(i=>i!==item).map(i=>[i.dataset.check,i.querySelector('.kreason').value,i.querySelector('.kby').value,i.querySelector('.knote').value]);clearMsgs();CURRENT=res;render(res);typed.forEach(([k,kr,kb,kn])=>{const i=[...box.querySelectorAll('.item')].find(x=>x.dataset.check===k);if(!i)return;i.querySelector('.kreason').value=kr;i.querySelector('.kby').value=kb||ack.by;i.querySelector('.knote').value=kn;const d=i.querySelector('details');if(d)d.open=true;});msg('ok',(res.hold?'Reason recorded. One more point is still held: see the red box.':'Reason recorded on the job. The machine files are released.'));}
+      catch(err){say(err.message);}finally{b.disabled=false;}};});
+  if(typeof LANG!=='undefined'&&LANG==='pt')applyLang('pt');}
+
+function undoLayout(){const u=UNDO.pop();if(!u)return;applyForm(u.form);CURRENT=u.result;FORM_OF_CURRENT=u.form;render(u.result);msg('ok','Back to the previous layout and its settings. Nest again to re-run it, or change something first.');}
+function wireTestLifecycle(r){const box=$('#testLifecycle'),marker=r.test_record;
+  if(!marker){box.hidden=true;return;}
+  const normalUi=marker.creation_channel==='normal_ui';box.hidden=false;$('#testIdentity').textContent=`Created by ${marker.created_by}; TEST ID ${marker.test_id}.`+(normalUi?'':' This older guarded marker uses its existing controlled cleanup route.');$('#archiveTest').hidden=!normalUi;
+  if(!normalUi)return;
+  const setStatus=(kind,text)=>{const status=$('#archiveTestStatus');status.className='msg '+kind;status.textContent=text;status.hidden=!text;};
+  $('#archiveTest').onclick=()=>{const dlg=$('#archiveTestDialog');$('#archiveTestIdentity').textContent=`${r.job} · ${r.job_id} · TEST ID ${marker.test_id} · created by ${marker.created_by}`;$('#archiveTestActor').value='';$('#archiveTestReason').value='';$('#archiveTestConfirmation').value='';setStatus('','');dlg.showModal();};
+  $('#archiveTestCancel').onclick=()=>$('#archiveTestDialog').close();
+  $('#archiveTestForm').onsubmit=async e=>{e.preventDefault();const submit=$('#archiveTestSubmit');const archive_actor=$('#archiveTestActor').value.trim(),reason=$('#archiveTestReason').value.trim(),confirmation=$('#archiveTestConfirmation').value;
+    if(!archive_actor){setStatus('err','Enter the operator performing this archive action.');return;}if(!reason){setStatus('err','Give the TEST archive reason.');return;}if(confirmation!=='ARCHIVE TEST JOB'){setStatus('err','Type the exact confirmation phrase ARCHIVE TEST JOB.');return;}setStatus('','');
+    submit.disabled=true;try{const archived=await api(`/api/job/${r.job_id}/archive-test`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({expected_job:r.job,expected_created:r.created,expected_test_id:marker.test_id,archive_actor,reason,confirmation})});
+      CURRENT=null;FORM_OF_CURRENT=null;UNDO=UNDO.filter(u=>(u.result||{}).job_id!==r.job_id);$('#results').style.display='none';$('#empty').style.display='';await loadProjects();const retained=archived.operational_files_retained||[],shared=retained.filter(x=>x.reason==='shared_with_live_job').length,library=retained.filter(x=>x.reason==='normal_ui_source_retained').length;
+      if(archived.operational_cleanup_complete){$('#archiveTestDialog').close();$('#disposableTest').checked=false;$('#testCreatedBy').value='';syncTestCreation();msg('ok',`Archived disposable TEST job ${archived.job_id}. Recovery receipt ${archived.archive_sha256}.${library?' '+library+' library source'+(library===1?' was':'s were')+' intentionally retained because this UI job does not prove source ownership.':''}${shared?' '+shared+' shared source'+(shared===1?' remains':'s remain')+' available to live jobs.':''}`);}
+      else setStatus('warn',`Recovery archive created for ${archived.job_id}, but operational cleanup is incomplete. Keep this dialog open and retry the exact archive action after checking the retained-file receipt.`);
+    }catch(err){setStatus('err',err.message);}finally{submit.disabled=false;}};
+}
 function render(r){$('#empty').style.display='none';$('#results').style.display='';
-  r.warnings.forEach(w=>msg('warn',w));(r.notes||[]).forEach(n=>msg('ok',n));
+  r.warnings.forEach(w=>msg('warn',w));(r.notes||[]).forEach(n=>msg((r.guard_notes||[]).includes(n)&&(n.includes('Kept on purpose')||n===(r.guard||{}).quantity_note)?'warn':'ok',n));
+  const held=!!r.hold,heldKinds=new Set(held?((r.guard||{}).held_kinds||[]):[]),frontOf=k=>k==='print-back-files'?'print-files':k==='print-back'?'print':k;renderHold(r);
   const eng=r.engine==='shapes'?`true-shape engine, rotation step ${r.rot_step}°${r.pairs&&r.pairs.length?', '+r.pairs.length+' part pair'+(r.pairs.length>1?'s':'')+' interlocked':''}`:'rectangle engine';
   const onWhat=r.process&&r.process.roll?`a ${r.sheet_mm[1]} mm wide roll: ${(r.media_used_mm/1000).toFixed(2)} m of roll used, cut in ${r.sheet_count} pass${r.sheet_count>1?'es':''} of up to ${r.sheet_mm[0]} mm (what the knife table takes in one go; no part crosses a pass, because cutting across the feed is not confirmed)`:`${r.sheet_count} sheet${r.sheet_count>1?'s':''} of ${r.sheet_mm[0]} x ${r.sheet_mm[1]} mm`;
   const mixed=r.rules&&r.rules.stock&&r.rules.stock.length&&r.words?r.words.replace(/^\d+ parts on /,'').replace(/, \d+% of the material used\..*$/,''):null;
-  msg('ok',`${r.parts_total} parts on ${mixed||onWhat}. Gap, edge and overlap checks passed.`);
+  if(r.process&&r.process.roll)msg('ok',`${r.words||`${r.parts_total} parts on ${(r.media_used_mm/1000).toFixed(2)} m of a ${r.sheet_mm[1]} mm roll.`} Gap, edge and overlap checks passed.`);   // the length used and nothing more (Danilo + owner, 20-Oct-2026)
+  else msg('ok',`${r.parts_total} parts on ${mixed||onWhat}. Gap, edge and overlap checks passed.`);
   $('#words').textContent=r.words||'';const link=location.origin+'/p/'+r.job_id;const share=(r.job?r.job+': ':'')+(r.words||'')+' '+link;
   $('#copyWords').onclick=()=>copyText(share).then(()=>msg('ok','Summary copied. Paste it into WhatsApp or an email.'),()=>msg('err','Could not copy. Select the sentence above and copy it by hand.'));
   $('#copyLink').onclick=()=>copyText(link).then(()=>msg('ok','Link copied: '+link+'. It opens on a phone only while this computer can be reached on the network.'),()=>msg('err','Could not copy: '+link));
   $('#waBtn').href='https://wa.me/?text='+encodeURIComponent(share);
-  $('#undoBtn').style.display=UNDO.length?'':'none';$('#undoBtn').onclick=()=>{const u=UNDO.pop();if(!u)return;applyForm(u.form);CURRENT=u.result;FORM_OF_CURRENT=u.form;render(u.result);msg('ok','Back to the previous layout and its settings. Nest again to re-run it, or change something first.');};
+  wireTestLifecycle(r);
+  $('#undoBtn').style.display=UNDO.length?'':'none';$('#undoBtn').onclick=undoLayout;
   $('#unlockBtn').style.display=PINS.length?'':'none';$('#unlockBtn').textContent=`Unlock all parts (${PINS.length})`;$('#unlockBtn').onclick=()=>{PINS=[];msg('ok','All parts unlocked. Nest again for a free layout.');$('#unlockBtn').style.display='none';document.querySelectorAll('#sheets path.part.locked').forEach(p=>p.classList.remove('locked'));};
   if(r.mode==='simple'&&r.engine==='shapes'&&r.sheet_count>1)msg('warn','Parts were turned 0 / 90° only. For odd shapes, Settings > Nesting mode > Complex rotates them freely and may save a sheet.');
   const last=r.sheets[r.sheets.length-1];
-  const roll=r.process&&r.process.roll;$('#stats').innerHTML=[[roll?'Cut passes':'Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],[roll?'Unprinted end of last pass':'Last-sheet offcut',last.custom_cuts!=null?'Custom cuts':last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`]].concat(r.process&&r.process.roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m']]:[]).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
-  const dl=[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print-files','Print files (1 per sheet, zip)'],['cut-files','Cut files (1 per sheet, zip)'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
-  const dlv=dl.filter(([k])=>!(k==='print-files'&&r.print_blocked)&&!(k==='cut-files'&&r.cut_blocked));
-  const short={'dxf':'Cutting DXF','dxf-labels':'DXF with part labels','print-files':'Print files','cut-files':'Cut files','layout':'Layout sheet (A4)','report':'Report (JSON)','all':'Download all files (zip)'};
+  const roll=r.process&&r.process.roll;$('#stats').innerHTML=(roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m'],['Parts',r.parts_total]]:[[roll?'Cut passes':'Sheets',r.sheet_count],['Material used',(r.utilisation*100).toFixed(1)+'%'],['Parts',r.parts_total],[roll?'Unprinted end of last pass':'Last-sheet offcut',last.custom_cuts!=null?'Custom cuts':last.offcut_strip_mm[2]==='none'?'none':`${last.offcut_strip_mm[0]} x ${last.offcut_strip_mm[1]}`]].concat(r.process&&r.process.roll?[['Roll length used',(r.media_used_mm/1000).toFixed(2)+' m']]:[])).map(([k,v])=>`<div class="stat"><b>${v}</b><span>${k}</span></div>`).join('');
+  // A roll gets the one 'print' / 'cut' file per kind, the job length, not the per-sheet zips.  The Ameida (roll_files 'one'): one PDF, art + CutContour.
+  const rf=roll&&((PRODUCTS[(r.process||{}).id]||PRODUCTS[$('#product').value]||{}).export||{}).roll_files;const printL=rf==='one'?'Print & cut PDF (art + CutContour)':'Print PDF';
+  const dl=roll?[['print',printL],['cut','Cut PDF (CutContour)'],['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']]:[['dxf','DXF cut files (zip)'],['dxf-labels','DXF with part labels'],['print-files','Print files (1 per sheet, zip)'],['cut-files','Cut files (1 per sheet, zip)'],['layout','Layout sheet (A4)'],['report','Report (JSON)'],['all','Everything (zip)']];
+  // The cutter's export profile (products.py) decides which files it gets: a product carries export.kinds; a custom
+  // material borrows the kinds of any product on the same cutter (the server applies the same rule), so a link the
+  // selected cutter does not offer is never shown.  A custom cutting process has no profile and keeps every link.
+  const proc=r.process||{};const pp=PRODUCTS[proc.id]||PRODUCTS[$('#product').value]||{};
+  const referenceStatus=$('#panelReferenceStatus');referenceStatus.hidden=!pp.printer;
+  const referenceCount=(r.order_labels||[]).flat().filter(label=>label&&label.order_ref&&label.piece_id).length;
+  const identified=!!(r.orders&&r.orders.length)&&referenceCount===r.parts_total&&referenceCount>0;
+  referenceStatus.textContent=roll?'Roll identification is added in ONYX. PS Nest does not add panel references to this roll file.':identified?`Panel references included: ${referenceCount} of ${r.parts_total}. The project reference, panel number and finished size print in the waste beside each panel.`:'No panel references in this print file. Use Combine approved orders to assign the projects and original item numbers, then nest again before combining panels from different jobs.';
+  referenceStatus.style.color=roll||identified?'#344054':'#b42318';
+  const cid=pp.cutter||(proc.custom_material||{}).cutter||(proc.id==='custom'?$('#custom_cutter').value:'');
+  const kl=(pp.export&&Array.isArray(pp.export.kinds))?pp.export.kinds:((cid&&(Object.values(PRODUCTS).find(q=>q.cutter===cid&&q.export&&Array.isArray(q.export.kinds))||{}).export)||{}).kinds;
+  const kinds=Array.isArray(kl)?new Set([...kl,'all']):null;
+  const corel=roll&&cid==='gunner'&&rf==='two';
+  if(corel){dl.splice(1,0,['corel-cut','Corel cut EPS']);if(kinds)kinds.add('corel-cut');}
+  if(r.orders&&r.orders.length){dl.splice(0,0,['worksheet','Production worksheet + nesting'],['production','Production package by material'],['packing','Project sorting checklist']);if(kinds){kinds.add('packing');kinds.add('worksheet');kinds.add('production');}msg('warn',r.packing_instruction);}
+  if(r.back_print&&!roll){const i=dl.findIndex(([k])=>k==='print-files');dl.splice(i+1,0,['print-back-files','Back print files (1 per sheet, zip)']);}   // double-sided: the back is written from the same nest
+  const dlv=dl.filter(([k])=>!heldKinds.has(k)&&!((frontOf(k)==='print-files'||frontOf(k)==='print')&&r.print_blocked)&&!((k==='cut-files'||k==='cut'||k==='corel-cut')&&r.cut_blocked)&&(!kinds||kinds.has(frontOf(k))));
+  const short={'worksheet':'Production worksheet + nesting','production':'Production package by material','packing':'Project sorting checklist','dxf':'Cutting DXF','dxf-labels':'DXF with part labels','print-files':r.back_print?'Print files - FRONT':'Print files','print-back-files':'Print files - BACK','cut-files':'Cut files','layout':'Layout sheet (A4)','report':'Report (JSON)','all':'Download all files (zip)','print':printL,'cut':'Cut PDF (CutContour)','corel-cut':'Corel cut EPS'};
   const minor=new Set(['dxf-labels','report']);
   $('#downloads').innerHTML=dlv.filter(([k])=>k==='all').map(([k,l])=>`<button class="main" data-k="${k}" data-l="${l}">${short[k]}</button>`).join('')
     +dlv.filter(([k])=>k!=='all'&&!minor.has(k)).map(([k,l])=>`<button class="ghost small" data-k="${k}" data-l="${l}">${short[k]}</button>`).join('')
     +'<span class="more">also:'+dlv.filter(([k])=>minor.has(k)).map(([k,l])=>`<a href="#" data-k="${k}" data-l="${l}">${short[k]}</a>`).join('')+'</span>';
-  if(r.print_blocked)msg('warn','Print files not offered. '+r.print_blocked);
-  if(r.cut_parts&&r.cut_blocked)msg('warn','Cut files not offered. '+r.cut_blocked);
-  if(r.cut_parts&&!r.cut_blocked)msg('ok',`Print & cut: one print file and one cut file per ${r.process&&r.process.roll?'pass':'sheet'}, named to pair up ("${r.file_label||'job'} - … - sheet 1 of ${r.sheet_count} - print ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf" goes with "… - cut ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf"). The print file has the cut line removed; the cut file has only the cut lines, same page and position.`);
+  if(held)msg('err','Machine files are held for this layout. The red box under Result says why and what to do.');
+  if(r.print_blocked&&r.print_blocked!==r.hold)msg('warn','Print files not offered. '+r.print_blocked);
+  if(r.cut_parts&&r.cut_blocked&&r.cut_blocked!==r.hold)msg('warn','Cut files not offered. '+r.cut_blocked);
+  if(roll&&r.cut_parts&&!r.cut_blocked)msg('ok',rf==='one'?'One file for the Ameida: art and CutContour on the same page \u2014 open it in ONYX.':corel?'Gunner: open Print PDF in ONYX and Corel cut EPS as editable curves in CorelDRAW, at 100%. Keep the same page origin and rotation. Long cut PDFs import at the wrong size in CorelDRAW 2021; use the EPS.':'Two files: the print file and the cut file, same length and position.');
+  else if(r.cut_parts&&!r.cut_blocked)msg('ok',`Print & cut: one print file and one cut file per ${r.process&&r.process.roll?'pass':'sheet'}, named to pair up ("${r.file_label||'job'} - … - sheet 1 of ${r.sheet_count} - print ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf" goes with "… - cut ${r.sheet_mm[0]}x${r.sheet_mm[1]}.pdf"). The print file has the cut line removed; the cut file has only the cut lines, same page and position.`);
   $('#downloads').querySelectorAll('button,a').forEach(b=>b.onclick=e=>{e.preventDefault();download(r.job_id,b.dataset.k,b.dataset.l,b);});
-  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Cut pass':'Sheet'} ${s.n} of ${r.sheet_count}</b><div class="meta"><span>${s.parts} parts</span><span>${(s.utilisation*100).toFixed(1)}% used</span>${roll?`<span>${(s.used_length_mm/1000).toFixed(2)} m of roll</span>`:''}<span>${s.custom_cuts!=null?'Custom cuts · area not measured':'Offcut '+(s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' × '+s.offcut_strip_mm[1]+' mm')}</span></div></div>${!roll?`<button class="ghost small edit-cuts" data-sheet="${i}">Edit separation cuts</button>`:''}${r.svg[i]}<details><summary>Sheet measurements</summary><p>Largest clear rectangle: ${s.largest_empty_rect_mm[0]} × ${s.largest_empty_rect_mm[1]} mm.${s.custom_cuts==null&&s.offcut_strip_mm[2]!=='none'?' Offcut position: '+s.offcut_strip_mm[2]+'.':''}${s.trim_line_mm?' Separation cut: '+s.trim_line_mm[1]+' mm ('+(s.trim_line_mm[0]==='x'?'vertical':'horizontal')+').':''}</p></details></div>`).join('');wireDrag(r);$('#sheets').querySelectorAll('.edit-cuts').forEach(b=>b.onclick=()=>cutOpen(r,+b.dataset.sheet));}
+  $('#sheets').innerHTML=r.sheets.map((s,i)=>`<div class="sheet"><div class="head"><b>${roll?'Roll length':'Sheet'} ${s.n} of ${r.sheet_count}</b><div class="meta"><span>${s.parts} parts</span>${roll?`<span>${(s.used_length_mm/1000).toFixed(2)} m of roll</span>`:`<span>${(s.utilisation*100).toFixed(1)}% used</span><span>${s.custom_cuts!=null?'Custom cuts · area not measured':'Offcut '+(s.offcut_strip_mm[2]==='none'?'none':s.offcut_strip_mm[0]+' × '+s.offcut_strip_mm[1]+' mm')}</span>`}</div></div>${!roll?`<button class="ghost small edit-cuts" data-sheet="${i}">Edit separation cuts</button>`:''}${r.svg[i]}${roll?'':`<details><summary>Sheet measurements</summary><p>Largest clear rectangle: ${s.largest_empty_rect_mm[0]} × ${s.largest_empty_rect_mm[1]} mm.${s.custom_cuts==null&&s.offcut_strip_mm[2]!=='none'?' Offcut position: '+s.offcut_strip_mm[2]+'.':''}${s.trim_line_mm?' Separation cut: '+s.trim_line_mm[1]+' mm ('+(s.trim_line_mm[0]==='x'?'vertical':'horizontal')+').':''}</p></details>`}</div>`).join('');wireDrag(r);$('#sheets').querySelectorAll('.edit-cuts').forEach(b=>b.onclick=()=>cutOpen(r,+b.dataset.sheet));}
 
 function wireDrag(r){document.querySelectorAll('#sheets .sheet').forEach((box,si)=>{const svg=box.querySelector('svg');if(!svg)return;const s=r.sheets[si];const paths=[...svg.querySelectorAll('g path')];const labels=[...svg.querySelectorAll('svg > text')];
   paths.forEach((p,pi)=>{const pl=s.placements[pi];if(!pl)return;p.classList.add('part');if(PINS.some(x=>x.name===pl.part&&x.sheet===si))p.classList.add('locked');p.setAttribute('title',pl.part);
@@ -712,9 +943,10 @@ const PT={'Material':'Material','Sheet length (mm)':'Comprimento da chapa (mm)',
  'Or type the PL number and pull the finished art from the NAS':'Ou digite o número PL e puxe a arte final do NAS','Or paste a Trello card link and fetch its files':'Ou cole o link do cartão Trello e busque os arquivos','Extra sheets or remnants to use first (mm x mm, how many)':'Chapas extras ou sobras para usar primeiro (mm x mm, quantas)',
  'Edge per side (mm, blank = edge margin)':'Margem por lado (mm, vazio = margem da borda)','Smallest offcut worth keeping (mm)':'Menor sobra que vale guardar (mm)','How to use':'Como usar','Set every qty to':'Definir todas as qtd para','Set':'Definir','Load an example job':'Carregar um exemplo',
  'The sheets, the numbers and the download buttons appear on the right.':'As chapas, os números e os botões de download aparecem à direita.','No artwork? Type the size and quantity and you get cut files only. Untick Turn for a part that must stay upright. +10 / +100 next to a quantity add to it.':'Sem arte? Digite a medida e a quantidade e você recebe só os arquivos de corte. Desmarque Girar para uma peça que deve ficar em pé. +10 / +100 ao lado da quantidade somam a ela.'};
+Object.assign(PT,{'Back artwork':'Arte do verso','Double-sided: choose a back artwork per part':'Frente e verso: escolha a arte do verso por peça','Machine files are held':'Arquivos de máquina retidos','Nest again with turning allowed':'Encaixar de novo com giro liberado','Open the earlier job':'Abrir o trabalho anterior','Keep this layout and record why':'Manter este layout e registrar o motivo','Reason':'Motivo','Your name':'Seu nome','What exactly requires it':'O que exatamente exige isso','Record reason and release the files':'Registrar o motivo e liberar os arquivos','Print files - FRONT':'Arquivos de impressão - FRENTE','Print files - BACK':'Arquivos de impressão - VERSO','No print, cut or DXF file can be downloaded for this layout until each point below is settled.':'Nenhum arquivo de impressão, corte ou DXF pode ser baixado para este layout até resolver cada ponto abaixo.','choose a reason':'escolha um motivo','Material grain or brushed finish must run one way':'O veio do material ou o acabamento escovado precisa seguir uma só direção','Printed pattern or material direction must run one way':'A estampa impressa ou a direção do material precisa seguir uma só direção','Customer asked for this direction':'O cliente pediu esta direção','Machine or handling limit':'Limite da máquina ou de manuseio','The tool or cut method needs these settings':'A ferramenta ou o método de corte exige estes ajustes','Different material or sheet than the earlier nest':'Material ou chapa diferente do encaixe anterior','The job changed since the earlier nest':'O trabalho mudou desde o encaixe anterior','The earlier nest was wrong and must not be used':'O encaixe anterior estava errado e não deve ser usado'});
 Object.assign(PT,{'Material & process':'Material e processo','Job name':'Nome do trabalho','Import from NAS':'Importar do NAS','Import from Trello':'Importar do Trello','PL job number':'Número PL do trabalho','Trello card link':'Link do cartão Trello','Sizes, quantities & turning':'Medidas, quantidades e giro','Machine, spacing & cut paths':'Máquina, espaçamento e linhas de corte','Guide to shapes, print & cut':'Guia de formas, impressão e corte','Adjusting & sharing this layout':'Ajustar e compartilhar este layout','Your layout appears here':'Seu layout aparece aqui','Quick start guide':'Guia rápido','Sheet measurements':'Medidas da chapa','Machine limits & material notes':'Limites da máquina e notas do material'});
 function applyLang(l){LANG=l;try{localStorage.setItem('psnest.lang',l);}catch(e){}$('#langBtn').textContent=l==='en'?'PT':'EN';
-  document.querySelectorAll('label,button,h2,h3,th,summary,option,.hint,a,.nas-check span').forEach(el=>{if(el.children.length){const t=el.lastChild;if(!t||t.nodeType!==3)return;const k0=el.dataset.en!==undefined?el.dataset.en:t.textContent.trim();if(!(k0 in PT))return;if(el.dataset.en===undefined)el.dataset.en=k0;t.textContent=l==='pt'?PT[k0]:k0;return;}const k=el.dataset.en!==undefined?el.dataset.en:el.textContent.trim();if(!(k in PT))return;if(el.dataset.en===undefined)el.dataset.en=k;el.textContent=l==='pt'?PT[k]:k;});
+  document.querySelectorAll('label,button,h2,h3,th,summary,option,.hint,a,.nas-check span,.tr').forEach(el=>{if(el.children.length){const t=el.lastChild;if(!t||t.nodeType!==3)return;const k0=el.dataset.en!==undefined?el.dataset.en:t.textContent.trim();if(!(k0 in PT))return;if(el.dataset.en===undefined)el.dataset.en=k0;t.textContent=l==='pt'?PT[k0]:k0;return;}const k=el.dataset.en!==undefined?el.dataset.en:el.textContent.trim();if(!(k in PT))return;if(el.dataset.en===undefined)el.dataset.en=k;el.textContent=l==='pt'?PT[k]:k;});
   document.documentElement.lang=l==='pt'?'pt-BR':'en';if(NAS_SETTINGS)renderNasStatus(NAS_SETTINGS);}
 
 // Connection settings stay outside the job data. Never put a password in localStorage or a URL.
@@ -725,7 +957,9 @@ function renderNasStatus(s){NAS_SETTINGS=s;$('#nasStatus').textContent=s.configu
   ?nasText('NAS access configured. Fetch a PL job to import its PDFs.','Acesso ao NAS configurado. Busque um PL para importar os PDFs.')
   :nasText('Connect your NAS account to fetch finished art.','Conecte seu acesso ao NAS para buscar as artes finais.');
   $('#nasConfigure').dataset.en=s.configured?'NAS connection':'Connect to NAS';$('#nasConfigure').textContent=s.configured?nasText('NAS connection','Conexão com o NAS'):nasText('Connect to NAS','Conectar ao NAS');}
-async function refreshNasSettings(){try{renderNasStatus(await api('/api/nas/settings'));}catch(e){$('#nasStatus').textContent=nasText('NAS settings could not be loaded. Try Connect to NAS.','Não foi possível carregar a configuração. Tente Conectar ao NAS.');}}
+function hostPcOnly(){return !['127.0.0.1','localhost','::1','[::1]'].includes(location.hostname);}   // NAS routes answer the host PC's own browser only (server: _nas_request_origin)
+async function refreshNasSettings(){if(hostPcOnly()){$('#nasStatus').textContent=nasText('NAS import runs on the host PC only. Use this machine\u2019s NAS folder, or open PS Nest on the host PC.','A importação do NAS funciona apenas no PC host. Use a pasta do NAS desta máquina ou abra o PS Nest no PC host.');$('#nasConfigure').hidden=true;$('#nasBtn').disabled=true;return;}
+  try{renderNasStatus(await api('/api/nas/settings'));}catch(e){$('#nasStatus').textContent=nasText('NAS settings could not be loaded. Try Connect to NAS.','Não foi possível carregar a configuração. Tente Conectar ao NAS.');}}
 async function openNasSetup(){if(NAS_BUSY)return;nasSetupMessage('','');$('#nasPassword').value='';
   $('#nasHost').value='';$('#nasUser').value='';$('#nasRoot').value='/Platinum';$('#nasTailnet').checked=false;$('#nasRemember').checked=false;$('#nasForgetBox').hidden=true;
   $('#nasDialog').showModal();$('#nasSave').disabled=true;$('#nasTest').disabled=true;
@@ -749,9 +983,17 @@ Object.assign(PT,{'NAS connection':'Conexão com o NAS','Connect to NAS':'Conect
 
 Object.assign(PT,{'Custom material…':'Material personalizado…','Material name':'Nome do material','Material family':'Família do material','Other / unlisted':'Outro / não listado','Cutting process':'Processo de corte','Stock type':'Tipo de material','Cutter name':'Nome da máquina de corte','Cutting tool':'Ferramenta de corte','Printing':'Impressão','Custom cutting process…':'Processo de corte personalizado…','Cut only — no printing':'Somente corte — sem impressão','Laser / other kerf':'Laser / outra largura de corte','Router bit':'Fresa','Knife':'Faca','Set your sheet size below. Adjust gap, tool width and margins in Settings.':'Defina o tamanho da chapa abaixo. Ajuste espaçamento, largura da ferramenta e margens em Configurações.'});
 
-(async function init(){const j=await api('/api/products');PRODUCTS=j.products;EXAMPLES=j.examples;CUSTOM_TEMPLATES=j.custom_templates;MATERIALS=j.materials;MACHINES=j.machines;CUTTERS=j.cutters;$('#appVersion').textContent=j.release?'v'+j.release.version+' · '+j.release.name:'Version unavailable — reopen the app';
+function machineFromUrl(){const qp=new URLSearchParams(location.search);let m=qp.get('machine');
+  if(m!==null){m=m.trim().toLowerCase();try{if(m)localStorage.setItem('psnest.machine',m);else localStorage.removeItem('psnest.machine');}catch(e){}return m;}
+  try{return localStorage.getItem('psnest.machine')||'';}catch(e){return '';}}
+function machineIds(){const ids=Object.keys(CUTTERS||{});for(const [k,v] of Object.entries(MACHINES||{}))if(v&&(v.kind==='cutter'||v.kind==='printer')&&!ids.includes(k))ids.push(k);return ids;}
+function renderMachineBar(asked){const bar=$('#machineBar');if(!MACHINE){bar.hidden=!asked;if(asked){try{localStorage.removeItem('psnest.machine');}catch(e){}bar.innerHTML='<span>Unknown machine <b>'+esc(asked)+'</b> in the link, so every machine is shown. Bookmark ?machine='+esc(machineIds().join(', '))+'.</span>';}return;}
+  const c=CUTTERS[MACHINE]||{},m=MACHINES[MACHINE]||{};bar.hidden=false;
+  const what=c.label||(m.kind==='printer'?(m.feed==='roll'?'Roll printer':'Flatbed printer'):'');
+  bar.innerHTML='<span>This PC: <b>'+esc(m.name||c.label||MACHINE)+'</b></span><span>'+esc(what)+' \u00b7 only its materials are listed</span><a href="?machine=">Show all machines</a>';}
+(async function init(){const asked=machineFromUrl();const j=await api('/api/products'+(asked?'?machine='+encodeURIComponent(asked):''));MACHINE=j.machine_preselect||null;PRODUCTS=j.products;EXAMPLES=j.examples;CUSTOM_TEMPLATES=j.custom_templates;MATERIALS=j.materials;MACHINES=j.machines;CUTTERS=j.cutters;$('#appVersion').textContent=j.release?'v'+j.release.version+' · '+j.release.name:'Version unavailable — reopen the app';
   try{ARTS=(await api('/api/artworks')).artworks;}catch(e){ARTS=[];}
-  const ps=$('#product');const ph=document.createElement('option');ph.value='';ph.textContent='Choose\u2026';ph.disabled=true;ph.selected=true;ps.appendChild(ph);const groups={};Object.entries(PRODUCTS).forEach(([k,v])=>{const g=groups[v.material]||(groups[v.material]=Object.assign(document.createElement('optgroup'),{label:v.material_name}));
+  const ps=$('#product');const ph=document.createElement('option');ph.value='';ph.textContent='Choose\u2026';ph.disabled=true;ph.selected=true;ps.appendChild(ph);const groups={};Object.entries(PRODUCTS).filter(([k,v])=>onMachine(v)).forEach(([k,v])=>{const g=groups[v.material]||(groups[v.material]=Object.assign(document.createElement('optgroup'),{label:v.material_name}));
     const o=document.createElement('option');o.value=k;o.textContent=v.name;g.appendChild(o);if(!g.parentNode)ps.appendChild(g);});
   ps.insertBefore(new Option('Custom material…','custom'),ps.children[1]||null);
   Object.entries(MATERIALS).forEach(([k,v])=>$('#custom_family').add(new Option(v.name,k)));
@@ -761,18 +1003,21 @@ Object.assign(PT,{'Custom material…':'Material personalizado…','Material nam
   ['name','cutter_name'].forEach(k=>$('#custom_'+k).oninput=()=>{refreshCustom();procInfo();if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';}});
   $('#custom_thickness').oninput=()=>$('#thickness').value=$('#custom_thickness').value;
   $('#thickness').oninput=()=>$('#custom_thickness').value=$('#thickness').value;
-  const es=$('#example');EXAMPLES.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=e.label;es.appendChild(o);});
-  ps.onchange=fillProduct;$('#printer').onchange=()=>{if($('#product').value==='custom'){$('#custom_printer').value=$('#printer').value;refreshCustom();}procInfo();};$('#sheet').onchange=sheetChanged;es.onchange=()=>{loadExample(es.value);es.value='';};
+  const es=$('#example');EXAMPLES=EXAMPLES.filter(e=>onMachine(PRODUCTS[e.product]));EXAMPLES.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=e.label;es.appendChild(o);});
+  const ms=$('#metal');ms.innerHTML='';ms.add(new Option('Choose\u2026',''));METALS.forEach(([v,n])=>ms.add(new Option(n,v)));ms.onchange=()=>{ms.style.outline='';$('#metalMsg').textContent='';};$('#custom_cutter').addEventListener('change',()=>{syncMetal();syncCut();});
+  ps.onchange=fillProduct;$('#printer').onchange=()=>{if($('#product').value==='custom'){$('#custom_printer').value=$('#printer').value;refreshCustom();}procInfo();};$('#sheet').onchange=sheetChanged;$('#sh').addEventListener('input',rollHint);$('#rollLen').addEventListener('input',rollLenChanged);$('#rollBatch').addEventListener('input',rollHint);es.onchange=()=>{loadExample(es.value);es.value='';};
+  renderMachineBar(asked);if(MACHINE){const first=Object.keys(PRODUCTS).find(k=>onMachine(PRODUCTS[k]));if(first)ps.value=first;if(!printerPC())$('#custom_cutter').value=MACHINE;}
   fillProduct();addRow();
+  $('#disposableTest').onchange=()=>{syncTestCreation();invalidateBatchResult();};$('#testCreatedBy').oninput=invalidateBatchResult;syncTestCreation();
   $('#addRow').onclick=()=>addRow();$('#clearRows').onclick=()=>{$('#parts tbody').innerHTML='';addRow();};
   $('#nestBtn').onclick=doNest;$('#resetCustomCuts').onclick=()=>{CUSTOM_CUTS={};offcutChanged();msg('ok','Custom cuts reset. Press Nest to regenerate automatic cuts.');};$('#offcut_enabled').onchange=offcutChanged;$('#offcut').onchange=offcutChanged;syncOffcut();
-  const drop=$('#drop'),file=$('#file');drop.onclick=()=>file.click();file.onchange=()=>uploadFiles(file.files);
+  const drop=$('#drop'),file=$('#file');drop.onclick=()=>file.click();file.onchange=async()=>{await uploadFiles(file.files);file.value='';};
   drop.ondragover=e=>{e.preventDefault();drop.classList.add('over');};drop.ondragleave=()=>drop.classList.remove('over');drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');uploadFiles(e.dataTransfer.files);};
   const od=$('#odrop'),of=$('#ofile');od.onclick=()=>of.click();of.onchange=()=>uploadOutlines(of.files);
   od.ondragover=e=>{e.preventDefault();od.classList.add('over');};od.ondragleave=()=>od.classList.remove('over');od.ondrop=e=>{e.preventDefault();od.classList.remove('over');uploadOutlines(e.dataTransfer.files);};
   $('#mode').onchange=modeChanged;modeChanged();
   const adv=$('#adv');adv.ontoggle=()=>$('#parts').classList.toggle('adv',adv.open);
-  $('#time').oninput=timeLabel;timeLabel();$('#stockAdd').onclick=()=>stockAdd();$('#policy').onchange=()=>{if($('#policy').value==='free'){$('#mode').value='complex';modeChanged();}};
+  $('#time').oninput=timeLabel;timeLabel();$('#stockAdd').onclick=()=>stockAdd();$('#policy').onchange=()=>{if($('#policy').value==='free'){$('#mode').value='complex';modeChanged();}};$('#two_sided').onchange=syncTwoSided;syncTwoSided();
   $('#qtyAllBtn').onclick=()=>{const v=+$('#qtyAll').value;if(!(v>0)){msg('err','Type the quantity first.');return;}document.querySelectorAll('#parts .qty').forEach(q=>q.value=v);};
   $('#qtyLast').onclick=()=>{const m=lastQty();let n=0;document.querySelectorAll('#parts tbody tr').forEach(tr=>{const k=tr.querySelector('.name').value.trim().toLowerCase();if(k in m){tr.querySelector('.qty').value=m[k];n++;}});clearMsgs();msg(n?'ok':'warn',n?`${n} quantit${n>1?'ies':'y'} copied from the last job nested on this computer (matched by part name).`:'No part name here matches the last job nested on this computer.');};
   const lf=$('#listFile');$('#listBtn').onclick=()=>lf.click();lf.onchange=async()=>{const f=lf.files[0];if(!f)return;clearMsgs();const b64=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.readAsDataURL(f);});
@@ -780,28 +1025,29 @@ Object.assign(PT,{'Custom material…':'Material personalizado…','Material nam
       j.parts.forEach(p=>addRow(p));refreshArtSelects();msg('ok',`${j.rows} part${j.rows>1?'s':''} added from ${f.name}.${j.parts.some(p=>p.artwork)?' Rows naming an uploaded PDF got that artwork.':''}`);(j.notes||[]).forEach(n=>msg('warn',n));}
     catch(e){msg('err',f.name+': '+e.message);}lf.value='';};
   if(!window.PSNEST_WEB){$('#nasBox').style.display='';initNasSettings();const nm=(kind,text)=>{const el=$('#nasMsg');el.textContent=text;el.style.color=kind==='err'?'#b42318':kind==='warn'?'#b54708':'#067647';msg(kind,text);};
-    $('#nasBtn').onclick=async()=>{clearMsgs();const v=$('#nasPl').value.trim();if(!v){nm('err','Type the PL number (PL014508) first.');$('#nasPl').focus();return;}const b=$('#nasBtn');b.disabled=true;b.textContent=nasText('Fetching…','Buscando…');
+    $('#nasBtn').onclick=async()=>{const orderRef=$('#activeOrder').value;clearMsgs();const v=$('#nasPl').value.trim();if(!v){nm('err','Type the PL number (PL014508) first.');$('#nasPl').focus();return;}const b=$('#nasBtn');b.disabled=true;b.textContent=nasText('Fetching…','Buscando…');
       try{const c=await api('/api/nas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pl:v})});const files=c.files||[];$('#job').value=$('#job').value||c.name;
         if(files.length){const tb=$('#parts tbody');const first=tb.children.length===1?tb.children[0]:null;if(first&&!first.querySelector('.w').value&&!first.querySelector('.name').value&&!first.querySelector('.art').value)tb.innerHTML='';
-          files.forEach(f=>{NEWARTS.add(f.key);const i=ARTS.findIndex(a=>a.key===f.key);if(i>=0)ARTS[i]=f;else ARTS.push(f);addArtPart(f);});refreshArtSelects();
+          for(const f of files){NEWARTS.add(f.key);const i=ARTS.findIndex(a=>a.key===f.key);if(i>=0)ARTS[i]=f;else ARTS.push(f);await addArtPart(f,orderRef);}refreshArtSelects();
           const nc=files.filter(f=>f.cut&&f.cut.found).length;nm(nc===files.length?'ok':'warn',`${files.length} PDF${files.length>1?'s':''} pulled from ${c.folders.join(', ')}: ${nc===files.length?'every one':nc+' of them'} with a CutContour line.${nc<files.length?' The rest are placed as rectangles at page size and cannot be cut.':''} Check the quantities.`+((c.notes||[]).length?'\n'+c.notes.join(' '):''));}
         else nm('warn',(c.notes||[]).join(' ')||'No PDF found.');}
       catch(e){nm('err',e.message);}finally{b.disabled=false;b.textContent=nasText('Fetch from NAS','Buscar no NAS');}};}
   loadProjects();applyLang(localStorage.getItem('psnest.lang')||'en');$('#langBtn').onclick=()=>{applyLang(LANG==='en'?'pt':'en');syncOffcut();};syncOffcut();
   try{OUTL=(await api('/api/outlines')).outlines;}catch(e){OUTL=[];}refreshOutlines();
   if(j.trello){$('#trelloBox').style.display='';const tm=(kind,text)=>{const el=$('#trelloMsg');el.textContent=text;el.style.color=kind==='err'?'#b42318':kind==='warn'?'#b54708':'#067647';msg(kind,text);};
-  $('#trelloBtn').onclick=async()=>{clearMsgs();const v=$('#trello').value.trim();if(!v){tm('err','Paste the Trello card link (https://trello.com/c/…) or its id in the box, then press Fetch.');$('#trello').focus();return;}
-  const b=$('#trelloBtn');b.disabled=true;b.textContent='Fetching…';try{const c=await api('/api/trello?card='+encodeURIComponent(v));const files=c.files||[];if(!c.items.length&&!files.length){tm('warn',`No artwork files and no lines with a W x H found on "${c.name}".`);return;}$('#job').value=$('#job').value||c.name;$('#parts tbody').innerHTML='';
+  $('#trelloBtn').onclick=async()=>{const orderRef=$('#activeOrder').value;clearMsgs();const v=$('#trello').value.trim();if(!v){tm('err','Paste the Trello card link (https://trello.com/c/…) or its id in the box, then press Fetch.');$('#trello').focus();return;}
+  const b=$('#trelloBtn');b.disabled=true;b.textContent='Fetching…';try{const c=await api('/api/trello?card='+encodeURIComponent(v)+(MACHINE?'&machine='+encodeURIComponent(MACHINE):''));const files=c.files||[];if(!c.items.length&&!files.length){tm('warn',`No artwork files and no lines with a W x H found on "${c.name}".`);return;}if(ORDERS.length){if(!orderRef)throw new Error('Choose the order for this import first.');if(c.product&&c.product!==$('#product').value)throw new Error('This card uses a different material / cutter. Nest it in a separate batch.');if((c.mix||[]).length>1)throw new Error('This card mixes materials. Import only the approved files for this batch.');}$('#job').value=$('#job').value||c.name;if(!ORDERS.length)$('#parts tbody').innerHTML='';
     const sk=(w,h)=>{const a=Math.round(+w),b=Math.round(+h);return a<b?a+'x'+b:b+'x'+a;};let ft='';
     if(files.length){files.forEach(f=>{NEWARTS.add(f.key);if(!ARTS.some(a=>a.key===f.key))ARTS.push(f);});
       const have=new Set(files.map(f=>{const q=f.cut||{};return q.found?sk(q.w,q.h):sk(f.w_mm,f.h_mm);}));
-      files.forEach(f=>addRow({name:f.name.replace(/\.pdf$/i,''),qty:f.qty_hint||1,artwork:f.key,w:f.cut&&f.cut.found?'':f.w_mm,h:f.cut&&f.cut.found?'':f.h_mm}));
-      const extra=c.items.filter(it=>!have.has(sk(it.w,it.h)));extra.forEach(addRow);refreshArtSelects();
+      for(const f of files)await addArtPart(f,orderRef);
+      const extra=c.items.filter(it=>!have.has(sk(it.w,it.h)));extra.forEach(p=>addRow({...p,order_ref:orderRef}));refreshArtSelects();
       const nz=files.filter(f=>f.from).length,nc=files.filter(f=>f.cut&&f.cut.found).length;
       ft=`${files.length} artwork file${files.length>1?'s':''} pulled from the card${nz?` (${nz} inside zip${nz>1?'s':''})`:''}: ${nc===files.length?'every one':nc+' of them'} with a CutContour line, so the parts come from the files (size, shape, quantity from the file name)${nc<files.length?`; ${files.length-nc} without a cut line, placed as rectangles at page size`:''}.${extra.length?` ${extra.length} line${extra.length>1?'s':''} of the card had no file of that size and ${extra.length>1?'were':'was'} added as plain rectangle${extra.length>1?'s':''}.`:''}`;}
-    else{c.items.forEach(addRow);}
+    else{c.items.forEach(p=>addRow({...p,order_ref:orderRef}));}
     const n=c.items.length,lines=k=>k+' line'+(k>1?'s':'');let kind='ok',mt='';
-    if(c.product&&PRODUCTS[c.product]){$('#product').value=c.product;fillProduct();const p=PRODUCTS[c.product];const mix=c.mix||[];
+    if(c.product_warning){kind='warn';$('#product').value='';fillProduct();mt=' '+c.product_warning;}   // bookmarked PC does not cut the card's material: no product, say why
+    else if(!ORDERS.length&&c.product&&PRODUCTS[c.product]){$('#product').value=c.product;fillProduct();const p=PRODUCTS[c.product];const mix=c.mix||[];
       mt=` Material set to ${p.material_name} \u2192 ${p.cutter_name}: the card says so${mix[0].lines?(mix[0].lines<n?' on '+mix[0].lines+' of '+n+' lines':n>1?' on all '+n+' lines':' on its one line'):''}. Check it.`;
       if(mix.length>1){kind='warn';mt+=` The card mixes materials: ${mix.map(m=>m.name+' on '+lines(m.lines)).join(', ')}. The lines of the other material need a run of their own \u2014 take them out of this list, or nest them after with that material chosen.`;}}
     else{mt=$('#product').value?` The card does not say the material, so the box still shows ${PRODUCTS[$('#product').value].material_name} \u2014 check it.`:' The card does not say the material \u2014 choose it in the Material \u2192 cutter box.';if(!$('#product').value)kind='warn';}
