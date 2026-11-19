@@ -1,7 +1,7 @@
 {
-  "version": "1.7.0",
-  "name": "Nest guard and double-sided files",
+  "version": "1.7.1",
+  "name": "Turning fix keeps order approvals",
   "date": "2026-11-19",
-  "build": "20261119-135228",
-  "source_commit": "8690d6aa2930c0504c3835ddc53634cbf6760b59"
+  "build": "20261119-213822",
+  "source_commit": "01bf23a6e34b11f64299dad394fdb9347dece5b6"
 }

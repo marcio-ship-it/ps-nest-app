@@ -175,13 +175,13 @@ details.adv .row3{grid-template-columns:repeat(2,minmax(0,1fr))}details.adv .row
 <body>
 <script>
 // Shared browser build: every /api/* request goes to a web worker running the Python engine
-// (Pyodide) instead of a server.  Built 20261119-135228 from nest/ui.html by scripts/build-web.py.
+// (Pyodide) instead of a server.  Built 20261119-213822 from nest/ui.html by scripts/build-web.py.
 (()=>{
 const bar=document.createElement('div');bar.id='enginebar';bar.textContent='Loading the nesting engine (first visit downloads about 15 MB; later visits are quick)…';
 document.body.prepend(bar);
 window.PSNEST_WEB=true;   // tells the page that Stop restarts the engine here (see stopWorker)
 const pending=new Map();let seq=0,worker,ready,readyResolve,progress=null;
-function startWorker(){worker=new Worker('worker.js?v=20261119-135228',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
+function startWorker(){worker=new Worker('worker.js?v=20261119-213822',{type:'module'});ready=new Promise(r=>{readyResolve=r;});
 worker.onmessage=e=>{const m=typeof e.data==='string'?JSON.parse(e.data):e.data;   // strings: live progress posted by Python
   if(m.type==='progress'){progress=m;return;}
   if(m.type==='status'){bar.textContent=m.text;return;}
@@ -720,7 +720,9 @@ function refreshOrderAssignments(){document.querySelectorAll('#parts tbody tr').
   const siteInput=tr.querySelector('.original-site');if(siteInput)siteInput.value=tr.dataset.siteRef||'';renderManualIdentity(tr);
 });}
 function invalidateBatchResult(){if(CURRENT){CURRENT=null;$('#results').style.display='none';$('#empty').style.display='';}}
-function recheckOrders(){let changed=false;for(const o of ORDERS){const selected=rows().filter(p=>p.order_ref===o.ref);if(o.approved&&(stable(o.approved_parts)!==stable(selected)||stable(o.setup)!==stable(batchSetup()))){o.approved=false;changed=true;}}if(changed){renderOrders();invalidateBatchResult();}}
+// An order approval covers parts, quantities and artwork. Turning on the sheet is a nesting choice, so it never clears one (1.7.1).
+function approvalParts(parts){return Array.isArray(parts)?parts.map(p=>{if(!p||typeof p!=='object'||Array.isArray(p))return p;const {rotate,...rest}=p;return rest;}):parts;}
+function recheckOrders(){let changed=false;for(const o of ORDERS){const selected=rows().filter(p=>p.order_ref===o.ref);if(o.approved&&(stable(approvalParts(o.approved_parts))!==stable(approvalParts(selected))||stable(o.setup)!==stable(batchSetup()))){o.approved=false;changed=true;}}if(changed){renderOrders();invalidateBatchResult();}}
 function renderOrders(){const active=$('#activeOrder').value;$('#activeOrder').replaceChildren(new Option('Choose an order',''),...ORDERS.map(o=>new Option(o.ref,o.ref)));$('#activeOrder').value=ORDERS.some(o=>o.ref===active)?active:(ORDERS[0]?.ref||'');const list=$('#orderList');list.replaceChildren();
  for(const o of ORDERS){const card=document.createElement('div');card.style.cssText='border:1px solid #ddd;padding:10px;margin-top:10px;border-radius:8px';const title=document.createElement('strong');title.textContent=o.ref;card.appendChild(title);
   for(const [key,label] of [['order_approval','Order approval reference'],['artwork_approval','Artwork approval reference / revision'],['confirmed_by','Confirmed by (operator)']]){const lab=document.createElement('label');lab.textContent=label;const input=document.createElement('input');input.type='text';input.value=o[key]||'';input.maxLength=500;input.setAttribute('aria-label',o.ref+' '+label);input.oninput=()=>{o[key]=input.value;o.approved=false;card.querySelector('input[type=checkbox]').checked=false;invalidateBatchResult();};lab.appendChild(input);card.appendChild(lab);}
