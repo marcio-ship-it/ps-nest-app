@@ -1,8 +1,8 @@
 {
-  "version": "1.7.1",
-  "build": "20261119.2137",
-  "sha256": "2fc267e910aa775074def12c5674d8c39cb966eb29f6212cad72100d5e6a556c",
-  "bytes": 40697882,
+  "version": "1.7.2",
+  "build": "20261123.1245",
+  "sha256": "0d7a9a349ae0155cb2471d27fda93144f22a2bd1d568f227e378a97e9aca5b73",
+  "bytes": 40699812,
   "feed": "https://marcio-ship-it.github.io/ps-nest-app/updates/appcast.xml",
-  "download": "https://github.com/marcio-ship-it/ps-nest-app/releases/download/v1.7.1/PS-Nest-Mac-1.7.1-update.zip"
+  "download": "https://github.com/marcio-ship-it/ps-nest-app/releases/download/v1.7.2/PS-Nest-Mac-1.7.2-update.zip"
 }

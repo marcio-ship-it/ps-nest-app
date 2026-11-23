@@ -1,7 +1,7 @@
 {
-  "version": "1.7.1",
-  "name": "Turning fix keeps order approvals",
-  "date": "2026-11-19",
-  "build": "20261119-213822",
-  "source_commit": "01bf23a6e34b11f64299dad394fdb9347dece5b6"
+  "version": "1.7.2",
+  "name": "Square bleed corners",
+  "date": "2026-11-23",
+  "build": "20261123-124600",
+  "source_commit": "4b33ff061a8fa7b2c02df1cbb8671747bfc48b8f"
 }
