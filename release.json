@@ -1,7 +1,7 @@
 {
-  "version": "1.7.2",
-  "name": "Square bleed corners",
+  "version": "1.7.3",
+  "name": "Gap-free bleed trims",
   "date": "2026-11-23",
-  "build": "20261123-124600",
-  "source_commit": "4b33ff061a8fa7b2c02df1cbb8671747bfc48b8f"
+  "build": "20261123-134614",
+  "source_commit": "b21f933d01ffd6443035a966f26f5f31093d6d00"
 }
